@@ -51,25 +51,23 @@ set s [::Plotchart::createGanttchart .c "1 january 2004" \
 
 puts $s
 $s font scale "times 10"
-$s font description "times 1"
 
-
-set spring [$s task "" "1 march 2004" "1 june 2004" 0]
-set summer [$s task "" "1 june 2004" "1 september 2004" 0]
-set winter [$s task "" "1 september 2004" "20 december 2004" 0]
+set spring [$s task "5.1.3 Realizacion..." "1 march 2004" "1 june 2004" 0]
+set summer [$s task "5.1.1 Desmonte de..." "1 june 2004" "1 september 2004" 0]
+set winter [$s task "5.1.2 Demolicion ..." "1 september 2004" "20 december 2004" 0]
 puts "$spring // $summer // $winter"
-$s summary "1" $spring $summer $winter
+$s summary "5.1 Preliminares" $spring $summer $winter
 
-set spring1 [$s task "" "1 march 2004" "1 june 2004" 0]
+set spring1 [$s task "5.2.4 Vaciado de..." "1 march 2004" "1 june 2004" 0]
 puts $::Plotchart::scaling(.c,current)
-set summer1 [$s task "" "1 june 2004" "1 september 2004" 0]
-set winter1 [$s task "" "1 september 2004" "20 december 2004" 0]
-$s summary "2" $spring1 $summer1 $winter1
+set summer1 [$s task "5.2.1 Replanteo ..." "1 june 2004" "1 september 2004" 0]
+set winter1 [$s task "5.2.2 Otra cosa ..." "1 september 2004" "20 december 2004" 0]
+$s summary "5.2 Cimentacion" $spring1 $summer1 $winter1
 
 puts $summer1
 .c delete 46 47 48 49
 set ::Plotchart::scaling(.c,current) 4
-set summer1 [$s task "" "1 june 2004" "1 september 2004" 0]
+set summer1 [$s task "5.2.1 Replantear..." "1 june 2004" "1 september 2004" 0]
 puts $summer1
 
 set connection [$s connect $spring $winter]

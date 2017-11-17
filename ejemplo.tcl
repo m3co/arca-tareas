@@ -49,30 +49,29 @@ pack   .c -fill both
 set s [::Plotchart::createGanttchart .c "1 january 2004" \
         "1 march 2005" 10 1 -ylabelwidth 1]
 
-set spring [$s task "5.1.3 Realizacion..." "1 march 2004" "1 june 2004" 0]
-set summer [$s task "5.1.1 Desmonte de..." "1 june 2004" "1 september 2004" 0]
-set winter [$s task "5.1.2 Demolicion ..." "1 september 2004" "20 december 2004" 0]
+set spring [$s task "5.1.3 Realizacion..." "1 march 2004" "1 june 2004" 100]
+set summer [$s task "5.1.1 Desmonte de..." "1 june 2004" "1 september 2004" 100]
+set winter [$s task "5.1.2 Demolicion ..." "1 september 2004" "20 december 2004" 100]
 puts "$spring // $summer // $winter"
 $s summary "5.1 Preliminares" $spring $summer $winter
 
-set spring1 [$s task "5.2.4 Vaciado de..." "1 march 2004" "1 june 2004" 0]
+set spring1 [$s task "5.2.4 Vaciado de..." "1 march 2004" "1 june 2004" 100]
 puts $::Plotchart::scaling(.c,current)
-set summer1 [$s task "5.2.1 Replanteo ..." "1 june 2004" "1 september 2004" 0]
-set winter1 [$s task "5.2.2 Otra cosa ..." "1 september 2004" "20 december 2004" 0]
+set summer1 [$s task "5.2.1 Replanteo ..." "1 june 2004" "1 september 2004" 100]
+set winter1 [$s task "5.2.2 Otra cosa ..." "1 september 2004" "20 december 2004" 100]
 $s summary "5.2 Cimentacion" $spring1 $summer1 $winter1
 
 puts $summer1
 .c delete 46 47 48 49
 set ::Plotchart::scaling(.c,current) 4
-set summer1 [$s task "5.2.1 Replantear..." "1 june 2004" "1 september 2004" 0]
+set summer1 [$s task "5.2.1 Replantear..." "1 june 2004" "1 september 2004" 100]
 puts $summer1
 
-set connection [$s connect $spring $winter]
+set connection [$s connect $spring $summer]
 puts $connection
 .c itemconfigure $connection -fill red
 
 .c itemconfigure [lindex $spring 3] -text {}
-.c itemconfigure [lindex $spring 1] -fill {} -outline {}
 
 $s vertline "1 jan" "1 january 2004"
 $s vertline "1 apr" "1 april 2004"
@@ -81,8 +80,8 @@ $s vertline "1 oct" "1 october 2004"
 $s vertline "31 dec" "31 december 2004"
 $s title "Seasons (northern hemisphere)"
 
-.c bind [lindex $spring 2] <ButtonPress-1> [list \
-  begin'extrude %W [lindex $spring 2] %x %y]
+.c bind [lindex $spring 1] <ButtonPress-1> [list \
+  begin'extrude %W [lindex $spring 1] %x %y]
 
-.c bind [lindex $spring 2] <ButtonRelease-1> [list \
-  end'extrude %W [lindex $spring 2] "spring"]
+.c bind [lindex $spring 1] <ButtonRelease-1> [list \
+  end'extrude %W [lindex $spring 1] "spring"]

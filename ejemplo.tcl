@@ -7,6 +7,9 @@ proc extrude'left { path id xcoord ycoord x0 y0 x1 y1 d} {
 proc extrude'right { path id xcoord ycoord x0 y0 x1 y1 d} {
   $path coords $id $x0 $y0 [expr { $xcoord + $d }] $y1
 }
+proc extrude'both { path id xcoord ycoord x0 y0 x1 y1 d1 d2} {
+  $path coords $id [expr { $xcoord - $d1 }] $y0 [expr { $xcoord + $d2 }] $y1
+}
 
 proc begin'extrude { path id xcoord ycoord } {
   set rect [$path coords $id]
@@ -24,11 +27,16 @@ proc begin'extrude { path id xcoord ycoord } {
   if { $x0 < $xcoord && $xcoord < $x0 + $l10 } {
     $path bind $id <Motion> [list extrude'left %W $id %x %y \
       $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x0) }]]
+    return
   }
   if { $x1 - $l10 < $xcoord && $xcoord < $x1 } {
     $path bind $id <Motion> [list extrude'right %W $id %x %y \
       $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x1) }]]
+    return
   }
+    $path bind $id <Motion> [list extrude'both %W $id %x %y \
+      $x0 $y0 $x1 $y1 \
+      [expr { abs($xcoord - $x0) }] [expr { abs($xcoord - $x1) }]]
 }
 
 proc end'extrude { path id } {

@@ -20,27 +20,24 @@ proc begin'extrude { path id xcoord ycoord } {
   set l [expr { abs($x1 - $x0) }]
   set l10 [expr { $l * 0.1 }]
 
-  puts $l
-  puts "$xcoord $ycoord"
-  puts $rect
-
   if { $x0 < $xcoord && $xcoord < $x0 + $l10 } {
     $path bind $id <Motion> [list extrude'left %W $id %x %y \
       $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x0) }]]
     return
-  }
-  if { $x1 - $l10 < $xcoord && $xcoord < $x1 } {
+  } elseif { $x1 - $l10 < $xcoord && $xcoord < $x1 } {
     $path bind $id <Motion> [list extrude'right %W $id %x %y \
       $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x1) }]]
     return
-  }
+  } else {
     $path bind $id <Motion> [list extrude'both %W $id %x %y \
       $x0 $y0 $x1 $y1 \
       [expr { abs($xcoord - $x0) }] [expr { abs($xcoord - $x1) }]]
+  }
 }
 
-proc end'extrude { path id } {
+proc end'extrude { path id task } {
   $path bind $id <Motion> {}
+  puts $task
 }
 
 canvas .c -width 500 -height 180 -bg gray
@@ -56,7 +53,7 @@ $s font description "times 1"
 set spring [$s task "" "1 march 2004" "1 june 2004" 0]
 set summer [$s task "" "1 june 2004" "1 september 2004" 0]
 set winter [$s task "" "1 september 2004" "20 december 2004" 0]
-$s summary "" $spring $summer $winter
+#$s summary "" $spring $summer $winter
 #$s connect $spring $summer
 $s vertline "1 jan" "1 january 2004"
 $s vertline "1 apr" "1 april 2004"
@@ -69,4 +66,4 @@ $s title "Seasons (northern hemisphere)"
   begin'extrude %W [lindex $spring 2] %x %y]
 
 .c bind [lindex $spring 2] <ButtonRelease-1> [list \
-  end'extrude %W [lindex $spring 2]]
+  end'extrude %W [lindex $spring 2] "spring"]

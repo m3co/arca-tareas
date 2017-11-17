@@ -38,23 +38,48 @@ proc begin'extrude { path id xcoord ycoord } {
 proc end'extrude { path id task } {
   $path bind $id <Motion> {}
   puts $task
+
+  ganttchart_.c connect [list 28 29 30 31] [list 36 37 38 39]
 }
 
-canvas .c -width 500 -height 180 -bg gray
+canvas .c -width 500 -bg gray
 pack   .c -fill both
 .c delete all
 
 set s [::Plotchart::createGanttchart .c "1 january 2004" \
-        "1 march 2005" 4 1 -ylabelwidth 1]
+        "1 march 2005" 10 1 -ylabelwidth 1]
 
+puts $s
 $s font scale "times 10"
 $s font description "times 1"
+
 
 set spring [$s task "" "1 march 2004" "1 june 2004" 0]
 set summer [$s task "" "1 june 2004" "1 september 2004" 0]
 set winter [$s task "" "1 september 2004" "20 december 2004" 0]
-#$s summary "" $spring $summer $winter
-#$s connect $spring $summer
+puts "$spring // $summer // $winter"
+$s summary "1" $spring $summer $winter
+
+set spring1 [$s task "" "1 march 2004" "1 june 2004" 0]
+puts $::Plotchart::scaling(.c,current)
+set summer1 [$s task "" "1 june 2004" "1 september 2004" 0]
+set winter1 [$s task "" "1 september 2004" "20 december 2004" 0]
+$s summary "2" $spring1 $summer1 $winter1
+
+puts $summer1
+.c delete 46 47 48 49
+set ::Plotchart::scaling(.c,current) 4
+set summer1 [$s task "" "1 june 2004" "1 september 2004" 0]
+puts $summer1
+
+set connection [$s connect $spring $winter]
+puts $connection
+set connection2 [$s connect $spring $winter]
+puts $connection2
+
+.c delete $connection
+.c delete $connection2
+
 $s vertline "1 jan" "1 january 2004"
 $s vertline "1 apr" "1 april 2004"
 $s vertline "1 jul" "1 july 2004"

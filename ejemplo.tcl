@@ -50,6 +50,9 @@ set s [::Plotchart::createGanttchart .c "1 january 2004" \
         "1 march 2005" 10 1 -ylabelwidth 1]
 
 set spring [$s task "5.1.3 Realizacion..." "1 march 2004" "1 june 2004" 100]
+set sCC [.c coords [lindex $spring 2]]
+.c coords [lindex $spring 2] [lindex $sCC 0] [lindex $sCC 1] [expr { 5 + [lindex $sCC 2] }] [lindex $sCC 3]
+
 set summer [$s task "5.1.1 Desmonte de..." "1 june 2004" "1 september 2004" 100]
 set winter [$s task "5.1.2 Demolicion ..." "1 september 2004" "20 december 2004" 100]
 puts "$spring // $summer // $winter"

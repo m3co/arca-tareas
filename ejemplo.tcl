@@ -49,9 +49,6 @@ pack   .c -fill both
 set s [::Plotchart::createGanttchart .c "1 january 2004" \
         "1 march 2005" 10 1 -ylabelwidth 1]
 
-puts $s
-$s font scale "times 10"
-
 set spring [$s task "5.1.3 Realizacion..." "1 march 2004" "1 june 2004" 0]
 set summer [$s task "5.1.1 Desmonte de..." "1 june 2004" "1 september 2004" 0]
 set winter [$s task "5.1.2 Demolicion ..." "1 september 2004" "20 december 2004" 0]
@@ -72,11 +69,10 @@ puts $summer1
 
 set connection [$s connect $spring $winter]
 puts $connection
-set connection2 [$s connect $spring $winter]
-puts $connection2
+.c itemconfigure $connection -fill red
 
-.c delete $connection
-.c delete $connection2
+.c itemconfigure [lindex $spring 3] -text {}
+.c itemconfigure [lindex $spring 1] -fill {} -outline {}
 
 $s vertline "1 jan" "1 january 2004"
 $s vertline "1 apr" "1 april 2004"

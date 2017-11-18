@@ -2,6 +2,8 @@
 package require Plotchart
 
 namespace eval tareas {
+  variable tasks
+
   proc howmanymonths { d1 d2 } {
     set c $d1
     set i 1
@@ -14,9 +16,11 @@ namespace eval tareas {
 
   proc render'task { gantt task } {
     upvar $task t
-    set canvas [string range $gantt 11 end]
+    variable tasks
 
+    set canvas [string range $gantt 11 end]
     set item [$gantt task $t(description) $t(start) $t(end) 100]
+
     $canvas itemconfigure [lindex $item 3] -text {}
 
     set coords [$canvas coords [lindex $item 2]]
@@ -24,6 +28,11 @@ namespace eval tareas {
       [expr { 5 + [lindex $coords 2] }] [lindex $coords 3]
 
     $canvas itemconfigure [lindex $item 2] -fill red
+
+    array set internal {}
+    set internal(payload) [array get t]
+    set internal(task) $item
+    set tasks($t(id)) [array get internal]
   }
 
   proc init { start end } {
@@ -53,6 +62,8 @@ namespace eval tareas {
 
 set gantt [tareas::init "2004-01-01 00:00:00" "2006-04-01 00:00:00"]
 array set t1 {
+  id 3
+  keynote "5.1.7"
   description "Tarea 1 por hacer"
   start "1 march 2004"
   end "1 june 2004"

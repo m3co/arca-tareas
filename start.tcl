@@ -19,7 +19,7 @@ namespace eval tareas {
     variable tasks
 
     set canvas [string range $gantt 11 end]
-    set item [$gantt task $t(description) $t(start) $t(end) 100]
+    set item [$gantt task "$t(keynote) $t(description)" $t(start) $t(end) 100]
 
     $canvas itemconfigure [lindex $item 3] -text {}
 
@@ -41,12 +41,12 @@ namespace eval tareas {
     set months [howmanymonths $project_start $project_end]
     set rows 20
 
-    canvas .c -width [expr {40 * $months}] -height [expr {20 * $rows}]
+    canvas .c -width [expr {200 * $months}] -height [expr {20 * $rows}]
     pack .c
 
     set gantt [::Plotchart::createGanttchart .c \
-      [clock format $project_start -format {%d %B %Y}] \
-      [clock format $project_end -format {%d %B %Y}] 20]
+      [clock format $project_start -format {%Y-%m-%d}] \
+      [clock format $project_end -format {%Y-%m-%d}] 20]
 
     set current_time $project_start
     while { $current_time < $project_end } {
@@ -60,12 +60,20 @@ namespace eval tareas {
   }
 }
 
-set gantt [tareas::init "2004-01-01 00:00:00" "2006-04-01 00:00:00"]
+set gantt [tareas::init "2004-02-01 00:00:00" "2004-07-01 00:00:00"]
 array set t1 {
   id 3
   keynote "5.1.7"
   description "Tarea 1 por hacer"
-  start "1 march 2004"
-  end "1 june 2004"
+  start "2004-02-15"
+  end "2004-04-15"
+}
+array set t2 {
+  id 4
+  keynote "5.1.8"
+  description "Tarea 2 por hacer"
+  start "2004-05-04"
+  end "2004-06-15"
 }
 tareas::render'task $gantt t1
+tareas::render'task $gantt t2

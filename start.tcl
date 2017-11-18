@@ -1,5 +1,6 @@
 
 package require Plotchart
+source "m3co/main.tcl"
 
 namespace eval tareas {
   variable tasks
@@ -72,8 +73,27 @@ namespace eval tareas {
   }
 
   proc end'extrude { path id id1 task } {
+    variable tasks
     $path bind $id <Motion> {}
-    puts $task
+    set coords [$path coords $id]
+    set pxstart [lindex $coords 0]
+    set pxend [lindex $coords 2]
+
+    set pxmin $Plotchart::scaling($path,pxmin)
+    set pxmax $Plotchart::scaling($path,pxmax)
+
+    set xmin $Plotchart::scaling($path,xmin)
+    set xmax $Plotchart::scaling($path,xmax)
+
+    set pxl [expr { $pxmax - $pxmin }]
+    set xl [expr { $xmax - $xmin }]
+
+    set xstart [expr { entier($xmin + (($pxstart - $pxmin) / $pxl)*$xl) }]
+    set xend [expr { entier($xmin + (($pxend - $pxmin) / $pxl)*$xl) }]
+
+    puts [clock format $xstart -format {%Y-%m-%d %H:%M:%S}]
+    puts [clock format $xend -format {%Y-%m-%d %H:%M:%S}]
+    puts $tasks($task)
   }
 
 

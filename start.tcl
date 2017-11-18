@@ -13,8 +13,29 @@ namespace eval tareas {
   proc extrude'both { path id xcoord ycoord x0 y0 x1 y1 d1 d2} {
     $path coords $id [expr { $xcoord - $d1 }] $y0 [expr { $xcoord + $d2 }] $y1
   }
+  proc private'move'red { path id xcoord ycoord x0 y0 x1 y1 } {
+    set d1 [expr { abs($xcoord - $x0) }]
+    set d2 [expr { abs($xcoord - $x1) }]
+    $path coords $id [expr { $xcoord + $d1 }] $y0 [expr { $xcoord + $d2 }] $y1
+  }
 
-  proc begin'extrude { path id xcoord ycoord } {
+  proc private'move'right { path xcoord ycoord id x0 y0 x1 y1 d1 \
+    id1 x01 y01 x11 y11 } {
+    tareas::extrude'right $path $id $xcoord $ycoord \
+      $x0  $y0  $x1  $y1  $d1
+    tareas::private'move'red $path $id1 $xcoord $ycoord \
+      $x01 $y01 $x11 $y11
+  }
+
+  proc private'move'both { path xcoord ycoord id x0 y0 x1 y1 d1 d2 \
+    id1 x01 y01 x11 y11 } {
+    tareas::extrude'both $path $id $xcoord $ycoord \
+      $x0  $y0  $x1  $y1  $d1 $d2
+    tareas::private'move'red $path $id1 $xcoord $ycoord \
+      $x01 $y01 $x11 $y11
+  }
+
+  proc begin'extrude { path id id1 xcoord ycoord } {
     set rect [$path coords $id]
     set x0 [lindex $rect 0]
     set y0 [lindex $rect 1]
@@ -23,22 +44,30 @@ namespace eval tareas {
     set l [expr { abs($x1 - $x0) }]
     set l10 [expr { $l * 0.1 }]
 
+    set rect1 [$path coords $id1]
+    set x01 [lindex $rect1 0]
+    set y01 [lindex $rect1 1]
+    set x11 [lindex $rect1 2]
+    set y11 [lindex $rect1 3]
+
     if { $x0 < $xcoord && $xcoord < $x0 + $l10 } {
       $path bind $id <Motion> [list tareas::extrude'left %W $id %x %y \
         $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x0) }]]
       return
     } elseif { $x1 - $l10 < $xcoord && $xcoord < $x1 } {
-      $path bind $id <Motion> [list tareas::extrude'right %W $id %x %y \
-        $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x1) }]]
+      $path bind $id <Motion> [list tareas::private'move'right %W %x %y \
+        $id $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x1) }] \
+        $id1 $x01 $y01 $x11 $y11]
       return
     } else {
-      $path bind $id <Motion> [list tareas::extrude'both %W $id %x %y \
-        $x0 $y0 $x1 $y1 \
-        [expr { abs($xcoord - $x0) }] [expr { abs($xcoord - $x1) }]]
+      $path bind $id <Motion> [list tareas::private'move'both %W %x %y \
+        $id $x0 $y0 $x1 $y1 \
+        [expr { abs($xcoord - $x0) }] [expr { abs($xcoord - $x1) }] \
+        $id1 $x01 $y01 $x11 $y11]
     }
   }
 
-  proc end'extrude { path id task } {
+  proc end'extrude { path id id1 task } {
     $path bind $id <Motion> {}
     puts $task
   }
@@ -70,10 +99,10 @@ namespace eval tareas {
     $canvas itemconfigure [lindex $item 2] -fill red
 
     $canvas bind [lindex $item 1] <ButtonPress-1> [list \
-      tareas::begin'extrude %W [lindex $item 1] %x %y]
+      tareas::begin'extrude %W [lindex $item 1] [lindex $item 2] %x %y]
 
     $canvas bind [lindex $item 1] <ButtonRelease-1> [list \
-      tareas::end'extrude %W [lindex $item 1] $t(id)]
+      tareas::end'extrude %W [lindex $item 1] [lindex $item 2] $t(id)]
 
     array set internal {}
     set internal(payload) [array get t]

@@ -13,7 +13,16 @@ proc howmanymonths { d1 d2 } {
 
 proc render'task { gantt task } {
   upvar $task t
-  $gantt task $t(description) $t(start) $t(end) 100
+  set canvas [string range $gantt 11 end]
+
+  set item [$gantt task $t(description) $t(start) $t(end) 100]
+  $canvas itemconfigure [lindex $item 3] -text {}
+
+  set coords [$canvas coords [lindex $item 2]]
+  $canvas coords [lindex $item 2] [lindex $coords 0] [lindex $coords 1] \
+    [expr { 5 + [lindex $coords 2] }] [lindex $coords 3]
+
+  $canvas itemconfigure [lindex $item 2] -fill red
 }
 
 set project_start [clock scan "2004-01-01 00:00:00" -format {%Y-%m-%d %H:%M:%S}]

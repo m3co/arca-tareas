@@ -4,6 +4,46 @@ package require Plotchart
 namespace eval tareas {
   variable tasks
 
+  proc extrude'left { path id xcoord ycoord x0 y0 x1 y1 d} {
+    $path coords $id [expr { $xcoord - $d }] $y0 $x1 $y1
+  }
+  proc extrude'right { path id xcoord ycoord x0 y0 x1 y1 d} {
+    $path coords $id $x0 $y0 [expr { $xcoord + $d }] $y1
+  }
+  proc extrude'both { path id xcoord ycoord x0 y0 x1 y1 d1 d2} {
+    $path coords $id [expr { $xcoord - $d1 }] $y0 [expr { $xcoord + $d2 }] $y1
+  }
+
+  proc begin'extrude { path id xcoord ycoord } {
+    set rect [$path coords $id]
+    set x0 [lindex $rect 0]
+    set y0 [lindex $rect 1]
+    set x1 [lindex $rect 2]
+    set y1 [lindex $rect 3]
+    set l [expr { abs($x1 - $x0) }]
+    set l10 [expr { $l * 0.1 }]
+
+    if { $x0 < $xcoord && $xcoord < $x0 + $l10 } {
+      $path bind $id <Motion> [list tareas::extrude'left %W $id %x %y \
+        $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x0) }]]
+      return
+    } elseif { $x1 - $l10 < $xcoord && $xcoord < $x1 } {
+      $path bind $id <Motion> [list tareas::extrude'right %W $id %x %y \
+        $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x1) }]]
+      return
+    } else {
+      $path bind $id <Motion> [list tareas::extrude'both %W $id %x %y \
+        $x0 $y0 $x1 $y1 \
+        [expr { abs($xcoord - $x0) }] [expr { abs($xcoord - $x1) }]]
+    }
+  }
+
+  proc end'extrude { path id task } {
+    $path bind $id <Motion> {}
+    puts $task
+  }
+
+
   proc howmanymonths { d1 d2 } {
     set c $d1
     set i 1
@@ -28,6 +68,12 @@ namespace eval tareas {
       [expr { 5 + [lindex $coords 2] }] [lindex $coords 3]
 
     $canvas itemconfigure [lindex $item 2] -fill red
+
+    $canvas bind [lindex $item 1] <ButtonPress-1> [list \
+      tareas::begin'extrude %W [lindex $item 1] %x %y]
+
+    $canvas bind [lindex $item 1] <ButtonRelease-1> [list \
+      tareas::end'extrude %W [lindex $item 1] $t(id)]
 
     array set internal {}
     set internal(payload) [array get t]

@@ -13,25 +13,27 @@ namespace eval tareas {
   proc extrude'both { path id xcoord ycoord x0 y0 x1 y1 d1 d2} {
     $path coords $id [expr { $xcoord - $d1 }] $y0 [expr { $xcoord + $d2 }] $y1
   }
-  proc private'move'red { path id xcoord ycoord x0 y0 x1 y1 } {
-    set d1 [expr { abs($xcoord - $x0) }]
-    set d2 [expr { abs($xcoord - $x1) }]
-    $path coords $id [expr { $xcoord + $d1 }] $y0 [expr { $xcoord + $d2 }] $y1
+  proc private'move'red { path id xcoord0 ycoord0 xcoord ycoord \
+    x0 y0 x1 y1 } {
+    set d1 [expr { $xcoord - $xcoord0 }]
+    $path coords $id [expr { $x0 + $d1 }] $y0 [expr { $x1 + $d1 }] $y1
   }
 
-  proc private'move'right { path xcoord ycoord id x0 y0 x1 y1 d1 \
+  proc private'move'right { path xcoord0 ycoord0 xcoord ycoord \
+    id x0 y0 x1 y1 d1 \
     id1 x01 y01 x11 y11 } {
     tareas::extrude'right $path $id $xcoord $ycoord \
       $x0  $y0  $x1  $y1  $d1
-    tareas::private'move'red $path $id1 $xcoord $ycoord \
+    tareas::private'move'red $path $id1 $xcoord0 $ycoord0 $xcoord $ycoord \
       $x01 $y01 $x11 $y11
   }
 
-  proc private'move'both { path xcoord ycoord id x0 y0 x1 y1 d1 d2 \
+  proc private'move'both { path xcoord0 ycoord0 xcoord ycoord \
+    id x0 y0 x1 y1 d1 d2 \
     id1 x01 y01 x11 y11 } {
     tareas::extrude'both $path $id $xcoord $ycoord \
       $x0  $y0  $x1  $y1  $d1 $d2
-    tareas::private'move'red $path $id1 $xcoord $ycoord \
+    tareas::private'move'red $path $id1 $xcoord0 $ycoord0 $xcoord $ycoord \
       $x01 $y01 $x11 $y11
   }
 
@@ -55,12 +57,14 @@ namespace eval tareas {
         $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x0) }]]
       return
     } elseif { $x1 - $l10 < $xcoord && $xcoord < $x1 } {
-      $path bind $id <Motion> [list tareas::private'move'right %W %x %y \
+      $path bind $id <Motion> [list tareas::private'move'right %W \
+        $xcoord $ycoord %x %y \
         $id $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x1) }] \
         $id1 $x01 $y01 $x11 $y11]
       return
     } else {
-      $path bind $id <Motion> [list tareas::private'move'both %W %x %y \
+      $path bind $id <Motion> [list tareas::private'move'both %W \
+        $xcoord $ycoord %x %y \
         $id $x0 $y0 $x1 $y1 \
         [expr { abs($xcoord - $x0) }] [expr { abs($xcoord - $x1) }] \
         $id1 $x01 $y01 $x11 $y11]

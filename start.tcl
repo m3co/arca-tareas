@@ -91,9 +91,12 @@ namespace eval tareas {
     set xstart [expr { entier($xmin + (($pxstart - $pxmin) / $pxl)*$xl) }]
     set xend [expr { entier($xmin + (($pxend - $pxmin) / $pxl)*$xl) }]
 
-    puts [clock format $xstart -format {%Y-%m-%d %H:%M:%S}]
-    puts [clock format $xend -format {%Y-%m-%d %H:%M:%S}]
-    puts $tasks($task)
+    set payload [dict get $tasks($task) payload]
+    dict set payload start [clock format $xstart -format {%Y-%m-%d}]
+    dict set payload end [clock format $xend -format {%Y-%m-%d}]
+
+    set tasks($task) [list payload $payload task [dict get $tasks($task) task]]
+    # aqui debo poner un evento que diga que la tarea fue actualizada...
   }
 
 

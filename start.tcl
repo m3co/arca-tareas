@@ -136,6 +136,18 @@ namespace eval tareas {
     event generate $path <<UpdateTask>> -data $task
   }
 
+  proc render'connections { gantt } {
+    variable tasks
+    foreach id [array names tasks] {
+      set task $tasks($id)
+      if { [dict exists $task payload connectWith] } {
+        set connectWith [dict get $task payload connectWith]
+        set from [dict get $task task]
+        set to [dict get $tasks($connectWith) task]
+        $gantt connect $from $to
+      }
+    }
+  }
 
   proc render'task { gantt task } {
     upvar $task t
@@ -198,6 +210,7 @@ array set t1 {
   description "Tarea 1 por hacer"
   start "2004-02-15"
   end "2004-04-15"
+  connectWith 4
 }
 array set t2 {
   id 4
@@ -213,6 +226,7 @@ set gantt [tareas::init $path "2004-02-01 00:00:00" "2004-07-01 00:00:00"]
 pack $path
 tareas::render'task $gantt t1
 tareas::render'task $gantt t2
+tareas::render'connections $gantt
 bind .c <<UpdateTask>> [list muestremelo %W $gantt %d]
 bind .btn <1> [list modifique'la'tarea $path $gantt]
 

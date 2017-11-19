@@ -243,14 +243,23 @@ pack $path
 tareas::render'task $gantt t1
 tareas::render'task $gantt t2
 
+set sumario1 [$gantt summary "Primer sumario" \
+  [dict get $tareas::tasks(3) task] [dict get $tareas::tasks(4) task]]
+puts $sumario1
 
 tareas::render'task $gantt t3
 tareas::render'task $gantt t4
+
+set sumario2 [$gantt summary "Segundo sumario" \
+  [dict get $tareas::tasks(5) task] [dict get $tareas::tasks(6) task]]
+puts $sumario2
+
 tareas::render'connections $gantt
 bind .c <<UpdateTask>> [list muestremelo %W $gantt %d]
 bind .btn <1> [list modifique'la'tarea $path $gantt]
 
-$gantt summary [dict get $tareas::tasks(3) task] [dict get $tareas::tasks(4) task]
+#$gantt connect $sumario1 $sumario2
+
 proc muestremelo { path gantt id } {
   puts $tareas::tasks($id)
 }

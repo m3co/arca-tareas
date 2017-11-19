@@ -50,6 +50,10 @@ namespace eval tareas {
     set coords [$path coords [lindex $task 2]]
     $path coords [lindex $task 2] $pxend [lindex $coords 1] \
       [expr { 5 + $pxend }] [lindex $coords 3]
+
+    set keynote [dict get $tasks($id) payload keynote]
+    set description [dict get $tasks($id) payload description]
+    $path itemconfigure [lindex $task 0] -text "$keynote $description"
   }
 
   proc private'move'right { path xcoord0 ycoord0 xcoord ycoord \

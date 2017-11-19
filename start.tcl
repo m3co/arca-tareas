@@ -20,12 +20,36 @@ namespace eval tareas {
     $path coords $id [expr { $x0 + $d1 }] $y0 [expr { $x1 + $d1 }] $y1
   }
 
-  proc update'task { canvas gantt id } {
+  proc redraw'task { path gantt id } {
     variable tasks
 
-    puts $canvas
-    puts $gantt
-    puts $tasks($id)
+    set task [dict get $tasks($id) task]
+    set tag_task [lindex $task 1]
+
+    set start [clock scan [dict get $tasks($id) payload start] -format "%Y-%m-%d"]
+    set end [clock scan [dict get $tasks($id) payload end] -format "%Y-%m-%d"]
+
+    puts $start
+    puts $end
+    set coords [$path coords $tag_task]
+
+    set pxmin $Plotchart::scaling($path,pxmin)
+    set pxmax $Plotchart::scaling($path,pxmax)
+
+    set xmin $Plotchart::scaling($path,xmin)
+    set xmax $Plotchart::scaling($path,xmax)
+
+    set pxl [expr { $pxmax - $pxmin }]
+    set xl [expr { $xmax - $xmin }]
+
+    set pxstart [expr { entier($pxmin + ($pxl * ($start - $xmin) / $xl)) }]
+    set pxend [expr { entier($pxmin + ($pxl * ($end - $xmin) / $xl)) }]
+
+    $path coords $tag_task $pxstart [lindex $coords 1] $pxend [lindex $coords 3]
+
+    set coords [$path coords [lindex $task 2]]
+    $path coords [lindex $task 2] $pxend [lindex $coords 1] \
+      [expr { 5 + $pxend }] [lindex $coords 3]
   }
 
   proc private'move'right { path xcoord0 ycoord0 xcoord ycoord \
@@ -180,8 +204,25 @@ array set t2 {
 }
 
 set path .c
+pack [button .btn -text "Go"]
 set gantt [tareas::init $path "2004-02-01 00:00:00" "2004-07-01 00:00:00"]
 pack $path
 tareas::render'task $gantt t1
 tareas::render'task $gantt t2
-bind .c <<UpdateTask>> "puts %d"
+bind .c <<UpdateTask>> [list muestremelo %W $gantt %d]
+bind .btn <1> [list modifique'la'tarea $path $gantt]
+
+proc muestremelo { path gantt id } {
+  puts $tareas::tasks($id)
+}
+
+proc modifique'la'tarea { path gantt } {
+  set tarea3 $tareas::tasks(3)
+  dict set tarea3 payload start "2004-03-15"
+  dict set tarea3 payload end "2004-05-15"
+  dict set tarea3 payload description "Otra tarea por modificar"
+  dict set tarea3 payload keynote "5.1.11"
+  puts $tareas::tasks(3)
+  set tareas::tasks(3) $tarea3
+  tareas::redraw'task $path $gantt 3
+}

@@ -4,6 +4,7 @@ source "m3co/main.tcl"
 
 namespace eval tareas {
   variable tasks
+  variable canvas
 
   proc extrude'left { path id xcoord ycoord x0 y0 x1 y1 d} {
     $path coords $id [expr { $xcoord - $d }] $y0 $x1 $y1
@@ -101,16 +102,6 @@ namespace eval tareas {
   }
 
 
-  proc howmanymonths { d1 d2 } {
-    set c $d1
-    set i 1
-    while { $c < $d2 } {
-      set c [clock add $c 1 months]
-      incr i
-    }
-    return $i
-  }
-
   proc render'task { gantt task } {
     upvar $task t
     variable tasks
@@ -138,16 +129,19 @@ namespace eval tareas {
     set tasks($t(id)) [array get internal]
   }
 
-  proc init { start end } {
+  proc init { path start end } {
     set project_start [clock scan $start -format {%Y-%m-%d %H:%M:%S}]
     set project_end [clock scan $end -format {%Y-%m-%d %H:%M:%S}]
     set months [howmanymonths $project_start $project_end]
     set rows 20
 
-    canvas .c -width [expr {200 * $months}] -height [expr {20 * $rows}]
-    pack .c
+    if { [winfo exists $path] == 1 } {
+      $path configure -width [expr {200 * $months}] -height [expr {20 * $rows}]
+    } else {
+      canvas $path -width [expr {200 * $months}] -height [expr {20 * $rows}]
+    }
 
-    set gantt [::Plotchart::createGanttchart .c \
+    set gantt [::Plotchart::createGanttchart $path \
       [clock format $project_start -format {%Y-%m-%d}] \
       [clock format $project_end -format {%Y-%m-%d}] 20]
 
@@ -163,7 +157,6 @@ namespace eval tareas {
   }
 }
 
-set gantt [tareas::init "2004-02-01 00:00:00" "2004-07-01 00:00:00"]
 array set t1 {
   id 3
   keynote "5.1.7"
@@ -178,6 +171,10 @@ array set t2 {
   start "2004-05-04"
   end "2004-06-15"
 }
+
+set path .c
+set gantt [tareas::init $path "2004-02-01 00:00:00" "2004-07-01 00:00:00"]
+pack $path
 tareas::render'task $gantt t1
 tareas::render'task $gantt t2
 bind .c <<UpdateTask>> "puts %d"

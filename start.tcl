@@ -97,6 +97,7 @@ namespace eval tareas {
 
     set tasks($task) [list payload $payload task [dict get $tasks($task) task]]
     # aqui debo poner un evento que diga que la tarea fue actualizada...
+    event generate $path <<UpdateTask>> -data $task
   }
 
 
@@ -179,3 +180,4 @@ array set t2 {
 }
 tareas::render'task $gantt t1
 tareas::render'task $gantt t2
+bind .c <<UpdateTask>> "puts %d"

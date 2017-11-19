@@ -216,6 +216,14 @@ array set t2 {
   id 4
   keynote "5.1.8"
   description "Tarea 2 por hacer"
+  start "2004-04-04"
+  end "2004-05-15"
+  connectWith 5
+}
+array set t3 {
+  id 5
+  keynote "5.1.9"
+  description "Tarea 3 por hacer"
   start "2004-05-04"
   end "2004-06-15"
 }
@@ -226,6 +234,7 @@ set gantt [tareas::init $path "2004-02-01 00:00:00" "2004-07-01 00:00:00"]
 pack $path
 tareas::render'task $gantt t1
 tareas::render'task $gantt t2
+tareas::render'task $gantt t3
 tareas::render'connections $gantt
 bind .c <<UpdateTask>> [list muestremelo %W $gantt %d]
 bind .btn <1> [list modifique'la'tarea $path $gantt]

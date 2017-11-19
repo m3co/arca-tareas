@@ -208,24 +208,32 @@ array set t1 {
   id 3
   keynote "5.1.7"
   description "Tarea 1 por hacer"
-  start "2004-02-15"
-  end "2004-04-15"
+  start "2004-02-05"
+  end "2004-02-25"
   connectWith 4
 }
 array set t2 {
   id 4
   keynote "5.1.8"
   description "Tarea 2 por hacer"
-  start "2004-04-04"
-  end "2004-05-15"
-  connectWith 5
+  start "2004-03-04"
+  end "2004-03-15"
 }
 array set t3 {
   id 5
   keynote "5.1.9"
   description "Tarea 3 por hacer"
+  start "2004-04-04"
+  end "2004-05-15"
+  connectWith 6
+}
+array set t4 {
+  id 6
+  keynote "5.1.9"
+  description "Tarea 3 por hacer"
   start "2004-05-04"
   end "2004-06-15"
+  connectWith 5
 }
 
 set path .c
@@ -234,11 +242,15 @@ set gantt [tareas::init $path "2004-02-01 00:00:00" "2004-07-01 00:00:00"]
 pack $path
 tareas::render'task $gantt t1
 tareas::render'task $gantt t2
+
+
 tareas::render'task $gantt t3
+tareas::render'task $gantt t4
 tareas::render'connections $gantt
 bind .c <<UpdateTask>> [list muestremelo %W $gantt %d]
 bind .btn <1> [list modifique'la'tarea $path $gantt]
 
+$gantt summary [dict get $tareas::tasks(3) task] [dict get $tareas::tasks(4) task]
 proc muestremelo { path gantt id } {
   puts $tareas::tasks($id)
 }

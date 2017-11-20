@@ -258,7 +258,8 @@ tareas::render'connections $gantt
 bind .c <<UpdateTask>> [list muestremelo %W $gantt %d]
 bind .btn <1> [list modifique'la'tarea $path $gantt]
 
-#$gantt connect $sumario1 $sumario2
+$gantt connect [list 0 [lindex $sumario1 1] [lindex $sumario1 1] 0] \
+  [list 0 [lindex $sumario2 1] [lindex $sumario2 1] 0]
 
 proc muestremelo { path gantt id } {
   puts $tareas::tasks($id)

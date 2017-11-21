@@ -92,12 +92,14 @@ namespace eval tareas {
     if { $x0 < $xcoord && $xcoord < $x0 + $l10 } {
       $path bind $id <Motion> [list [namespace current]::extrude'left %W $id %x %y \
         $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x0) }]]
+      $path bind $id <Motion> {+ puts "ok" }
       return
     } elseif { $x1 - $l10 < $xcoord && $xcoord < $x1 } {
       $path bind $id <Motion> [list [namespace current]::private'move'right %W \
         $xcoord $ycoord %x %y \
         $id $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x1) }] \
         $id1 $x01 $y01 $x11 $y11]
+      $path bind $id <Motion> {+ puts "ok" }
       return
     } else {
       $path bind $id <Motion> [list [namespace current]::private'move'both %W \
@@ -105,6 +107,8 @@ namespace eval tareas {
         $id $x0 $y0 $x1 $y1 \
         [expr { abs($xcoord - $x0) }] [expr { abs($xcoord - $x1) }] \
         $id1 $x01 $y01 $x11 $y11]
+      $path bind $id <Motion> {+ puts "ok" }
+      return
     }
   }
 
@@ -149,6 +153,10 @@ namespace eval tareas {
     }
   }
 
+  proc begin'connect { path id id1 task } {
+    puts "begin connect $path $id $id1 $task"
+  }
+
   proc render'task { gantt task } {
     upvar $task t
     variable tasks
@@ -169,6 +177,10 @@ namespace eval tareas {
 
     $canvas bind [lindex $item 1] <ButtonRelease-1> [list \
       [namespace current]::end'extrude %W [lindex $item 1] [lindex $item 2] $t(id)]
+
+    $canvas bind [lindex $item 2] <ButtonPress-1> [list \
+      [namespace current]::begin'connect %W \
+      [lindex $item 1] [lindex $item 2] $t(id)]
 
     array set internal {}
     set internal(payload) [array get t]

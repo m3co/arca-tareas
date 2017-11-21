@@ -5,7 +5,7 @@ source "m3co/main.tcl"
 namespace eval tareas {
   variable tasks
 
-  proc extrude'left { path id xcoord ycoord x0 y0 x1 y1 d} {
+  proc extrude'left { path xcoord ycoord id x0 y0 x1 y1 d} {
     $path coords $id [expr { $xcoord - $d }] $y0 $x1 $y1
   }
   proc extrude'right { path id xcoord ycoord x0 y0 x1 y1 d} {
@@ -59,18 +59,22 @@ namespace eval tareas {
   proc private'move'right { path xcoord0 ycoord0 xcoord ycoord \
     id x0 y0 x1 y1 d1 \
     id1 x01 y01 x11 y11 } {
-    [namespace current]::extrude'right $path $id $xcoord $ycoord \
+    [namespace current]::extrude'right $path \
+      $id $xcoord $ycoord \
       $x0  $y0  $x1  $y1  $d1
-    [namespace current]::private'move'red $path $id1 $xcoord0 $ycoord0 $xcoord $ycoord \
+    [namespace current]::private'move'red $path \
+      $id1 $xcoord0 $ycoord0 $xcoord $ycoord \
       $x01 $y01 $x11 $y11
   }
 
   proc private'move'both { path xcoord0 ycoord0 xcoord ycoord \
     id x0 y0 x1 y1 d1 d2 \
     id1 x01 y01 x11 y11 } {
-    [namespace current]::extrude'both $path $id $xcoord $ycoord \
+    [namespace current]::extrude'both $path \
+      $id $xcoord $ycoord \
       $x0  $y0  $x1  $y1  $d1 $d2
-    [namespace current]::private'move'red $path $id1 $xcoord0 $ycoord0 $xcoord $ycoord \
+    [namespace current]::private'move'red $path \
+      $id1 $xcoord0 $ycoord0 $xcoord $ycoord \
       $x01 $y01 $x11 $y11
   }
 
@@ -90,8 +94,8 @@ namespace eval tareas {
     set y11 [lindex $rect1 3]
 
     if { $x0 < $xcoord && $xcoord < $x0 + $l10 } {
-      $path bind $id <Motion> [list [namespace current]::extrude'left %W $id %x %y \
-        $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x0) }]]
+      $path bind $id <Motion> [list [namespace current]::extrude'left %W %x %y \
+        $id $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x0) }]]
       $path bind $id <Motion> [list +[namespace current]::inform'motion \
         %W $id $id1]
       return

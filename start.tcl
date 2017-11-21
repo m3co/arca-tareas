@@ -131,9 +131,10 @@ namespace eval tareas {
     variable lastmotion
 
     $path bind $id <Motion> {}
-    array set lastmotion { path "" id "" id1 "" }
-    if { "$lastmotion(path) $lastmotion(id) $lastmotion(id1)" != \
+    if { "$lastmotion(path) $lastmotion(id) $lastmotion(id1)" == \
           "$path $id $id1" } {
+      array set lastmotion { path "" id "" id1 "" }
+    } else {
       return
     }
 

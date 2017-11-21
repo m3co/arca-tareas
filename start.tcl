@@ -61,7 +61,6 @@ namespace eval tareas {
     set connector $tasks($taskid)
     if { [dict exists $connector connectedWith] == 1} {
       redraw'connections $path $gantt [dict get $connector connectedWith]
-      return
     }
     if { [dict exists $connector payload connectWith] == 0 } {
       return
@@ -105,11 +104,11 @@ namespace eval tareas {
 
     if { [dict exists $ctor payload connectWith] == 1 } {
       $path delete [dict get $ctor arrow]
-      set connection [$gantt connect [dict get $ctor task] [dict get $cted task]]
-      dict set tasks($connector) payload connectWith $connected
-      dict set tasks($connector) arrow $connection
-      dict set tasks($connected) connectedWith $connector
     }
+    set connection [$gantt connect [dict get $ctor task] [dict get $cted task]]
+    dict set tasks($connector) payload connectWith $connected
+    dict set tasks($connector) arrow $connection
+    dict set tasks($connected) connectedWith $connector
   }
 
   proc begin'extrude { path gantt id id1 task xcoord ycoord } {
@@ -161,7 +160,6 @@ namespace eval tareas {
   array set lastmotion { path "" id "" id1 "" }
   proc inform'motion { path gantt id id1 taskid } {
     variable lastmotion
-    variable tasks
     array set lastmotion [list \
       path $path \
       id $id \
@@ -223,7 +221,7 @@ namespace eval tareas {
     }
   }
 
-  variable beginConnect
+  variable beginConnect ""
   proc begin'connect { path id id1 task } {
     variable beginConnect $task
     after 100 {

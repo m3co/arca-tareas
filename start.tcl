@@ -29,8 +29,6 @@ namespace eval tareas {
     set start [clock scan [dict get $tasks($id) payload start] -format "%Y-%m-%d"]
     set end [clock scan [dict get $tasks($id) payload end] -format "%Y-%m-%d"]
 
-    puts $start
-    puts $end
     set coords [$path coords $tag_task]
 
     set pxmin $Plotchart::scaling($path,pxmin)
@@ -99,6 +97,21 @@ namespace eval tareas {
       $x01 $y01 $x11 $y11
   }
 
+  proc connect'tasks { path gantt connector connected } {
+    variable tasks
+
+    set ctor $tasks($connector)
+    set cted $tasks($connected)
+
+    if { [dict exists $ctor payload connectWith] == 1 } {
+      $path delete [dict get $ctor arrow]
+      set connection [$gantt connect [dict get $ctor task] [dict get $cted task]]
+      dict set tasks($connector) payload connectWith $connected
+      dict set tasks($connector) arrow $connection
+      dict set tasks($connected) connectedWith $connector
+    }
+  }
+
   proc begin'extrude { path gantt id id1 task xcoord ycoord } {
     set rect [$path coords $id]
     set x0 [lindex $rect 0]
@@ -114,6 +127,10 @@ namespace eval tareas {
     set x11 [lindex $rect1 2]
     set y11 [lindex $rect1 3]
 
+    variable beginConnect
+    if { $beginConnect != "" } {
+      connect'tasks $path $gantt $beginConnect $task
+    }
     if { $x0 < $xcoord && $xcoord < $x0 + $l10 } {
       $path bind $id <Motion> [list [namespace current]::extrude'left %W %x %y \
         $id $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x0) }]]
@@ -206,8 +223,18 @@ namespace eval tareas {
     }
   }
 
+  variable beginConnect
   proc begin'connect { path id id1 task } {
-    puts "begin connect $path $id $id1 $task"
+    variable beginConnect $task
+    after 100 {
+      bind . <ButtonPress-1> {
+        bind . <ButtonPress-1> {}
+        bind . <ButtonRelease-1> {
+          bind . <ButtonRelease-1> {}
+          set tareas::beginConnect ""
+        }
+      }
+    }
   }
 
   proc render'task { gantt task } {
@@ -329,7 +356,7 @@ $gantt connect [list 0 [lindex $sumario1 1] [lindex $sumario1 1] 0] \
 #parray tareas::tasks
 
 proc muestremelo { path gantt id } {
-  #puts $tareas::tasks($id)
+  puts $tareas::tasks($id)
 }
 
 proc modifique'la'tarea { path gantt } {

@@ -158,7 +158,7 @@ namespace eval tareas {
     dict set payload start [clock format $xstart -format {%Y-%m-%d}]
     dict set payload end [clock format $xend -format {%Y-%m-%d}]
 
-    set tasks($task) [list payload $payload task [dict get $tasks($task) task]]
+    dict set tasks($task) payload $payload
     # aqui debo poner un evento que diga que la tarea fue actualizada...
     event generate $path <<UpdateTask>> -data $task
   }
@@ -171,7 +171,10 @@ namespace eval tareas {
         set connectWith [dict get $task payload connectWith]
         set from [dict get $task task]
         set to [dict get $tasks($connectWith) task]
-        $gantt connect $from $to
+        set arrow [$gantt connect $from $to]
+        dict set tasks($id) arrow $arrow
+        dict set tasks($connectWith) arrow $arrow
+        dict set tasks($connectWith) connectedWith $id
       }
     }
   }
@@ -280,14 +283,14 @@ tareas::render'task $gantt t2
 
 set sumario1 [$gantt summary "Primer sumario" \
   [dict get $tareas::tasks(3) task] [dict get $tareas::tasks(4) task]]
-puts $sumario1
+#puts $sumario1
 
 tareas::render'task $gantt t3
 tareas::render'task $gantt t4
 
 set sumario2 [$gantt summary "Segundo sumario" \
   [dict get $tareas::tasks(5) task] [dict get $tareas::tasks(6) task]]
-puts $sumario2
+#puts $sumario2
 
 tareas::render'connections $gantt
 bind .c <<UpdateTask>> [list muestremelo %W $gantt %d]
@@ -295,6 +298,8 @@ bind .btn <1> [list modifique'la'tarea $path $gantt]
 
 $gantt connect [list 0 [lindex $sumario1 1] [lindex $sumario1 1] 0] \
   [list 0 [lindex $sumario2 1] [lindex $sumario2 1] 0]
+
+#parray tareas::tasks
 
 proc muestremelo { path gantt id } {
   puts $tareas::tasks($id)

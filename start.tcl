@@ -78,7 +78,7 @@ namespace eval tareas {
       $x01 $y01 $x11 $y11
   }
 
-  proc begin'extrude { path id id1 xcoord ycoord } {
+  proc begin'extrude { path gantt id id1 task xcoord ycoord } {
     set rect [$path coords $id]
     set x0 [lindex $rect 0]
     set y0 [lindex $rect 1]
@@ -97,7 +97,7 @@ namespace eval tareas {
       $path bind $id <Motion> [list [namespace current]::extrude'left %W %x %y \
         $id $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x0) }]]
       $path bind $id <Motion> [list +[namespace current]::inform'motion \
-        %W $id $id1]
+        %W $gantt $id $id1 $task]
       return
     } elseif { $x1 - $l10 < $xcoord && $xcoord < $x1 } {
       $path bind $id <Motion> [list [namespace current]::private'move'right %W \
@@ -105,7 +105,7 @@ namespace eval tareas {
         $id $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x1) }] \
         $id1 $x01 $y01 $x11 $y11]
       $path bind $id <Motion> [list +[namespace current]::inform'motion \
-        %W $id $id1]
+        %W $gantt $id $id1 $task]
       return
     } else {
       $path bind $id <Motion> [list [namespace current]::private'move'both %W \
@@ -114,20 +114,29 @@ namespace eval tareas {
         [expr { abs($xcoord - $x0) }] [expr { abs($xcoord - $x1) }] \
         $id1 $x01 $y01 $x11 $y11]
       $path bind $id <Motion> [list +[namespace current]::inform'motion \
-        %W $id $id1]
+        %W $gantt $id $id1 $task]
       return
     }
   }
 
   variable lastmotion
   array set lastmotion { path "" id "" id1 "" }
-  proc inform'motion { path id id1 } {
+  proc inform'motion { path gantt id id1 taskid } {
     variable lastmotion
+    variable tasks
     array set lastmotion [list \
       path $path \
       id $id \
       id1 $id1 \
     ]
+    set connector $tasks($taskid)
+    set connected $tasks([dict get $connector payload connectWith])
+
+    $path delete [dict get $connector arrow]
+    set connection [$gantt connect \
+      [dict get $connector task] [dict get $connected task]]
+    dict set tasks($taskid) arrow $connection
+    dict set tasks([dict get $connector payload connectWith]) arrow $connection
   }
 
   proc end'extrude { path id id1 task } {
@@ -203,7 +212,8 @@ namespace eval tareas {
     $canvas itemconfigure [lindex $item 2] -fill red
 
     $canvas bind [lindex $item 1] <ButtonPress-1> [list \
-      [namespace current]::begin'extrude %W [lindex $item 1] [lindex $item 2] %x %y]
+      [namespace current]::begin'extrude %W $gantt \
+      [lindex $item 1] [lindex $item 2] $t(id) %x %y]
 
     $canvas bind [lindex $item 1] <ButtonRelease-1> [list \
       [namespace current]::end'extrude %W [lindex $item 1] [lindex $item 2] $t(id)]
@@ -306,7 +316,7 @@ $gantt connect [list 0 [lindex $sumario1 1] [lindex $sumario1 1] 0] \
 #parray tareas::tasks
 
 proc muestremelo { path gantt id } {
-  puts $tareas::tasks($id)
+  #puts $tareas::tasks($id)
 }
 
 proc modifique'la'tarea { path gantt } {

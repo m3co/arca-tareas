@@ -61,6 +61,9 @@ namespace eval tareas {
   proc redraw'connections { path gantt taskid } {
     variable tasks
     set connector $tasks($taskid)
+    if { [dict exists $connector payload connectWith] == 0 } {
+      return
+    }
     set connected $tasks([dict get $connector payload connectWith])
 
     $path delete [dict get $connector arrow]

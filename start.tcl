@@ -54,6 +54,20 @@ namespace eval tareas {
     set keynote [dict get $tasks($id) payload keynote]
     set description [dict get $tasks($id) payload description]
     $path itemconfigure [lindex $task 0] -text "$keynote $description"
+
+    redraw'connections $path $gantt $id
+  }
+
+  proc redraw'connections { path gantt taskid } {
+    variable tasks
+    set connector $tasks($taskid)
+    set connected $tasks([dict get $connector payload connectWith])
+
+    $path delete [dict get $connector arrow]
+    set connection [$gantt connect \
+      [dict get $connector task] [dict get $connected task]]
+    dict set tasks($taskid) arrow $connection
+    dict set tasks([dict get $connector payload connectWith]) arrow $connection
   }
 
   proc private'move'right { path xcoord0 ycoord0 xcoord ycoord \
@@ -129,14 +143,7 @@ namespace eval tareas {
       id $id \
       id1 $id1 \
     ]
-    set connector $tasks($taskid)
-    set connected $tasks([dict get $connector payload connectWith])
-
-    $path delete [dict get $connector arrow]
-    set connection [$gantt connect \
-      [dict get $connector task] [dict get $connected task]]
-    dict set tasks($taskid) arrow $connection
-    dict set tasks([dict get $connector payload connectWith]) arrow $connection
+    redraw'connections $path $gantt $taskid
   }
 
   proc end'extrude { path id id1 task } {
@@ -285,7 +292,6 @@ array set t4 {
   description "Tarea 3 por hacer"
   start "2004-05-04"
   end "2004-06-15"
-  connectWith 5
 }
 
 set path .c

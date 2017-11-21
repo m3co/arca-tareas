@@ -92,14 +92,16 @@ namespace eval tareas {
     if { $x0 < $xcoord && $xcoord < $x0 + $l10 } {
       $path bind $id <Motion> [list [namespace current]::extrude'left %W $id %x %y \
         $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x0) }]]
-      $path bind $id <Motion> {+ puts "ok" }
+      $path bind $id <Motion> [list +[namespace current]::inform'motion \
+        %W $id $id1]
       return
     } elseif { $x1 - $l10 < $xcoord && $xcoord < $x1 } {
       $path bind $id <Motion> [list [namespace current]::private'move'right %W \
         $xcoord $ycoord %x %y \
         $id $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x1) }] \
         $id1 $x01 $y01 $x11 $y11]
-      $path bind $id <Motion> {+ puts "ok" }
+      $path bind $id <Motion> [list +[namespace current]::inform'motion \
+        %W $id $id1]
       return
     } else {
       $path bind $id <Motion> [list [namespace current]::private'move'both %W \
@@ -107,14 +109,34 @@ namespace eval tareas {
         $id $x0 $y0 $x1 $y1 \
         [expr { abs($xcoord - $x0) }] [expr { abs($xcoord - $x1) }] \
         $id1 $x01 $y01 $x11 $y11]
-      $path bind $id <Motion> {+ puts "ok" }
+      $path bind $id <Motion> [list +[namespace current]::inform'motion \
+        %W $id $id1]
       return
     }
   }
 
+  variable lastmotion
+  array set lastmotion { path "" id "" id1 "" }
+  proc inform'motion { path id id1 } {
+    variable lastmotion
+    array set lastmotion [list \
+      path $path \
+      id $id \
+      id1 $id1 \
+    ]
+  }
+
   proc end'extrude { path id id1 task } {
     variable tasks
+    variable lastmotion
+
     $path bind $id <Motion> {}
+    array set lastmotion { path "" id "" id1 "" }
+    if { "$lastmotion(path) $lastmotion(id) $lastmotion(id1)" != \
+          "$path $id $id1" } {
+      return
+    }
+
     set coords [$path coords $id]
     set pxstart [lindex $coords 0]
     set pxend [lindex $coords 2]

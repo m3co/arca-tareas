@@ -106,6 +106,11 @@ namespace eval tareas {
 
     if { [dict exists $ctor payload connectWith] == 1 } {
       $path delete [dict get $ctor arrow]
+      set oldcted [dict get $tasks([dict get $ctor payload connectWith])]
+      set oldctedwith [dict get $oldcted connectedWith]
+      lremove oldctedwith $connector
+      dict set tasks([dict get $ctor payload connectWith]) \
+        connectedWith $oldctedwith
     }
     set connection [$gantt connect [dict get $ctor task] [dict get $cted task]]
     dict set tasks($connector) payload connectWith $connected

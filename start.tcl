@@ -60,7 +60,9 @@ namespace eval tareas {
     variable tasks
     set connector $tasks($taskid)
     if { [dict exists $connector connectedWith] == 1} {
-      redraw'connections $path $gantt [dict get $connector connectedWith]
+      foreach connection [dict get $connector connectedWith] {
+        redraw'connections $path $gantt $connection
+      }
     }
     if { [dict exists $connector payload connectWith] == 0 } {
       return
@@ -108,7 +110,13 @@ namespace eval tareas {
     set connection [$gantt connect [dict get $ctor task] [dict get $cted task]]
     dict set tasks($connector) payload connectWith $connected
     dict set tasks($connector) arrow $connection
-    dict set tasks($connected) connectedWith $connector
+
+    set connections [list]
+    if { [dict exists $tasks($connected) connectedWith] == 1 } {
+      lappend connections [dict get $tasks($connected) connectedWith]
+    }
+    lappend connections $connector
+    dict set tasks($connected) connectedWith $connections
   }
 
   proc begin'extrude { path gantt id id1 task xcoord ycoord } {
@@ -216,7 +224,13 @@ namespace eval tareas {
         set arrow [$gantt connect $from $to]
         dict set tasks($id) arrow $arrow
         dict set tasks($connectWith) arrow $arrow
-        dict set tasks($connectWith) connectedWith $id
+
+        set connections [list]
+        if { [dict exists tasks($connectWith) connectedWith] == 1 } {
+          lappend connections [dict get tasks($connectWith) connectedWith]
+        }
+        lappend connections $id
+        dict set tasks($connectWith) connectedWith $connections
       }
     }
   }

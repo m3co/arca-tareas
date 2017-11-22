@@ -113,7 +113,7 @@ namespace eval tareas {
 
     set connections [list]
     if { [dict exists $tasks($connected) connectedWith] == 1 } {
-      lappend connections [dict get $tasks($connected) connectedWith]
+      set connections [dict get $tasks($connected) connectedWith]
     }
     lappend connections $connector
     dict set tasks($connected) connectedWith $connections

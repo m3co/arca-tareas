@@ -369,12 +369,12 @@ namespace eval tareas {
     set project_start [clock scan $start -format {%Y-%m-%d %H:%M:%S}]
     set project_end [clock scan $end -format {%Y-%m-%d %H:%M:%S}]
     set months [howmanymonths $project_start $project_end]
-    set rows 20
+    set rh 25
 
     if { [winfo exists $path] == 1 } {
-      $path configure -width [expr {200 * $months}] -height [expr {20 * $rows}]
+      $path configure -width [expr {200 * $months}] -height [expr {$rh * $l}]
     } else {
-      canvas $path -width [expr {200 * $months}] -height [expr {20 * $rows}]
+      canvas $path -width [expr {200 * $months}] -height [expr {$rh * $l}]
     }
 
     set gantt [::Plotchart::createGanttchart $path \

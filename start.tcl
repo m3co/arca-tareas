@@ -464,18 +464,11 @@ tareas::render'summary $gantt t1
 tareas::render'task $gantt t2
 tareas::render'task $gantt t3
 
-#set sumario1 [$gantt summary "Primer sumario" \
-#  [dict get $tareas::tasks(3) task] [dict get $tareas::tasks(4) task]]
-#puts $sumario1
-
 tareas::render'summary $gantt t4
 
 tareas::render'task $gantt t6
 tareas::render'task $gantt t7
 
-#set sumario2 [$gantt summary "Segundo sumario" \
-#  [dict get $tareas::tasks(5) task] [dict get $tareas::tasks(6) task]]
-#puts $sumario2
 
 tareas::render'connections $gantt
 tareas::render'summaries $gantt
@@ -497,7 +490,7 @@ proc modifique'la'tarea { path gantt } {
   dict set tarea3 payload end "2004-05-15"
   dict set tarea3 payload description "Otra tarea por modificar"
   dict set tarea3 payload keynote "5.1.11"
-  set tareas::tasks(3) $tarea3
-  tareas::redraw'task $path $gantt 3
-  puts $tareas::tasks(3)
+  set tareas::tasks(55) $tarea3
+  tareas::redraw'task $path $gantt 55
+  puts $tareas::tasks(55)
 }

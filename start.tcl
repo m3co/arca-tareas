@@ -1,6 +1,7 @@
 
 package require Plotchart
 source "m3co/main.tcl"
+source "patch_plotgantt.tcl"
 
 namespace eval tareas {
   variable tasks
@@ -276,9 +277,30 @@ namespace eval tareas {
     variable summaries
     variable keynotes
 
-    parray tasks
-    parray summaries
-    parray keynotes
+    set path [string range $gantt 11 end]
+    foreach s [lsort -decreasing [array names summaries]] {
+      set s $summaries($s)
+      set keynote [dict get $s payload keynote]
+      set filtred [list]
+      set pos [expr { entier([dict get $s current]) + 1}]
+      puts $pos
+      set cmd "::Plotchart::DrawGanttSummaryModified $path"
+      append cmd " $pos "
+      append cmd "\""
+      append cmd "[dict get $s payload keynote] [dict get $s payload description]"
+      append cmd "\""
+      foreach d [array names keynotes -regexp "$keynote\[.\]"] {
+        if { [array names tasks -exact $keynotes($d)] != "" } {
+          append cmd " {"
+          append cmd [dict get $tasks($keynotes($d)) task]
+          append cmd "}"
+        }
+      }
+      eval $cmd
+    }
+    #parray tasks
+    #parray summaries
+    #parray keynotes
   }
 
   proc render'summary { gantt summary } {
@@ -343,7 +365,7 @@ namespace eval tareas {
     set tasks($t(id)) [array get internal]
   }
 
-  proc init { path start end } {
+  proc init { path start end l } {
     set project_start [clock scan $start -format {%Y-%m-%d %H:%M:%S}]
     set project_end [clock scan $end -format {%Y-%m-%d %H:%M:%S}]
     set months [howmanymonths $project_start $project_end]
@@ -357,7 +379,7 @@ namespace eval tareas {
 
     set gantt [::Plotchart::createGanttchart $path \
       [clock format $project_start -format {%Y-%m-%d}] \
-      [clock format $project_end -format {%Y-%m-%d}] 20]
+      [clock format $project_end -format {%Y-%m-%d}] $l]
 
     set current_time $project_start
     while { $current_time < $project_end } {
@@ -427,7 +449,7 @@ array set t7 {
 
 set path .c
 pack [button .btn -text "Go"]
-set gantt [tareas::init $path "2004-02-01 00:00:00" "2004-07-01 00:00:00"]
+set gantt [tareas::init $path "2004-02-01 00:00:00" "2004-07-01 00:00:00" 10]
 pack $path
 
 tareas::render'summary $gantt t0

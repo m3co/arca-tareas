@@ -4,6 +4,8 @@ source "m3co/main.tcl"
 
 namespace eval tareas {
   variable tasks
+  variable summaries
+  variable keynotes
 
   proc extrude'left { path xcoord ycoord id x0 y0 x1 y1 d} {
     $path coords $id [expr { $xcoord - $d }] $y0 $x1 $y1
@@ -271,12 +273,20 @@ namespace eval tareas {
 
   proc render'summaries { gantt } {
     variable tasks
+    variable summaries
+    variable keynotes
+
     parray tasks
+    parray summaries
+    parray keynotes
   }
 
   proc render'summary { gantt summary } {
     variable tasks
+    variable summaries
     upvar $summary s_
+
+    set summaries($s_(id)) [array get s_]
     set path [string range $gantt 11 end]
     set c1 [expr { entier($Plotchart::scaling($path,xmin)) }]
     set c2 [expr { entier($c1 + 1) }]
@@ -293,14 +303,15 @@ namespace eval tareas {
       $path delete $d
     }
 
-    dict unset tasks($s_(id)) payload start
-    dict unset tasks($s_(id)) payload end
+    array unset tasks $s_(id)
   }
 
   proc render'task { gantt task } {
     upvar $task t
     variable tasks
+    variable keynotes
 
+    set keynotes($t(keynote)) $t(id)
     set canvas [string range $gantt 11 end]
     set item [$gantt task "$t(keynote) $t(description)" $t(start) $t(end) 100]
 
@@ -370,7 +381,7 @@ array set t1 {
   expand 1
 }
 array set t2 {
-  id 3
+  id 55
   keynote "5.1.7"
   description "Tarea 1 por hacer"
   start "2004-02-05"
@@ -394,7 +405,7 @@ array set t4 {
   expand 1
 }
 array set t6 {
-  id 6
+  id 16
   keynote "5.2.9"
   description "Tarea 3 por hacer"
   start "2004-04-04"

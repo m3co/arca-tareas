@@ -286,8 +286,11 @@ namespace eval tareas {
     variable summaries
     upvar $summary s_
 
-    set summaries($s_(id)) [array get s_]
     set path [string range $gantt 11 end]
+    set summaries($s_(id)) [list \
+      payload [array get s_] \
+      current $Plotchart::scaling($path,current)
+    ]
     set c1 [expr { entier($Plotchart::scaling($path,xmin)) }]
     set c2 [expr { entier($c1 + 1) }]
 

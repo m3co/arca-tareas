@@ -269,6 +269,22 @@ namespace eval tareas {
     }
   }
 
+  proc render'summary { gantt summary } {
+    upvar $summary _s
+    set path [string range $gantt 11 end]
+    set c1 [expr { entier($Plotchart::scaling($path,xmin)) }]
+    set c2 [expr { entier($c1 + 1) }]
+
+    set c1_ [clock format $c1 -format {%Y-%m-%d}]
+    set c2_ [clock format $c2 -format {%Y-%m-%d}]
+
+    array set _s [list \
+      start $c1_ \
+      end $c2_ \
+    ]
+    render'task $gantt _s
+  }
+
   proc render'task { gantt task } {
     upvar $task t
     variable tasks
@@ -387,12 +403,18 @@ set path .c
 pack [button .btn -text "Go"]
 set gantt [tareas::init $path "2004-02-01 00:00:00" "2004-07-01 00:00:00"]
 pack $path
+
+tareas::render'summary $gantt t0
+tareas::render'summary $gantt t1
+
 tareas::render'task $gantt t2
 tareas::render'task $gantt t3
 
 #set sumario1 [$gantt summary "Primer sumario" \
 #  [dict get $tareas::tasks(3) task] [dict get $tareas::tasks(4) task]]
 #puts $sumario1
+
+tareas::render'summary $gantt t4
 
 tareas::render'task $gantt t6
 tareas::render'task $gantt t7

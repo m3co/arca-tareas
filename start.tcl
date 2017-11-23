@@ -122,6 +122,7 @@ namespace eval tareas {
     }
     lappend connections $connector
     dict set tasks($connected) connectedWith $connections
+    event generate $path <<UpdateTask>> -data $connected
   }
 
   proc begin'extrude { path gantt id id1 task xcoord ycoord } {
@@ -254,6 +255,7 @@ namespace eval tareas {
       dict set tasks([dict get $ctor payload connectWith]) \
         connectedWith $oldctedwith
       dict unset tasks($task) payload connectWith
+      event generate $path <<UpdateTask>> -data $task
     }
 
     after 100 {

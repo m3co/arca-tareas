@@ -243,6 +243,18 @@ namespace eval tareas {
   variable beginConnect ""
   proc begin'connect { path id id1 task } {
     variable beginConnect $task
+    variable tasks
+
+    set ctor $tasks($task)
+    if { [dict exists $ctor payload connectWith] == 1 } {
+      $path delete [dict get $ctor arrow]
+      set oldcted [dict get $tasks([dict get $ctor payload connectWith])]
+      set oldctedwith [dict get $oldcted connectedWith]
+      lremove oldctedwith $task
+      dict set tasks([dict get $ctor payload connectWith]) \
+        connectedWith $oldctedwith
+    }
+
     after 100 {
       bind . <ButtonPress-1> {
         bind . <ButtonPress-1> {}

@@ -270,7 +270,7 @@ namespace eval tareas {
   }
 
   proc render'summary { gantt summary } {
-    upvar $summary _s
+    upvar $summary s_
     set path [string range $gantt 11 end]
     set c1 [expr { entier($Plotchart::scaling($path,xmin)) }]
     set c2 [expr { entier($c1 + 1) }]
@@ -278,11 +278,14 @@ namespace eval tareas {
     set c1_ [clock format $c1 -format {%Y-%m-%d}]
     set c2_ [clock format $c2 -format {%Y-%m-%d}]
 
-    array set _s [list \
+    array set s_ [list \
       start $c1_ \
       end $c2_ \
     ]
-    render'task $gantt _s
+    set task_ [render'task $gantt s_]
+    foreach d [dict get $task_ task] {
+      $path delete $d
+    }
   }
 
   proc render'task { gantt task } {

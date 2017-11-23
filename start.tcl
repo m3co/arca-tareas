@@ -279,11 +279,11 @@ namespace eval tareas {
 
     set path [string range $gantt 11 end]
     foreach s [lsort -decreasing [array names summaries]] {
+      set i $s
       set s $summaries($s)
       set keynote [dict get $s payload keynote]
       set filtred [list]
-      set pos [expr { entier([dict get $s current]) + 1}]
-      puts $pos
+      set pos [expr { entier([dict get $s current]) + 2}]
       set cmd "::Plotchart::DrawGanttSummaryModified $path"
       append cmd " $pos "
       append cmd "\""
@@ -296,11 +296,9 @@ namespace eval tareas {
           append cmd "}"
         }
       }
-      eval $cmd
+      set summaryimage [eval $cmd]
+      dict set summaries($i) summaryimage $summaryimage
     }
-    #parray tasks
-    #parray summaries
-    #parray keynotes
   }
 
   proc render'summary { gantt summary } {
@@ -309,10 +307,6 @@ namespace eval tareas {
     upvar $summary s_
 
     set path [string range $gantt 11 end]
-    set summaries($s_(id)) [list \
-      payload [array get s_] \
-      current $Plotchart::scaling($path,current)
-    ]
     set c1 [expr { entier($Plotchart::scaling($path,xmin)) }]
     set c2 [expr { entier($c1 + 1) }]
 
@@ -324,7 +318,19 @@ namespace eval tareas {
       end $c2_ \
     ]
     set task_ [render'task $gantt s_]
+    set i 0
     foreach d [dict get $task_ task] {
+      incr i
+      if { $i == 1 } {
+        $path itemconfigure $d -anchor w -tag {summary vertscroll above} \
+         -font $::Plotchart::settings($path,font,summary)
+        set summaries($s_(id)) [list \
+          payload [array get s_] \
+          current $Plotchart::scaling($path,current) \
+          summarytext $d
+        ]
+        continue
+      }
       $path delete $d
     }
 
@@ -486,7 +492,7 @@ proc muestremelo { path gantt id } {
 }
 
 proc modifique'la'tarea { path gantt } {
-  set tarea3 $tareas::tasks(3)
+  set tarea3 $tareas::tasks(55)
   dict set tarea3 payload start "2004-03-15"
   dict set tarea3 payload end "2004-05-15"
   dict set tarea3 payload description "Otra tarea por modificar"

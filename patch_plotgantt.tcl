@@ -10,9 +10,7 @@
 # Side effects:
 #    Items are shifted down to make room for the summary
 #
-puts " aja ? "
 proc ::Plotchart::DrawGanttSummaryModified { w ypos text args } {
-    puts "Ok ok... here we go..."
     variable settings
     variable data_series
     variable scaling
@@ -40,14 +38,11 @@ proc ::Plotchart::DrawGanttSummaryModified { w ypos text args } {
     # Compute the vertical shift
     #
     set yfirst $ypos
-    puts "$yfirst --- "
-    puts $yfirst
     set ynext  [expr {$yfirst-1.0}]
     foreach {x y1} [coordsToPixel $w $scaling($w,xmin) $yfirst] {break}
     foreach {x y2} [coordsToPixel $w $scaling($w,xmin) $ynext ] {break}
-    set ymin $y2
-    set yminb $y1
-    puts "$y1 -- $y2"
+    set ymin [expr { $y2 - 15*0 }]
+    set yminb [expr { $y1 - 15*0 }]
     set dy [expr {$y2-$y1}]
 
 
@@ -58,10 +53,6 @@ proc ::Plotchart::DrawGanttSummaryModified { w ypos text args } {
     set ymin  [expr {$ymin+0.3*$dy}]
 
     set items {}
-    lappend items \
-        [$w create text 5 $ytext -text $text -anchor w -tag {summary vertscroll above} \
-              -font $settings($w,font,summary)]
-        # Colour text?
 
     #
     # Draw the bar
@@ -79,9 +70,9 @@ proc ::Plotchart::DrawGanttSummaryModified { w ypos text args } {
         [$w create polygon $coords -tag {summarybar vertscroll horizscroll below} \
               -fill $settings($w,color,summarybar)]
 
-    set scaling($w,current) [expr {$scaling($w,current)-1.0}]
+    #set scaling($w,current) [expr {$scaling($w,current)-1.0}]
 
-    ReorderChartItems $w
+    #ReorderChartItems $w
 
     return $items
 }

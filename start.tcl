@@ -269,7 +269,13 @@ namespace eval tareas {
     }
   }
 
+  proc render'summaries { gantt } {
+    variable tasks
+    parray tasks
+  }
+
   proc render'summary { gantt summary } {
+    variable tasks
     upvar $summary s_
     set path [string range $gantt 11 end]
     set c1 [expr { entier($Plotchart::scaling($path,xmin)) }]
@@ -286,6 +292,9 @@ namespace eval tareas {
     foreach d [dict get $task_ task] {
       $path delete $d
     }
+
+    dict unset tasks($s_(id)) payload start
+    dict unset tasks($s_(id)) payload end
   }
 
   proc render'task { gantt task } {
@@ -396,7 +405,7 @@ array set t6 {
 array set t7 {
   id 7
   keynote "5.2.10"
-  description "Tarea 3 por hacer"
+  description "Tarea 4 por hacer"
   start "2004-05-04"
   end "2004-06-15"
   expand 0
@@ -427,6 +436,7 @@ tareas::render'task $gantt t7
 #puts $sumario2
 
 tareas::render'connections $gantt
+tareas::render'summaries $gantt
 bind .c <<UpdateTask>> [list muestremelo %W $gantt %d]
 bind .btn <1> [list modifique'la'tarea $path $gantt]
 

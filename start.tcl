@@ -253,6 +253,7 @@ namespace eval tareas {
       lremove oldctedwith $task
       dict set tasks([dict get $ctor payload connectWith]) \
         connectedWith $oldctedwith
+      dict unset tasks($task) payload connectWith
     }
 
     after 100 {

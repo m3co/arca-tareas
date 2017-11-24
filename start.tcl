@@ -88,8 +88,7 @@ array set t7 {
   expand 0
 }
 
-set path .c
-pack [button .btn -text "Go"]
+set path $frame.c
 set gantt [tareas::init $path "2004-02-01 00:00:00" "2004-07-01 00:00:00" 10]
 pack $path
 
@@ -107,8 +106,7 @@ tareas::render'task $gantt t7
 
 tareas::render'connections $gantt
 tareas::render'summaries $gantt
-bind .c <<UpdateTask>> [list muestremelo %W $gantt %d]
-bind .btn <1> [list modifique'la'tarea $path $gantt]
+bind $path <<UpdateTask>> [list muestremelo %W $gantt %d]
 
 #$gantt connect [list 0 [lindex $sumario1 1] [lindex $sumario1 1] 0] \
 #  [list 0 [lindex $sumario2 1] [lindex $sumario2 1] 0]
@@ -118,18 +116,6 @@ bind .btn <1> [list modifique'la'tarea $path $gantt]
 proc muestremelo { path gantt id } {
   puts $tareas::tasks($id)
 }
-
-proc modifique'la'tarea { path gantt } {
-  set tarea3 $tareas::tasks(55)
-  dict set tarea3 payload start "2004-03-15"
-  dict set tarea3 payload end "2004-05-15"
-  dict set tarea3 payload description "Otra tarea por modificar"
-  dict set tarea3 payload keynote "5.1.11"
-  set tareas::tasks(55) $tarea3
-  tareas::redraw'task $path $gantt 55
-  puts $tareas::tasks(55)
-}
-
 
 
 }

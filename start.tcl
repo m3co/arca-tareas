@@ -89,32 +89,32 @@ array set t7 {
 }
 
 set path $frame.c
-set gantt [tareas::init $path "2004-02-01 00:00:00" "2004-07-01 00:00:00" 10]
+set gantt [Tasks::init $path "2004-02-01 00:00:00" "2004-07-01 00:00:00" 10]
 pack $path
 
-tareas::render'summary $gantt t0
-tareas::render'summary $gantt t1
+Tasks::render'summary $gantt t0
+Tasks::render'summary $gantt t1
 
-tareas::render'task $gantt t2
-tareas::render'task $gantt t3
+Tasks::render'task $gantt t2
+Tasks::render'task $gantt t3
 
-tareas::render'summary $gantt t4
+Tasks::render'summary $gantt t4
 
-tareas::render'task $gantt t6
-tareas::render'task $gantt t7
+Tasks::render'task $gantt t6
+Tasks::render'task $gantt t7
 
 
-tareas::render'connections $gantt
-tareas::render'summaries $gantt
+Tasks::render'connections $gantt
+Tasks::render'summaries $gantt
 bind $path <<UpdateTask>> [list muestremelo %W $gantt %d]
 
 #$gantt connect [list 0 [lindex $sumario1 1] [lindex $sumario1 1] 0] \
 #  [list 0 [lindex $sumario2 1] [lindex $sumario2 1] 0]
 
-#parray tareas::tasks
+#parray Tasks::tasks
 
 proc muestremelo { path gantt id } {
-  puts $tareas::tasks($id)
+  puts $Tasks::tasks($id)
 }
 
 

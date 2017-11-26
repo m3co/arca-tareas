@@ -1,6 +1,6 @@
 source "patch_plotgantt.tcl"
 
-namespace eval tareas {
+namespace eval Tasks {
   variable tasks
   variable summaries
   variable keynotes
@@ -263,7 +263,7 @@ namespace eval tareas {
         bind . <ButtonPress-1> {}
         bind . <ButtonRelease-1> {
           bind . <ButtonRelease-1> {}
-          set tareas::beginConnect ""
+          set Tasks::beginConnect ""
         }
       }
     }
@@ -368,6 +368,11 @@ namespace eval tareas {
     set tasks($t(id)) [array get internal]
   }
 
+  proc 'do'select { resp } {
+    upvar $resp response
+    parray response
+  }
+
   proc init { path start end l } {
     set project_start [clock scan $start -format {%Y-%m-%d %H:%M:%S}]
     set project_end [clock scan $end -format {%Y-%m-%d %H:%M:%S}]
@@ -392,6 +397,15 @@ namespace eval tareas {
     }
 
     $gantt title "Administrador de tiempos (version inicial)"
+
+    array set event [list \
+      query select \
+      module Tasks \
+      from Tasks \
+      project 5 \
+    ]
+    chan puts $MAIN::chan [array get event]
+
     return $gantt
   }
 }

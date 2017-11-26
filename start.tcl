@@ -88,6 +88,14 @@ array set t7 {
   expand 0
 }
 
+array set event [list \
+  query getedges \
+  module Tasks \
+  from Tasks \
+  project 5 \
+]
+chan puts $MAIN::chan [array get event]
+
 set path $frame.c
 set gantt [Tasks::init $path "2004-02-01 00:00:00" "2004-07-01 00:00:00" 10]
 pack $path

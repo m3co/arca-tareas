@@ -373,6 +373,11 @@ namespace eval Tasks {
     parray response
   }
 
+  proc 'do'getedges { resp } {
+    upvar $resp response
+    parray response
+  }
+
   proc init { path start end l } {
     set project_start [clock scan $start -format {%Y-%m-%d %H:%M:%S}]
     set project_end [clock scan $end -format {%Y-%m-%d %H:%M:%S}]

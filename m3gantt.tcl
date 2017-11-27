@@ -64,16 +64,16 @@ namespace eval Tasks {
         redraw'connections $path $gantt $connection
       }
     }
-    if { [dict exists $connector payload connectWith] == 0 } {
+    if { [dict exists $connector payload connectwith] == 0 } {
       return
     }
-    set connected $tasks([dict get $connector payload connectWith])
+    set connected $tasks([dict get $connector payload connectwith])
 
     $path delete [dict get $connector arrow]
     set connection [$gantt connect \
       [dict get $connector task] [dict get $connected task]]
     dict set tasks($taskid) arrow $connection
-    dict set tasks([dict get $connector payload connectWith]) arrow $connection
+    dict set tasks([dict get $connector payload connectwith]) arrow $connection
   }
 
   proc private'move'right { path xcoord0 ycoord0 xcoord ycoord \
@@ -104,16 +104,16 @@ namespace eval Tasks {
     set ctor $tasks($connector)
     set cted $tasks($connected)
 
-    if { [dict exists $ctor payload connectWith] == 1 } {
+    if { [dict exists $ctor payload connectwith] == 1 } {
       $path delete [dict get $ctor arrow]
-      set oldcted [dict get $tasks([dict get $ctor payload connectWith])]
+      set oldcted [dict get $tasks([dict get $ctor payload connectwith])]
       set oldctedwith [dict get $oldcted connectedWith]
       lremove oldctedwith $connector
-      dict set tasks([dict get $ctor payload connectWith]) \
+      dict set tasks([dict get $ctor payload connectwith]) \
         connectedWith $oldctedwith
     }
     set connection [$gantt connect [dict get $ctor task] [dict get $cted task]]
-    dict set tasks($connector) payload connectWith $connected
+    dict set tasks($connector) payload connectwith $connected
     dict set tasks($connector) arrow $connection
 
     set connections [list]
@@ -223,20 +223,20 @@ namespace eval Tasks {
     variable tasks
     foreach id [array names tasks] {
       set task $tasks($id)
-      if { [dict exists $task payload connectWith] } {
-        set connectWith [dict get $task payload connectWith]
+      if { [dict exists $task payload connectwith] } {
+        set connectwith [dict get $task payload connectwith]
         set from [dict get $task task]
-        set to [dict get $tasks($connectWith) task]
+        set to [dict get $tasks($connectwith) task]
         set arrow [$gantt connect $from $to]
         dict set tasks($id) arrow $arrow
-        dict set tasks($connectWith) arrow $arrow
+        dict set tasks($connectwith) arrow $arrow
 
         set connections [list]
-        if { [dict exists tasks($connectWith) connectedWith] == 1 } {
-          lappend connections [dict get tasks($connectWith) connectedWith]
+        if { [dict exists tasks($connectwith) connectedWith] == 1 } {
+          lappend connections [dict get tasks($connectwith) connectedWith]
         }
         lappend connections $id
-        dict set tasks($connectWith) connectedWith $connections
+        dict set tasks($connectwith) connectedWith $connections
       }
     }
   }
@@ -247,14 +247,14 @@ namespace eval Tasks {
     variable tasks
 
     set ctor $tasks($task)
-    if { [dict exists $ctor payload connectWith] == 1 } {
+    if { [dict exists $ctor payload connectwith] == 1 } {
       $path delete [dict get $ctor arrow]
-      set oldcted [dict get $tasks([dict get $ctor payload connectWith])]
+      set oldcted [dict get $tasks([dict get $ctor payload connectwith])]
       set oldctedwith [dict get $oldcted connectedWith]
       lremove oldctedwith $task
-      dict set tasks([dict get $ctor payload connectWith]) \
+      dict set tasks([dict get $ctor payload connectwith]) \
         connectedWith $oldctedwith
-      dict unset tasks($task) payload connectWith
+      dict unset tasks($task) payload connectwith
       event generate $path <<UpdateTask>> -data $task
     }
 
@@ -370,93 +370,47 @@ namespace eval Tasks {
 
   proc 'do'select { resp } {
     upvar $resp response
-    parray response
+    variable gantt
+    array set row [deserialize $response(row)]
+
+    array set task [list \
+      id $row(id) \
+      keynote $row(keynote) \
+      parent $row(parent) \
+      description $row(description) \
+    ]
+    if { $row(expand) == t } {
+      array set task [list \
+        expand 1 \
+      ]
+      Tasks::render'summary $gantt task
+    } else {
+      array set task [list \
+        start $row(start) \
+        end $row(end) \
+        connectwith $row(connectwith) \
+        expand 0 \
+      ]
+      Tasks::render'task $gantt task
+    }
   }
 
   proc 'do'getedges { resp } {
     upvar $resp response
-    parray response
+    array set row [deserialize $response(row)]
 
     set path $MAIN::frame.c
-    set gantt [Tasks::init $path "2004-02-01 00:00:00" "2004-07-01 00:00:00" 10]
+    variable gantt [Tasks::init $path $row(start) $row(end) $row(rows)]
     pack $path
 
-array set t0 {
-  id 1
-  keynote "5"
-  description "Projecto 5"
-  expand 1
-}
-array set t1 {
-  id 2
-  keynote "5.1"
-  description "Preliminares"
-  expand 1
-}
-array set t2 {
-  id 55
-  keynote "5.1.7"
-  description "Tarea 1 por hacer"
-  start "2004-02-05"
-  end "2004-02-25"
-  connectWith 4
-  expand 0
-}
-array set t3 {
-  id 4
-  keynote "5.1.8"
-  description "Tarea 2 por hacer"
-  start "2004-03-04"
-  end "2004-03-15"
-  expand 0
-}
-
-array set t4 {
-  id 5
-  keynote "5.2"
-  description "Cimentaciones"
-  expand 1
-}
-array set t6 {
-  id 16
-  keynote "5.2.9"
-  description "Tarea 3 por hacer"
-  start "2004-04-04"
-  end "2004-05-15"
-  connectWith 7
-  expand 0
-}
-array set t7 {
-  id 7
-  keynote "5.2.10"
-  description "Tarea 4 por hacer"
-  start "2004-05-04"
-  end "2004-06-15"
-  expand 0
-}
-
-
-Tasks::render'summary $gantt t0
-Tasks::render'summary $gantt t1
-
-Tasks::render'task $gantt t2
-Tasks::render'task $gantt t3
-
-Tasks::render'summary $gantt t4
-
-Tasks::render'task $gantt t6
-Tasks::render'task $gantt t7
-
-
-Tasks::render'connections $gantt
-Tasks::render'summaries $gantt
-
-  puts "que putas"
+    return
+    Tasks::render'connections $gantt
+    Tasks::render'summaries $gantt
   }
 
   proc init { path start end l } {
-    set project_start [clock scan $start -format {%Y-%m-%d %H:%M:%S}]
-    set project_end [clock scan $end -format {%Y-%m-%d %H:%M:%S}]
+    set project_start [clock scan $start -format {%Y-%m-%d}]
+    set project_end [clock scan $end -format {%Y-%m-%d}]
     set months [howmanymonths $project_start $project_end]
     set rh 25
 

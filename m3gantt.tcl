@@ -388,9 +388,11 @@ namespace eval Tasks {
       array set task [list \
         start $row(start) \
         end $row(end) \
-        connectwith $row(connectwith) \
         expand 0 \
       ]
+      if { $row(connectwith) != "" } {
+        set task(connectwith) $row(connectwith)
+      }
       Tasks::render'task $gantt task
     }
   }

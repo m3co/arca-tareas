@@ -144,21 +144,21 @@ namespace eval Tasks {
     if { $beginConnect != "" } {
       connect'tasks $path $gantt $beginConnect $task
     }
-    if { $x0 < $xcoord && $xcoord < $x0 + $l10 } {
-      $path bind $id <Motion> [list [namespace current]::extrude'left %W %x %y \
-        $id $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x0) }]]
-      $path bind $id <Motion> [list +[namespace current]::inform'motion \
-        %W $gantt $id $id1 $task]
-      return
-    } elseif { $x1 - $l10 < $xcoord && $xcoord < $x1 } {
-      $path bind $id <Motion> [list [namespace current]::private'move'right %W \
-        $xcoord $ycoord %x %y \
-        $id $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x1) }] \
-        $id1 $x01 $y01 $x11 $y11]
-      $path bind $id <Motion> [list +[namespace current]::inform'motion \
-        %W $gantt $id $id1 $task]
-      return
-    } else {
+#    if { $x0 < $xcoord && $xcoord < $x0 + $l10 } {
+#      $path bind $id <Motion> [list [namespace current]::extrude'left %W %x %y \
+#        $id $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x0) }]]
+#      $path bind $id <Motion> [list +[namespace current]::inform'motion \
+#        %W $gantt $id $id1 $task]
+#      return
+#    } elseif { $x1 - $l10 < $xcoord && $xcoord < $x1 } {
+#      $path bind $id <Motion> [list [namespace current]::private'move'right %W \
+#        $xcoord $ycoord %x %y \
+#        $id $x0 $y0 $x1 $y1 [expr { abs($xcoord - $x1) }] \
+#        $id1 $x01 $y01 $x11 $y11]
+#      $path bind $id <Motion> [list +[namespace current]::inform'motion \
+#        %W $gantt $id $id1 $task]
+#      return
+#    } else {
       $path bind $id <Motion> [list [namespace current]::private'move'both %W \
         $xcoord $ycoord %x %y \
         $id $x0 $y0 $x1 $y1 \
@@ -166,8 +166,8 @@ namespace eval Tasks {
         $id1 $x01 $y01 $x11 $y11]
       $path bind $id <Motion> [list +[namespace current]::inform'motion \
         %W $gantt $id $id1 $task]
-      return
-    }
+#      return
+#    }
   }
 
   variable lastmotion

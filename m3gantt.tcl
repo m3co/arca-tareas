@@ -411,8 +411,11 @@ namespace eval Tasks {
   }
 
   proc init { path start end l } {
-    set project_start [clock scan $start -format {%Y-%m-%d}]
-    set project_end [clock scan $end -format {%Y-%m-%d}]
+    set start_ [clock add [clock scan $start -format {%Y-%m-%d}] -1 week]
+    set end_ [clock add [clock scan $end -format {%Y-%m-%d}] 1 week]
+
+    set project_start $start_
+    set project_end $end_
     set months [howmanymonths $project_start $project_end]
     set rh 22
 

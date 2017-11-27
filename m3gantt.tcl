@@ -412,6 +412,16 @@ namespace eval Tasks {
     Tasks::render'connections $gantt
   }
 
+  proc updatetask { path gantt taskid } {
+    variable tasks
+    array set container [deserialize $tasks($taskid)]
+    array set payload [deserialize $container(payload)]
+    set task $container(task)
+    puts $task
+    parray payload
+    puts "$path - $gantt - $taskid"
+  }
+
   proc init { path start end l } {
     set start_ [clock add [clock scan $start -format {%Y-%m-%d}] -1 week]
     set end_ [clock add [clock scan $end -format {%Y-%m-%d}] 1 week]
@@ -439,6 +449,8 @@ namespace eval Tasks {
     }
 
     $gantt title "Administrador de tiempos (version inicial)"
+    bind $path <<UpdateTask>> [list \
+      [namespace current]::updatetask %W $gantt %d]
 
     array set event [list \
       query select \

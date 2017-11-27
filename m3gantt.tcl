@@ -376,6 +376,82 @@ namespace eval Tasks {
   proc 'do'getedges { resp } {
     upvar $resp response
     parray response
+
+    set path $MAIN::frame.c
+    set gantt [Tasks::init $path "2004-02-01 00:00:00" "2004-07-01 00:00:00" 10]
+    pack $path
+
+array set t0 {
+  id 1
+  keynote "5"
+  description "Projecto 5"
+  expand 1
+}
+array set t1 {
+  id 2
+  keynote "5.1"
+  description "Preliminares"
+  expand 1
+}
+array set t2 {
+  id 55
+  keynote "5.1.7"
+  description "Tarea 1 por hacer"
+  start "2004-02-05"
+  end "2004-02-25"
+  connectWith 4
+  expand 0
+}
+array set t3 {
+  id 4
+  keynote "5.1.8"
+  description "Tarea 2 por hacer"
+  start "2004-03-04"
+  end "2004-03-15"
+  expand 0
+}
+
+array set t4 {
+  id 5
+  keynote "5.2"
+  description "Cimentaciones"
+  expand 1
+}
+array set t6 {
+  id 16
+  keynote "5.2.9"
+  description "Tarea 3 por hacer"
+  start "2004-04-04"
+  end "2004-05-15"
+  connectWith 7
+  expand 0
+}
+array set t7 {
+  id 7
+  keynote "5.2.10"
+  description "Tarea 4 por hacer"
+  start "2004-05-04"
+  end "2004-06-15"
+  expand 0
+}
+
+
+Tasks::render'summary $gantt t0
+Tasks::render'summary $gantt t1
+
+Tasks::render'task $gantt t2
+Tasks::render'task $gantt t3
+
+Tasks::render'summary $gantt t4
+
+Tasks::render'task $gantt t6
+Tasks::render'task $gantt t7
+
+
+Tasks::render'connections $gantt
+Tasks::render'summaries $gantt
+
+  puts "que putas"
   }
 
   proc init { path start end l } {

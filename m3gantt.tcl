@@ -402,17 +402,19 @@ namespace eval Tasks {
     set path $MAIN::frame.c
     variable gantt [Tasks::init $path $row(start) $row(end) $row(rows)]
     pack $path
+  }
 
-    return
-    Tasks::render'connections $gantt
+  proc 'do'finish'select { resp } {
+    variable gantt
     Tasks::render'summaries $gantt
+    Tasks::render'connections $gantt
   }
 
   proc init { path start end l } {
     set project_start [clock scan $start -format {%Y-%m-%d}]
     set project_end [clock scan $end -format {%Y-%m-%d}]
     set months [howmanymonths $project_start $project_end]
-    set rh 25
+    set rh 22
 
     if { [winfo exists $path] == 1 } {
       $path configure -width [expr {200 * $months}] -height [expr {$rh * $l}]

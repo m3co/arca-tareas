@@ -417,9 +417,17 @@ namespace eval Tasks {
     array set container [deserialize $tasks($taskid)]
     array set payload [deserialize $container(payload)]
     set task $container(task)
-    puts $task
-    parray payload
-    puts "$path - $gantt - $taskid"
+
+    array set event [list \
+      query update \
+      module Tasks \
+      from Tasks \
+      idkey id \
+      id $payload(id) \
+      key [list start end] \
+      value [list $payload(start) $payload(end)] \
+    ]
+    chan puts $MAIN::chan [array get event]
   }
 
   proc init { path start end l } {

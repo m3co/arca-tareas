@@ -16,23 +16,6 @@ namespace eval MAIN {
   set frame [$main.scrollableframe getframe]
   update
 
-  proc subscribe { } {
-    variable chan
-
-    array set event {
-      module fnSuppliesByLevel1
-      query subscribe
-    }
-    chan puts $chan [array get event]
-
-    array set event {
-      module Projects
-      query subscribe
-    }
-    chan puts $chan [array get event]
-  }
-  subscribe
-
   array set event [list \
     query getedges \
     module Tasks \

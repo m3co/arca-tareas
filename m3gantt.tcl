@@ -368,6 +368,21 @@ namespace eval Tasks {
     set tasks($t(id)) [array get internal]
   }
 
+  proc 'do'update { resp } {
+    upvar $resp response
+    puts "haga actualizar"
+  }
+
+  proc 'do'delete { resp } {
+    upvar $resp response
+    puts "haga eliminar"
+  }
+
+  proc 'do'insert { resp } {
+    upvar $resp response
+    puts "haga insert"
+  }
+
   proc 'do'select { resp } {
     upvar $resp response
     variable gantt

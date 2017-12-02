@@ -6,7 +6,7 @@ source "m3gantt.tcl"
 
 namespace eval MAIN {
   connect [namespace current]
-  wm title . "Administrador de Insumos"
+  wm title . "Administrador de Tareas"
   wm geometry . "800x600+100+10"
 
   # Configure el Layout inicial

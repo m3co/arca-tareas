@@ -1,4 +1,4 @@
-source "patch_plotgantt.tcl"
+source [file join [file dirname [info script]] "patch_plotgantt.tcl"]
 
 namespace eval Tasks {
   variable tasks

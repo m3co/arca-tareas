@@ -1,8 +1,8 @@
 
 package require BWidget
 package require Plotchart
-source "m3co/main.tcl"
-source "m3gantt.tcl"
+source [file join [file dirname [info script]] "m3co/main.tcl"]
+source [file join [file dirname [info script]] "m3gantt.tcl"]
 
 namespace eval MAIN {
   connect [namespace current]

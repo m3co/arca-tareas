@@ -1,0 +1,22 @@
+{
+  "name": "d3-gantt",
+  "version": "1.0.0",
+  "description": "The simplest way to render a Gantt Chart",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rianby64/d3-gantt.git"
+  },
+  "author": "Andres Rios <rianby64@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rianby64/d3-gantt/issues"
+  },
+  "homepage": "https://github.com/rianby64/d3-gantt#readme",
+  "dependencies": {
+    "d3": "^4.13.0"
+  }
+}

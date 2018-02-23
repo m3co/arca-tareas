@@ -39,12 +39,21 @@ var tasks = [
 
   var padh = 2;
   var a = d3.select('svg g').selectAll('rect').data(tasks);
-  var g = a.enter().append('g')
+  var g1 = a.enter();
+
+  g1.append('line')
+    .attr('stroke', 'black')
+    .attr('stroke-width', 0.5)
+    .attr('x1', 0).attr('y1', (d, i) => i * h)
+    .attr('x2', WIDTH).attr('y2', (d, i) => i * h);
+
+  var g = g1.append('g')
     .attr('transform', (d, i) => {
       return `translate(${
         WIDTH * (d.start - startend.start) / (startend.end - startend.start)
       }, ${i * (h + 0)})`
     });
+
   g.append('rect')
     .attr('height', h - (padh / 2))
     .attr('width', d => {

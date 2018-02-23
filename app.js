@@ -1,7 +1,7 @@
 'use strict';
 (() => {
 
-var tasks = [
+var taski = [
 {"start":new Date("Sun Dec 09 01:36:45"),"end":new Date("Sun Dec 09 02:36:45"),"id": "1", "description":"E Job"},
 {"start":new Date("Sun Dec 09 04:56:32"),"end":new Date("Sun Dec 09 06:35:47"),"id": "2", "description":"A Job"},
 {"start":new Date("Sun Dec 09 06:29:53"),"end":new Date("Sun Dec 09 06:34:04"),"id": "3", "description":"D Job"},
@@ -28,7 +28,8 @@ var tasks = [
 {"start":new Date("Sun Dec 09 12:27:15"),"end":new Date("Sun Dec 09 12:54:56"),"id": "24", "description":"E Job"},
 {"start":new Date("Sat Dec 08 23:12:24"),"end":new Date("Sun Dec 09 10:26:13"),"id": "25", "description":"A Job"}];
 
-// Define the div for the tooltip
+  render(taski);
+function render(tasks) {
   var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
@@ -96,4 +97,5 @@ var tasks = [
     .selectAll('svg g#xaxis .tick line')
       .attr('y2', svgHeight)
       .attr('opacity', 0.2);
+}
 })();

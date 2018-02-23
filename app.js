@@ -38,11 +38,13 @@ var tasks = [
   }, { start: undefined, end: undefined });
 
   var padh = 2;
-  var a = d3.select('svg#main g').selectAll('rect.row').data(tasks);
-  var g1 = a.enter();
+  var a = d3.select('svg g#tasks')
+    .selectAll('rect.row').data(tasks);
 
+  var g1 = a.enter();
   g1.append('rect')
     .attr('fill', (d, i) => i % 2 ? 'green' : 'red')
+    .attr('opacity', 0.3)
     .attr('x', 0)
     .attr('y', (d, i) => i * h)
     .attr('width', WIDTH)
@@ -54,7 +56,6 @@ var tasks = [
         WIDTH * (d.start - startend.start) / (startend.end - startend.start)
       }, ${i * (h + 0)})`
     });
-
   g.append('rect')
     .attr('class', 'row')
     .attr('height', h - (padh / 2))
@@ -72,9 +73,9 @@ var tasks = [
   // set the ranges
   var x = d3.scaleTime().range([0, WIDTH]);
   x.domain([startend.start, startend.end]);
-  var b = d3.select('svg#main g')
-    .append('g')
+
+  var b = d3.select('svg g#xaxis')
     .call(d3.axisBottom(x))
-    .selectAll('svg#main .tick line')
+    .selectAll('svg g#xaxis .tick line')
       .attr('y2', HEIGHT);
 })();

@@ -41,7 +41,9 @@ var tasks = [
   var a = d3.select('svg g').selectAll('rect').data(tasks);
   var g = a.enter().append('g')
     .attr('transform', (d, i) => {
-      return `translate(0, ${i * (h + 0)})`
+      return `translate(${
+        WIDTH * (d.start - startend.start) / (startend.end - startend.start)
+      }, ${i * (h + 0)})`
     });
   g.append('rect')
     .attr('height', h - (padh / 2))
@@ -54,9 +56,6 @@ var tasks = [
       return `${d.id} -- ${d.name}`;
     })
     .attr('fill', 'black')
-    .attr('x', (d, i) => {
-      return 15;
-    })
     .attr('y', (3 * h / 4) - (padh / 2));
 
 })();

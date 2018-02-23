@@ -40,7 +40,7 @@ var tasks = [
     return acc;
   }, { start: undefined, end: undefined });
 
-  var padh = 2;
+  var padh = 4;
   var a = d3.select('svg g#tasks')
     .attr('transform', `translate(0, ${xaxisHeight})`)
     .selectAll('rect.row').data(tasks);
@@ -62,7 +62,8 @@ var tasks = [
     });
   g.append('rect')
     .attr('class', 'row')
-    .attr('height', h - (padh / 2))
+    .attr('y', (padh / 2))
+    .attr('height', h - padh)
     .attr('width', d => {
       return svgWidth * (d.end - d.start) / (startend.end - startend.start);
     })
@@ -72,7 +73,7 @@ var tasks = [
       return `${d.id} -- ${d.name}`;
     })
     .attr('fill', 'black')
-    .attr('y', (3 * h / 4) - (padh / 2));
+    .attr('y', (3 * h / 4));
 
   // set the ranges
   var x = d3.scaleTime().range([0, svgWidth]);

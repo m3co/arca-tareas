@@ -41,11 +41,12 @@ var tasks = [
   var a = d3.select('svg g').selectAll('rect').data(tasks);
   var g1 = a.enter();
 
-  g1.append('line')
-    .attr('stroke', 'black')
-    .attr('stroke-width', 0.5)
-    .attr('x1', 0).attr('y1', (d, i) => i * h)
-    .attr('x2', WIDTH).attr('y2', (d, i) => i * h);
+  g1.append('rect')
+    .attr('fill', (d, i) => i % 2 ? 'green' : 'red')
+    .attr('x', 0)
+    .attr('y', (d, i) => i * h)
+    .attr('width', WIDTH)
+    .attr('height', h);
 
   var g = g1.append('g')
     .attr('transform', (d, i) => {

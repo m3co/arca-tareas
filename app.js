@@ -28,9 +28,12 @@ var tasks = [
 {"start":new Date("Sun Dec 09 12:27:15"),"end":new Date("Sun Dec 09 12:54:56"),"id": "24", "name":"E Job"},
 {"start":new Date("Sat Dec 08 23:12:24"),"end":new Date("Sun Dec 09 10:26:13"),"id": "25", "name":"A Job"}];
 
-  var WIDTH = document.querySelector('svg').getAttribute('width');
-  var HEIGHT = document.querySelector('svg').getAttribute('height');
-  var h = HEIGHT / tasks.length;
+  var svgWidth = document.querySelector('svg').getAttribute('width');
+  var svgHeight = document.querySelector('svg').getAttribute('height');
+  var xaxisHeight = 22;
+
+  var tasksHeight = svgHeight - xaxisHeight;
+  var h = tasksHeight / tasks.length;
   var startend = tasks.reduce((acc, d) => {
     acc.start = acc.start ? (acc.start > d.start ? d.start : acc.start) : d.start;
     acc.end = acc.end ? (acc.end < d.end ? d.end : acc.end) : d.end;
@@ -39,6 +42,7 @@ var tasks = [
 
   var padh = 2;
   var a = d3.select('svg g#tasks')
+    .attr('transform', `translate(0, ${xaxisHeight})`)
     .selectAll('rect.row').data(tasks);
 
   var g1 = a.enter();
@@ -47,20 +51,20 @@ var tasks = [
     .attr('opacity', 0.3)
     .attr('x', 0)
     .attr('y', (d, i) => i * h)
-    .attr('width', WIDTH)
+    .attr('width', svgWidth)
     .attr('height', h);
 
   var g = g1.append('g')
     .attr('transform', (d, i) => {
       return `translate(${
-        WIDTH * (d.start - startend.start) / (startend.end - startend.start)
+        svgWidth * (d.start - startend.start) / (startend.end - startend.start)
       }, ${i * (h + 0)})`
     });
   g.append('rect')
     .attr('class', 'row')
     .attr('height', h - (padh / 2))
     .attr('width', d => {
-      return WIDTH * (d.end - d.start) / (startend.end - startend.start);
+      return svgWidth * (d.end - d.start) / (startend.end - startend.start);
     })
     .attr('fill', 'blue');
   g.append('text')
@@ -71,11 +75,12 @@ var tasks = [
     .attr('y', (3 * h / 4) - (padh / 2));
 
   // set the ranges
-  var x = d3.scaleTime().range([0, WIDTH]);
+  var x = d3.scaleTime().range([0, svgWidth]);
   x.domain([startend.start, startend.end]);
 
   var b = d3.select('svg g#xaxis')
     .call(d3.axisBottom(x))
     .selectAll('svg g#xaxis .tick line')
-      .attr('y2', HEIGHT);
+      .attr('y2', svgHeight)
+      .attr('opacity', 0.2);
 })();

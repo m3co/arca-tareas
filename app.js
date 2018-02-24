@@ -90,7 +90,7 @@ function render(tasks) {
         }
         acc += c;
         d3.select(`svg g#tasks g[id="${acc.slice(0, -1)}"] rect.bar`)
-          .attr('x', c => {
+          .attr('width', c => {
             if (c.start) {
               c.start = c.start > d.start ? new Date(d.start) : c.start;
             } else {
@@ -101,12 +101,13 @@ function render(tasks) {
             } else {
               c.end = new Date(d.end);
             }
-            return svgWidth * (c.start - startend.start)
-              / (startend.end - startend.start);
-          })
-          .attr('width', c =>
-            svgWidth * (c.end - c.start)
+            return svgWidth * (c.end - c.start)
               / (startend.end - startend.start)
+          });
+        d3.select(`svg g#tasks g[id="${acc.slice(0, -1)}"] g`)
+          .attr('transform', c =>
+            `translate(${svgWidth * (c.start - startend.start)
+              / (startend.end - startend.start)}, 0)`
           );
         return acc;
       }, '');

@@ -81,10 +81,7 @@ function render(tasks) {
     .attr('transform', (d, i) =>
       d.expand ?
         'translate(0,0)' :
-        `translate(${
-        svgWidth * (d.start - startend.start)
-          / (startend.end - startend.start)
-        }, 0)`
+        `translate(${x(d.start)}, 0)`
     )
     .on("mouseover", function(d) {
       tooltip.transition()
@@ -129,18 +126,15 @@ function render(tasks) {
             } else {
               c.end = new Date(d.end);
             }
-            return svgWidth * (c.end - c.start)
-              / (startend.end - startend.start)
+            return x(c.end) - x(c.start);
           });
         d3.select(`svg g#tasks g[id="${acc.slice(0, -1)}"] g`)
           .attr('transform', c =>
-            `translate(${svgWidth * (c.start - startend.start)
-              / (startend.end - startend.start)}, 0)`
+            `translate(${x(c.start)}, 0)`
           );
         return acc;
       }, '');
-      return svgWidth * (d.end - d.start)
-        / (startend.end - startend.start);
+      return x(d.end) - x(d.start);
     })
     .attr('fill', d => {
       var p = d.id.match(/[.]/g);

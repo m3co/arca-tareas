@@ -30,6 +30,11 @@ function render(tasks) {
     d.start = x.invert(d3.event.x - d[tempSymbol]);
     d.end = x.invert(Number(x(d.start)) + width);
     delete d[tempSymbol];
+
+    d3.selectAll(`svg g#tasks g.row[class~="${d.id}"]`)
+      .each(c => {
+        console.log(c);
+      });
   }
 
   var tooltip = d3.select("body").append("div")

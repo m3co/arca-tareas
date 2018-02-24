@@ -6,9 +6,9 @@
     .then(tasks => {
       render(tasks.map(d => {
         if (d.expand) {
+          [d.start, d.end] = [null, null];
         } else {
-          d.start = new Date(d.start);
-          d.end = new Date(d.end);
+          [d.start, d.end] = [new Date(d.start), new Date(d.end)];
         }
         return d;
       }));

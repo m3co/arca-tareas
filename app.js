@@ -36,12 +36,22 @@ function render(tasks) {
     return acc;
   }, { start: undefined, end: undefined });
 
+  // set the ranges
+  var x = d3.scaleTime().range([0, svgWidth]);
+  x.domain([startend.start, startend.end]);
+
+  var a = d3.select('svg g#xaxis')
+    .call(d3.axisBottom(x))
+    .selectAll('svg g#xaxis .tick line')
+      .attr('y2', svgHeight)
+      .attr('opacity', 0.2);
+
   var padh = 4;
   var a = d3.select('svg g#tasks')
     .attr('transform', `translate(0, ${xaxisHeight})`)
-    .selectAll('g.row').data(tasks).enter();
+    .selectAll('g.row').data(tasks);
 
-  var g1 = a.append('g')
+  var g1 = a.enter().append('g')
     .attr('transform', (d, i) => `translate(0, ${i * (h + 0)})`)
     .attr('y', (d, i) => i * h)
     .attr('id', d => d.id)
@@ -129,15 +139,5 @@ function render(tasks) {
     .attr('fill', 'white')
     .attr('y', h - padh)
     .text(d => d.id);
-
-  // set the ranges
-  var x = d3.scaleTime().range([0, svgWidth]);
-  x.domain([startend.start, startend.end]);
-
-  var b = d3.select('svg g#xaxis')
-    .call(d3.axisBottom(x))
-    .selectAll('svg g#xaxis .tick line')
-      .attr('y2', svgHeight)
-      .attr('opacity', 0.2);
 }
 })();

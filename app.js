@@ -18,14 +18,18 @@ function render(tasks) {
 
   function dragstarted(d) {
     //d3.select(this).classed("active", true);
+    d.__temp_reference__ = d3.event.x - x(d.start);
   }
   function dragged(d) {
-    console.log(d);
     d3.select(this)
-      .attr('transform', `translate(${d3.event.x}, 0)`);
+      .attr('transform', `translate(${d3.event.x - d.__temp_reference__}, 0)`);
   }
   function dragended(d) {
     //d3.select(this).classed("active", false);
+    var width = x(d.end) - x(d.start);
+    d.start = x.invert(d3.event.x - d.__temp_reference__);
+    d.end = x.invert(Number(x(d.start)) + width);
+    delete d.__temp_reference__;
   }
 
   var tooltip = d3.select("body").append("div")

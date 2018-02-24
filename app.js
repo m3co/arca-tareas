@@ -15,21 +15,21 @@
     });
 
 function render(tasks) {
-
+  var tempSymbol = Symbol();
   function dragstarted(d) {
     //d3.select(this).classed("active", true);
-    d.__temp_reference__ = d3.event.x - x(d.start);
+    d[tempSymbol] = d3.event.x - x(d.start);
   }
   function dragged(d) {
     d3.select(this)
-      .attr('transform', `translate(${d3.event.x - d.__temp_reference__}, 0)`);
+      .attr('transform', `translate(${d3.event.x - d[tempSymbol]}, 0)`);
   }
   function dragended(d) {
     //d3.select(this).classed("active", false);
     var width = x(d.end) - x(d.start);
-    d.start = x.invert(d3.event.x - d.__temp_reference__);
+    d.start = x.invert(d3.event.x - d[tempSymbol]);
     d.end = x.invert(Number(x(d.start)) + width);
-    delete d.__temp_reference__;
+    delete d[tempSymbol];
   }
 
   var tooltip = d3.select("body").append("div")

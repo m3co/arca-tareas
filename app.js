@@ -1,14 +1,19 @@
 'use strict';
 (() => {
+  const COLORS = ['brown', 'red', 'blue', 'maroon', 'darkgreen'];
   fetch('example.json')
     .then(response => response.json())
     .then(tasks => {
       render(tasks.map(d => {
-        d.start = new Date(d.start);
-        d.end = new Date(d.end);
+        if (d.expand) {
+        } else {
+          d.start = new Date(d.start);
+          d.end = new Date(d.end);
+        }
         return d;
       }));
     });
+
 function render(tasks) {
   var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
@@ -69,7 +74,13 @@ function render(tasks) {
     .attr('width', d => {
       return svgWidth * (d.end - d.start) / (startend.end - startend.start);
     })
-    .attr('fill', 'blue');
+    .attr('fill', d => {
+      var p = d.id.match(/[.]/g);
+      if (p) {
+        return COLORS[p.length];
+      }
+      return COLORS[0];
+    });
   g.append('text')
     .attr('fill', 'white')
     .attr('y', h - padh)

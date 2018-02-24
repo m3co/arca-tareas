@@ -85,10 +85,14 @@ function render(tasks) {
     })
     .attr('fill', d => {
       var p = d.id.match(/[.]/g);
-      if (p) {
-        return COLORS[p.length];
+      if (d.expand) {
+        if (p) {
+          return COLORS[p.length];
+        }
+        return COLORS[0];
+      } else {
+        return COLORS[COLORS.length - 1];
       }
-      return COLORS[0];
     });
   g.append('text')
     .attr('fill', 'white')

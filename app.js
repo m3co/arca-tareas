@@ -29,23 +29,26 @@ function render(tasks) {
   var padh = 4;
   var a = d3.select('svg g#tasks')
     .attr('transform', `translate(0, ${xaxisHeight})`)
-    .selectAll('g.row').data(tasks);
+    .selectAll('g.row').data(tasks).enter();
 
-  var g1 = a.enter();
+  var g1 = a.append('g')
+    .attr('transform', (d, i) => {
+      return `translate(0, ${i * (h + 0)})`
+    })
+    .attr('y', (d, i) => i * h)
+    .attr('class', 'row');
+
   g1.append('rect')
     .attr('fill', (d, i) => i % 2 ? 'green' : 'red')
     .attr('opacity', 0.3)
-    .attr('x', 0)
-    .attr('y', (d, i) => i * h)
     .attr('width', svgWidth)
     .attr('height', h);
 
   var g = g1.append('g')
-    .attr('class', 'row')
     .attr('transform', (d, i) => {
       return `translate(${
         svgWidth * (d.start - startend.start) / (startend.end - startend.start)
-      }, ${i * (h + 0)})`
+      }, 0)`
     })
     .on("mouseover", function(d) {
       tooltip.transition()

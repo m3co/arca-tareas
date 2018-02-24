@@ -26,6 +26,9 @@ function render(tasks) {
   var tasksHeight = svgHeight - xaxisHeight;
   var h = tasksHeight / tasks.length;
   var startend = tasks.reduce((acc, d) => {
+    if (d.expand) {
+      return acc;
+    }
     acc.start = acc.start ? (acc.start > d.start ? d.start : acc.start) : d.start;
     acc.end = acc.end ? (acc.end < d.end ? d.end : acc.end) : d.end;
     return acc;
@@ -51,6 +54,9 @@ function render(tasks) {
 
   var g = g1.append('g')
     .attr('transform', (d, i) => {
+      if (d.expand) {
+        return 'translate(0,0)';
+      }
       return `translate(${
         svgWidth * (d.start - startend.start) / (startend.end - startend.start)
       }, 0)`
@@ -72,6 +78,9 @@ function render(tasks) {
     .attr('y', (padh / 2))
     .attr('height', h - padh)
     .attr('width', d => {
+      if (d.expand) {
+        return 0
+      }
       return svgWidth * (d.end - d.start) / (startend.end - startend.start);
     })
     .attr('fill', d => {

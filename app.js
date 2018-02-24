@@ -29,7 +29,7 @@ function render(tasks) {
   var padh = 4;
   var a = d3.select('svg g#tasks')
     .attr('transform', `translate(0, ${xaxisHeight})`)
-    .selectAll('rect.row').data(tasks);
+    .selectAll('g.row').data(tasks);
 
   var g1 = a.enter();
   g1.append('rect')
@@ -41,32 +41,36 @@ function render(tasks) {
     .attr('height', h);
 
   var g = g1.append('g')
+    .attr('class', 'row')
     .attr('transform', (d, i) => {
       return `translate(${
         svgWidth * (d.start - startend.start) / (startend.end - startend.start)
       }, ${i * (h + 0)})`
-    });
-  g.append('rect')
-    .attr('class', 'row')
-    .attr('y', (padh / 2))
-    .attr('height', h - padh)
-    .attr('width', d => {
-      return svgWidth * (d.end - d.start) / (startend.end - startend.start);
     })
-    .attr('fill', 'blue')
     .on("mouseover", function(d) {
       tooltip.transition()
         .duration(200)
         .style("opacity", .9);
-      tooltip.html(`1.1.5<br>${d.description}`)
+      tooltip.html(`${d.id}<br>${d.description}`)
         .style("left", (d3.event.pageX) + "px")
-        .style("top", (d3.event.pageY - 28) + "px");
+        .style("top", (d3.event.pageY - 30) + "px");
     })
     .on("mouseout", function(d) {
       tooltip.transition()
         .duration(500)
         .style("opacity", 0);
     });
+  g.append('rect')
+    .attr('y', (padh / 2))
+    .attr('height', h - padh)
+    .attr('width', d => {
+      return svgWidth * (d.end - d.start) / (startend.end - startend.start);
+    })
+    .attr('fill', 'blue');
+  g.append('text')
+    .attr('fill', 'white')
+    .attr('y', h - padh)
+    .text(d => d.id);
 
   // set the ranges
   var x = d3.scaleTime().range([0, svgWidth]);

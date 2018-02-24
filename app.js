@@ -72,7 +72,18 @@ function render(tasks) {
     .attr('transform', (d, i) => `translate(0, ${i * (h + 0)})`)
     .attr('y', (d, i) => i * h)
     .attr('id', d => d.id)
-    .attr('class', 'row');
+    .attr('class', function(d) {
+      d.id.match(/\d+[.]{0,1}/g).reduce((acc, c, i, arr) => {
+        if (arr.length == i + 1) {
+          return acc;
+        }
+        acc += c;
+        d3.select(`svg g#tasks g[id="${acc.slice(0, -1)}"]`)
+          .classed(d.id, true);
+        return acc;
+      }, '');
+      return `row ${d.id}`;
+    });
 
   g1.append('rect')
     .attr('class', 'background')

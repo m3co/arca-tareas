@@ -15,7 +15,7 @@
 {"id":"1.4.2",    "expand":true, "description":"D Job"},
 {"id":"1.4.2.1",  "expand":true, "description":"P Job"},
 {"id":"1.4.2.1.1","expand":false,"description":"D Job","start":"2001-12-09T04:00:06","end":"2001-12-09T09:05:07"},
-{"id":"1.4.2.2",  "expand":false,"description":"P Job"},
+{"id":"1.4.2.2",  "expand":true, "description":"P Job"},
 {"id":"1.4.2.2.1","expand":false,"description":"N Job","start":"2001-12-09T06:02:45","end":"2001-12-09T06:48:56"},
 {"id":"1.4.2.2.2","expand":false,"description":"E Job","start":"2001-12-09T05:27:35","end":"2001-12-09T05:58:43"},
 {"id":"1.4.3",    "expand":true, "description":"A Job"},

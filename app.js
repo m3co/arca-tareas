@@ -29,8 +29,10 @@ function render(tasks) {
     if (d.expand) {
       return acc;
     }
-    acc.start = acc.start ? (acc.start > d.start ? d.start : acc.start) : d.start;
-    acc.end = acc.end ? (acc.end < d.end ? d.end : acc.end) : d.end;
+    acc.start = acc.start ?
+      (acc.start > d.start ? d.start : acc.start) : d.start;
+    acc.end = acc.end ?
+      (acc.end < d.end ? d.end : acc.end) : d.end;
     return acc;
   }, { start: undefined, end: undefined });
 
@@ -40,9 +42,7 @@ function render(tasks) {
     .selectAll('g.row').data(tasks).enter();
 
   var g1 = a.append('g')
-    .attr('transform', (d, i) => {
-      return `translate(0, ${i * (h + 0)})`
-    })
+    .attr('transform', (d, i) => `translate(0, ${i * (h + 0)})`)
     .attr('y', (d, i) => i * h)
     .attr('class', 'row');
 
@@ -53,14 +53,14 @@ function render(tasks) {
     .attr('height', h);
 
   var g = g1.append('g')
-    .attr('transform', (d, i) => {
-      if (d.expand) {
-        return 'translate(0,0)';
-      }
-      return `translate(${
-        svgWidth * (d.start - startend.start) / (startend.end - startend.start)
-      }, 0)`
-    })
+    .attr('transform', (d, i) =>
+      d.expand ?
+        'translate(0,0)' :
+        `translate(${
+        svgWidth * (d.start - startend.start)
+          / (startend.end - startend.start)
+        }, 0)`
+    )
     .on("mouseover", function(d) {
       tooltip.transition()
         .duration(200)
@@ -75,13 +75,41 @@ function render(tasks) {
         .style("opacity", 0);
     });
   g.append('rect')
-    .attr('y', (padh / 2))
+    .attr('id', d => d.id)
+    .attr('y', padh / 2)
     .attr('height', h - padh)
     .attr('width', d => {
       if (d.expand) {
         return 0
       }
-      return svgWidth * (d.end - d.start) / (startend.end - startend.start);
+      d.id.match(/\d+[.]{0,1}/g).reduce((acc, c, i, arr) => {
+        if (arr.length == i + 1) {
+          return acc;
+        }
+        acc += c;
+        d3.select(`svg g#tasks rect[id="${acc.slice(0, -1)}"]`)
+          .attr('x', c => {
+            if (c.start) {
+              c.start = c.start > d.start ? new Date(d.start) : c.start;
+            } else {
+              c.start = new Date(d.start);
+            }
+            if (c.end) {
+              c.end = c.end < d.end ? new Date(d.end) : c.end;
+            } else {
+              c.end = new Date(d.end);
+            }
+            return svgWidth * (c.start - startend.start)
+              / (startend.end - startend.start);
+          })
+          .attr('width', c =>
+            svgWidth * (c.end - c.start)
+              / (startend.end - startend.start)
+          );
+        return acc;
+      }, '');
+      return svgWidth * (d.end - d.start)
+        / (startend.end - startend.start);
     })
     .attr('fill', d => {
       var p = d.id.match(/[.]/g);

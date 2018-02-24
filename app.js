@@ -44,9 +44,11 @@ function render(tasks) {
   var g1 = a.append('g')
     .attr('transform', (d, i) => `translate(0, ${i * (h + 0)})`)
     .attr('y', (d, i) => i * h)
+    .attr('id', d => d.id)
     .attr('class', 'row');
 
   g1.append('rect')
+    .attr('class', 'background')
     .attr('fill', (d, i) => i % 2 ? 'green' : 'red')
     .attr('opacity', 0.3)
     .attr('width', svgWidth)
@@ -75,7 +77,7 @@ function render(tasks) {
         .style("opacity", 0);
     });
   g.append('rect')
-    .attr('id', d => d.id)
+    .attr('class', 'bar')
     .attr('y', padh / 2)
     .attr('height', h - padh)
     .attr('width', d => {
@@ -87,7 +89,7 @@ function render(tasks) {
           return acc;
         }
         acc += c;
-        d3.select(`svg g#tasks rect[id="${acc.slice(0, -1)}"]`)
+        d3.select(`svg g#tasks g[id="${acc.slice(0, -1)}"] rect.bar`)
           .attr('x', c => {
             if (c.start) {
               c.start = c.start > d.start ? new Date(d.start) : c.start;

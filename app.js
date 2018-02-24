@@ -32,9 +32,39 @@ function render(tasks) {
     delete d[tempSymbol];
 
     d3.selectAll(`svg g#tasks g.row[class~="${d.id}"]`)
-      .each(c => {
-        console.log(c);
+      .each(function(c) {
+        if (c.expand) {
+          console.log(this, c);
+        }
       });
+  }
+  function calculateWidthAndTranslate(x, d) {
+    d.id.match(/\d+[.]{0,1}/g).reduce((acc, c, i, arr) => {
+      if (arr.length == i + 1) {
+        return acc;
+      }
+      acc += c;
+      d3.select(`svg g#tasks g[id="${acc.slice(0, -1)}"] rect.bar`)
+        .attr('width', c => {
+          if (c.start) {
+            c.start = c.start > d.start ? new Date(d.start) : c.start;
+          } else {
+            c.start = new Date(d.start);
+          }
+          if (c.end) {
+            c.end = c.end < d.end ? new Date(d.end) : c.end;
+          } else {
+            c.end = new Date(d.end);
+          }
+          return x(c.end) - x(c.start);
+        });
+      d3.select(`svg g#tasks g[id="${acc.slice(0, -1)}"] g`)
+        .attr('transform', c =>
+          `translate(${x(c.start)}, 0)`
+        );
+      return acc;
+    }, '');
+    return x(d.end) - x(d.start);
   }
 
   var tooltip = d3.select("body").append("div")
@@ -129,32 +159,7 @@ function render(tasks) {
       if (d.expand) {
         return 0
       }
-      d.id.match(/\d+[.]{0,1}/g).reduce((acc, c, i, arr) => {
-        if (arr.length == i + 1) {
-          return acc;
-        }
-        acc += c;
-        d3.select(`svg g#tasks g[id="${acc.slice(0, -1)}"] rect.bar`)
-          .attr('width', c => {
-            if (c.start) {
-              c.start = c.start > d.start ? new Date(d.start) : c.start;
-            } else {
-              c.start = new Date(d.start);
-            }
-            if (c.end) {
-              c.end = c.end < d.end ? new Date(d.end) : c.end;
-            } else {
-              c.end = new Date(d.end);
-            }
-            return x(c.end) - x(c.start);
-          });
-        d3.select(`svg g#tasks g[id="${acc.slice(0, -1)}"] g`)
-          .attr('transform', c =>
-            `translate(${x(c.start)}, 0)`
-          );
-        return acc;
-      }, '');
-      return x(d.end) - x(d.start);
+      return calculateWidthAndTranslate(x, d);
     })
     .attr('fill', d => {
       var p = d.id.match(/[.]/g);

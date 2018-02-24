@@ -15,6 +15,19 @@
     });
 
 function render(tasks) {
+
+  function dragstarted(d) {
+    //d3.select(this).classed("active", true);
+  }
+  function dragged(d) {
+    console.log(d);
+    d3.select(this)
+      .attr('transform', `translate(${d3.event.x}, 0)`);
+  }
+  function dragended(d) {
+    //d3.select(this).classed("active", false);
+  }
+
   var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
@@ -85,7 +98,12 @@ function render(tasks) {
       tooltip.transition()
         .duration(500)
         .style("opacity", 0);
-    });
+    })
+    .call(d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended));
+
   g.append('rect')
     .attr('class', 'bar')
     .attr('y', padh / 2)

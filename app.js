@@ -17,7 +17,6 @@
 function render(tasks) {
   var tempSymbol = Symbol();
   function dragstarted(d) {
-    //d3.select(this).classed("active", true);
     d[tempSymbol] = d3.event.x - x(d.start);
   }
   function dragged(d) {
@@ -25,7 +24,6 @@ function render(tasks) {
       .attr('transform', `translate(${d3.event.x - d[tempSymbol]}, 0)`);
   }
   function dragended(d) {
-    //d3.select(this).classed("active", false);
     var width = x(d.end) - x(d.start);
     d.start = x.invert(d3.event.x - d[tempSymbol]);
     d.end = x.invert(Number(x(d.start)) + width);
@@ -35,17 +33,24 @@ function render(tasks) {
       .each(function(c) {
         if (c.expand) {
           [c.start, c.end] = [null, null];
+        }
+      })
+      .each(function(c) {
+        if (c.expand) {
           [...this.classList].splice(1).forEach(b => {
             d3.select(`svg g#tasks g.row[id="${b}"]`)
               .each(a => {
-                if (c.start) {
+                if (a.id === c.id) {
+                  return;
+                }
+                if (c.start && a.start) {
                   c.start = c.start > a.start ? new Date(a.start) : c.start;
                 } else {
                   if (a.start) {
                     c.start = new Date(a.start);
                   }
                 }
-                if (c.end) {
+                if (c.end && a.start) {
                   c.end = c.end < a.end ? new Date(a.end) : c.end;
                 } else {
                   if (a.end) {
@@ -55,11 +60,15 @@ function render(tasks) {
               });
           });
         }
-        d3.select(this)
-          .select('g')
-            .attr('transform', `translate(${x(c.start)}, 0)`)
-            .select('rect.bar').
-              attr('width', x(c.end) - x(c.start));
+      })
+      .each(function(c) {
+        if (c.expand) {
+          d3.select(this)
+            .select('g')
+              .attr('transform', `translate(${x(c.start)}, 0)`)
+              .select('rect.bar')
+                .attr('width', x(c.end) - x(c.start));
+        }
       });
   }
 
@@ -165,12 +174,16 @@ function render(tasks) {
             if (c.start) {
               c.start = c.start > d.start ? new Date(d.start) : c.start;
             } else {
-              c.start = new Date(d.start);
+              if (d.start) {
+                c.start = new Date(d.start);
+              }
             }
             if (c.end) {
               c.end = c.end < d.end ? new Date(d.end) : c.end;
             } else {
-              c.end = new Date(d.end);
+              if (d.end) {
+                c.end = new Date(d.end);
+              }
             }
             return x(c.end) - x(c.start);
           });

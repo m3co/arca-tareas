@@ -34,11 +34,35 @@ function render(tasks) {
     d3.selectAll(`svg g#tasks g.row[class~="${d.id}"]`)
       .each(function(c) {
         if (c.expand) {
-          console.log(this, c);
+          [c.start, c.end] = [null, null];
+          [...this.classList].splice(1).forEach(b => {
+            d3.select(`svg g#tasks g.row[id="${b}"]`)
+              .each(a => {
+                if (c.start) {
+                  c.start = c.start > a.start ? new Date(a.start) : c.start;
+                } else {
+                  if (a.start) {
+                    c.start = new Date(a.start);
+                  }
+                }
+                if (c.end) {
+                  c.end = c.end < a.end ? new Date(a.end) : c.end;
+                } else {
+                  if (a.end) {
+                    c.end = new Date(a.end);
+                  }
+                }
+              });
+          });
         }
+        d3.select(this)
+          .select('g')
+            .attr('transform', `translate(${x(c.start)}, 0)`)
+            .select('rect.bar').
+              attr('width', x(c.end) - x(c.start));
       });
   }
-  function calculateWidthAndTranslate(x, d) {
+  function calculateWidthAndTranslate(d) {
     d.id.match(/\d+[.]{0,1}/g).reduce((acc, c, i, arr) => {
       if (arr.length == i + 1) {
         return acc;
@@ -159,7 +183,7 @@ function render(tasks) {
       if (d.expand) {
         return 0
       }
-      return calculateWidthAndTranslate(x, d);
+      return calculateWidthAndTranslate(d);
     })
     .attr('fill', d => {
       var p = d.id.match(/[.]/g);

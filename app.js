@@ -24,9 +24,19 @@ function render(tasks) {
       .attr('transform', `translate(${d3.event.x - d[tempSymbol]}, 0)`);
   }
   function dragended(d) {
-    var width = x(d.end) - x(d.start);
-    d.start = x.invert(d3.event.x - d[tempSymbol]);
-    d.end = x.invert(Number(x(d.start)) + width);
+    var dstart = x.invert(d3.event.x - d[tempSymbol]) - d.start.valueOf();
+    d3.select(`svg g#tasks g.row[id="${d.id}"]`)
+      .each(function() {
+        [...this.classList].splice(1).forEach(b => {
+          d3.select(`svg g#tasks g.row[id="${b}"]`)
+            .each(function(c) {
+              c.start = new Date(c.start.valueOf() + dstart);
+              c.end = new Date(c.end.valueOf() + dstart);
+            })
+            .select('g')
+              .attr('transform', d => `translate(${x(d.start)}, 0)`);
+        });
+      });
     delete d[tempSymbol];
 
     d3.selectAll(`svg g#tasks g.row[class~="${d.id}"]`)

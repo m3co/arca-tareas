@@ -10,6 +10,12 @@
     });
 
     client.emit('data', {
+      query: 'get-edges',
+      module: 'viewAPUTasks',
+      project: 2
+    });
+
+    client.emit('data', {
       query: 'select',
       module: 'viewAPUTasks',
       project: 2

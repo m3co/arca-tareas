@@ -12,6 +12,6 @@ app.use('/socket.io', wsProxy);
 
 app.use('/', proxy(config.static));
 
-console.log('Listening to http://localhost:1133');
-const server = app.listen(1133);
+console.log(`Listening to http://localhost:${config.port}`);
+const server = app.listen(Number(config.port));
 server.on('upgrade', wsProxy.upgrade);

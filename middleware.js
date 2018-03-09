@@ -10,13 +10,7 @@ const wsProxy = proxy('/socket.io', config.socketio);
 app.use(wsProxy);
 app.use('/socket.io', wsProxy);
 
-app.use('/', proxy({
-  target: 'http://localhost:9001',
-  changeOrigin: true,
-  logLevel: 'debug',
-  secure: false,
-  xfwd: true
-}));
+app.use('/', proxy(config.static));
 
 console.log('Listening to http://localhost:1133');
 const server = app.listen(1133);

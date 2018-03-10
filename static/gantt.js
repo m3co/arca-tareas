@@ -20,6 +20,8 @@ function Gantt() {
   function dragged(d) {
     d3.select(this)
       .attr('transform', `translate(${d3.event.x - d[tempSymbol]}, 0)`);
+    d3.select(this.parentElement).select('rect.btn-expand')
+      .attr('transform', `translate(${d3.event.x - d[tempSymbol]}, ${padding})`);
   }
   function dragended(d) {
     var p = x.invert(d3.event.x - d[tempSymbol]);
@@ -32,6 +34,8 @@ function Gantt() {
     d3.select(this)
       .attr('transform', `translate(${d.Tasks_start ?
         x(d.Tasks_start) : 0}, ${padding})`);
+    d3.select(this.parentElement).select('rect.btn-expand')
+      .attr('transform', `translate(${x(d.Tasks_start)}, ${padding})`);
   }
 
   function setedges(row) {
@@ -136,6 +140,7 @@ function Gantt() {
     grow.each(function(d) {
       if (d.APU_expand) {
         d3.select(this).append('rect')
+          .attr('class', 'btn-expand')
           .attr('fill', 'gold')
           .attr('width', rowHeight - (padding * 2))
           .attr('height', rowHeight - (padding * 2))

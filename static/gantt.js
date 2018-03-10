@@ -27,17 +27,7 @@ function Gantt() {
     delete d[tempSymbol];
 
     d.Tasks_start = new Date(d.Tasks_start.valueOf() + dstart);
-
-    var event = {
-      query: 'update',
-      module: 'viewAPUTasks',
-      from: 'viewAPUTasks',
-      id: d.id,
-      idkey: 'id',
-      key: ['Tasks_start'],
-      value: [d.Tasks_start.toISOString()]
-    };
-    client.emit('data', event);
+    client.arca.update(d);
 
     d3.select(this)
       .attr('transform', `translate(${d.Tasks_start ?

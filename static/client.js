@@ -16,6 +16,20 @@
     });
   });
 
+  client.arca = {};
+  client.arca.update = function(row) {
+    var event = {
+      query: 'update',
+      module: 'viewAPUTasks',
+      from: 'viewAPUTasks',
+      id: row.id,
+      idkey: 'id',
+      key: ['Tasks_start'],
+      value: [row.Tasks_start.toISOString()]
+    };
+    client.emit('data', event);
+  };
+
   client.on('response', (data) => {
     var query = data.query;
     if (query == 'select') {

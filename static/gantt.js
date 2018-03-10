@@ -27,7 +27,18 @@ function Gantt() {
     delete d[tempSymbol];
 
     d.Tasks_start = new Date(d.Tasks_start.valueOf() + dstart);
-    console.log(d);
+
+    var event = {
+      query: 'update',
+      module: 'viewAPUTasks',
+      from: 'viewAPUTasks',
+      id: d.id,
+      idkey: 'id',
+      key: ['Tasks_start'],
+      value: [d.Tasks_start.toISOString()]
+    };
+    client.emit('data', event);
+
     d3.select(this)
       .attr('transform', `translate(${d.Tasks_start ?
         x(d.Tasks_start) : 0}, ${padding})`);

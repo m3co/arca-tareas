@@ -32,4 +32,5 @@
       console.log('not processed', data);
     }
   });
+  window.client = client;
 })(io);

@@ -129,9 +129,24 @@ function Gantt() {
 
     gtasks.append('text')
       .attr('fill', 'black')
-      .attr('y', (rowHeight / 2))
+      .attr('transform', `translate(${rowHeight}, ${(rowHeight / 2) + padding / 2})`)
       .text(d => `${d.APU_id}${d.Tasks_constrain ?
         `::${d.Tasks_constrain}` : ''}`);
+
+    grow.each(function(d) {
+      if (d.APU_expand) {
+        d3.select(this).append('rect')
+          .attr('fill', 'gold')
+          .attr('width', rowHeight - (padding * 2))
+          .attr('height', rowHeight - (padding * 2))
+          .attr('transform', `translate(${x(d.Tasks_start)}, ${padding})`)
+          .on('click', () => {
+            client.arca.select({
+              parent: d.APU_id
+            });
+          });
+      }
+    });
   }
 
   this.doselect = doselect;

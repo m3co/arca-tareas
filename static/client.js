@@ -17,7 +17,7 @@
   });
 
   client.arca = {};
-  client.arca.update = function(row) {
+  client.arca.update = function update(row) {
     var event = {
       query: 'update',
       module: 'viewAPUTasks',
@@ -29,6 +29,13 @@
     };
     client.emit('data', event);
   };
+  client.arca.select = function select(params) {
+    client.emit('data', {
+      query: 'select',
+      module: 'viewAPUTasks',
+      parent: params.parent
+    });
+  };
 
   client.on('response', (data) => {
     var query = data.query;
@@ -36,11 +43,8 @@
       gantt.doselect(data.row);
     } else if (query == 'get-edges') {
       gantt.setedges(data.row);
-
-      client.emit('data', {
-        query: 'select',
-        module: 'viewAPUTasks',
-        parent: '2'
+      client.arca.select({
+        parent: 2
       });
     } else {
       console.log('not processed', data);

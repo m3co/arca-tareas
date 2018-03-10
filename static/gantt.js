@@ -56,13 +56,12 @@ function Gantt() {
     row.Tasks_end = row.Tasks_end ? new Date(row.Tasks_end) : null;
     row[APUIdSymbol] = row.APU_id.split('.')
       .reduce((acc, d, i, array) => {
-        if (i == 0) {
-          acc.unshift((new Array(8 - array.length)).fill('00000'));
-        }
         acc.push(`${'0'.repeat(5 - d.length)}${d}`);
+        if (i + 1 == array.length) {
+          acc.push(...(new Array(8 - array.length)).fill('00000'));
+        }
         return acc;
-      }, [])
-      .join('.');
+      }, []).join('');
 
     tasks.push(row);
     tasks.sort((a, b) => {

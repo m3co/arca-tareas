@@ -1,6 +1,7 @@
 'use strict';
 (() => {
 var APUIdSymbol = Symbol();
+var tempSymbol = Symbol();
 var tooltip = d3.select("body div.tooltip");
 function Gantt() {
 
@@ -12,6 +13,25 @@ function Gantt() {
   const padding = 4;
   var width, height;
   var x = d3.scaleTime();
+
+  function dragstarted(d) {
+    d[tempSymbol] = d3.event.x - (d.Tasks_start ? x(d.Tasks_start) : 0);
+  }
+  function dragged(d) {
+    d3.select(this)
+      .attr('transform', `translate(${d3.event.x - d[tempSymbol]}, 0)`);
+  }
+  function dragended(d) {
+    var p = x.invert(d3.event.x - d[tempSymbol]);
+    var dstart = p - d.Tasks_start.valueOf();
+    delete d[tempSymbol];
+
+    d.Tasks_start = new Date(d.Tasks_start.valueOf() + dstart);
+    console.log(d);
+    d3.select(this)
+      .attr('transform', `translate(${d.Tasks_start ?
+        x(d.Tasks_start) : 0}, ${padding})`);
+  }
 
   function setedges(row) {
     edges.Tasks_start = new Date(row.Tasks_start);
@@ -88,7 +108,11 @@ function Gantt() {
         tooltip.transition()
           .duration(500)
           .style("opacity", 0);
-      });
+      })
+      .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended));
 
     gtasks.append('rect')
       .attr('class', 'bar')

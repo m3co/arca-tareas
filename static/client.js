@@ -23,6 +23,13 @@
   });
 
   client.on('response', (data) => {
-    console.log(data);
+    var query = data.query;
+    if (query == 'select') {
+      gantt.doselect(data.row);
+    } else if (query == 'get-edges') {
+      gantt.setedges(data.row);
+    } else {
+      console.log('ok ok ok', data);
+    }
   });
 })(io);

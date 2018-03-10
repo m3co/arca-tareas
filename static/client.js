@@ -12,13 +12,7 @@
     client.emit('data', {
       query: 'get-edges',
       module: 'viewAPUTasks',
-      project: 2
-    });
-
-    client.emit('data', {
-      query: 'select',
-      module: 'viewAPUTasks',
-      project: 2
+      project: '2'
     });
   });
 
@@ -28,8 +22,14 @@
       gantt.doselect(data.row);
     } else if (query == 'get-edges') {
       gantt.setedges(data.row);
+
+      client.emit('data', {
+        query: 'select',
+        module: 'viewAPUTasks',
+        parent: '2'
+      });
     } else {
-      console.log('ok ok ok', data);
+      console.log('not processed', data);
     }
   });
 })(io);

@@ -1,11 +1,13 @@
 'use strict';
 (() => {
 var APUId_normalized = Symbol();
+var tooltip = d3.select("body div.tooltip");
 function Gantt() {
 
   var edges = { Tasks_start: null, Tasks_end: null, count: null };
   var tasks = [];
 
+  const COLORS = ['brown', 'red', 'blue', 'maroon', 'darkgreen'];
   const rowHeight = 26;
   const padding = 4;
   var width, height;
@@ -69,7 +71,24 @@ function Gantt() {
 
     var gtasks = grow.append('g')
       .attr('transform', (d, i) =>
-        `translate(${d.Tasks_start ? x(d.Tasks_start) : 0}, ${padding})`);
+        `translate(${d.Tasks_start ? x(d.Tasks_start) : 0}, ${padding})`)
+      .on("mouseover", function(d) {
+        tooltip.transition()
+          .duration(200)
+          .style("opacity", .9);
+        tooltip.html(`
+          Desde:${d.Tasks_start ? d.Tasks_start.toLocaleDateString() : ''}<br>
+          Hasta:${d.Tasks_end ? d.Tasks_end.toLocaleDateString() : ''}<br>
+          ${d.APU_id}${d.Tasks_constrain ? `::${d.Tasks_constrain}` : ''}<br>
+          ${d.APU_description}`)
+          .style("left", (d3.event.pageX) + "px")
+          .style("top", (d3.event.pageY - 30) + "px");
+      })
+      .on("mouseout", function(d) {
+        tooltip.transition()
+          .duration(500)
+          .style("opacity", 0);
+      });
 
     gtasks.append('rect')
       .attr('class', 'bar')
@@ -78,13 +97,16 @@ function Gantt() {
         (x(d.Tasks_end) - x(d.Tasks_start)) : 0)
       .attr('fill', d => {
         var p = d.APU_id.match(/[.]/g)
-        return 'blue';
+        if (p) {
+          return COLORS[p.length];
+        }
       });
 
     gtasks.append('text')
       .attr('fill', 'black')
       .attr('y', (rowHeight / 2))
-      .text(d => `${d.APU_id}${d.Tasks_constrain ? `::${d.Tasks_constrain}` : ''}`);
+      .text(d => `${d.APU_id}${d.Tasks_constrain ?
+        `::${d.Tasks_constrain}` : ''}`);
   }
 
   this.doselect = doselect;

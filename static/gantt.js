@@ -66,6 +66,25 @@ function Gantt() {
       .attr('opacity', 0.2)
       .attr('width', width)
       .attr('height', rowHeight);
+
+    var gtasks = grow.append('g')
+      .attr('transform', (d, i) =>
+        `translate(${d.Tasks_start ? x(d.Tasks_start) : 0}, ${padding})`);
+
+    gtasks.append('rect')
+      .attr('class', 'bar')
+      .attr('height', rowHeight - (padding * 2))
+      .attr('width', d => d.Tasks_start && d.Tasks_end ?
+        (x(d.Tasks_end) - x(d.Tasks_start)) : 0)
+      .attr('fill', d => {
+        var p = d.APU_id.match(/[.]/g)
+        return 'blue';
+      });
+
+    gtasks.append('text')
+      .attr('fill', 'black')
+      .attr('y', (rowHeight / 2))
+      .text(d => `${d.APU_id}${d.Tasks_constrain ? `::${d.Tasks_constrain}` : ''}`);
   }
 
   this.doselect = doselect;

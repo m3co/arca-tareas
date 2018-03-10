@@ -4,7 +4,7 @@ var APUId_normalized = Symbol();
 function Gantt() {
 
   var edges = { Tasks_start: null, Tasks_end: null, count: null };
-  var rows = [];
+  var tasks = [];
 
   const rowHeight = 26;
   const padding = 4;
@@ -20,6 +20,8 @@ function Gantt() {
     d3.select('svg').attr('width', width)
       .select('g#timeline')
       .call(d3.axisBottom(x));
+    d3.select('svg g#tasks')
+      .attr('transform', `translate(0, ${document.querySelector('svg g#timeline text').getBoundingClientRect().bottom})`);
   }
 
   function doselect(row) {
@@ -35,8 +37,8 @@ function Gantt() {
       }, [])
       .join('.');
 
-    rows.push(row);
-    rows.sort((a, b) => {
+    tasks.push(row);
+    tasks.sort((a, b) => {
       if (a[APUId_normalized] > b[APUId_normalized]) return 1;
       if (a[APUId_normalized] < b[APUId_normalized]) return -1;
       return 0;
@@ -46,11 +48,24 @@ function Gantt() {
   }
 
   function renderRows() {
-    height = rows.length * rowHeight
+    height = tasks.length * rowHeight
     d3.select('svg').attr('height', height)
       .selectAll('g#timeline .tick line')
         .attr('y2', height)
         .attr('opacity', 0.2);
+
+    var gtasks = d3.select('svg g#tasks').selectAll('g.row').data(tasks);
+    var grow = gtasks.enter().append('g')
+      .attr('transform', (d, i) => `translate(0, ${i * rowHeight})`)
+      .attr('class', 'row')
+      .attr('id', d => d.id);
+
+    grow.append('rect')
+      .attr('class', 'background')
+      .attr('fill', (d, i) => i % 2 ? 'white' : 'gray')
+      .attr('opacity', 0.2)
+      .attr('width', width)
+      .attr('height', rowHeight);
   }
 
   this.doselect = doselect;

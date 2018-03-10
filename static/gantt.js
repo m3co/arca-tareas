@@ -1,6 +1,6 @@
 'use strict';
 (() => {
-var APUId_normalized = Symbol();
+var APUIdSymbol = Symbol();
 var tooltip = d3.select("body div.tooltip");
 function Gantt() {
 
@@ -29,7 +29,7 @@ function Gantt() {
   function doselect(row) {
     row.Tasks_start = row.Tasks_start ? new Date(row.Tasks_start) : null;
     row.Tasks_end = row.Tasks_end ? new Date(row.Tasks_end) : null;
-    row[APUId_normalized] = row.APU_id.split('.')
+    row[APUIdSymbol] = row.APU_id.split('.')
       .reduce((acc, d, i, array) => {
         if (i == 0) {
           acc.unshift((new Array(8 - array.length)).fill('00000'));
@@ -41,8 +41,8 @@ function Gantt() {
 
     tasks.push(row);
     tasks.sort((a, b) => {
-      if (a[APUId_normalized] > b[APUId_normalized]) return 1;
-      if (a[APUId_normalized] < b[APUId_normalized]) return -1;
+      if (a[APUIdSymbol] > b[APUIdSymbol]) return 1;
+      if (a[APUIdSymbol] < b[APUIdSymbol]) return -1;
       return 0;
     });
 

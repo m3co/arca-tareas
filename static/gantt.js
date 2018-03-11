@@ -73,27 +73,37 @@ function Gantt() {
     renderRows();
   }
 
-  function renderRows() {
-    height = tasks.length * rowHeight
-    d3.select('svg').attr('height', height)
-      .selectAll('g#timeline .tick line')
-        .attr('y2', height)
-        .attr('opacity', 0.2);
-
-    var gtasks = d3.select('svg g#tasks').selectAll('g.row').data(tasks);
-    var grow = gtasks.enter().append('g')
-      .attr('transform', (d, i) => `translate(0, ${i * rowHeight})`)
-      .attr('class', 'row')
-      .attr('id', d => d.id);
-
-    grow.append('rect')
-      .attr('class', 'background')
+  function drawBackground(selection) {
+    selection.attr('class', 'background')
       .attr('fill', (d, i) => i % 2 ? 'white' : 'gray')
       .attr('opacity', 0.2)
       .attr('width', width)
       .attr('height', rowHeight);
+  }
 
-    var gtasks = grow.append('g')
+  function drawText(selection) {
+    selection.attr('class', 'text')
+      .attr('fill', 'black')
+      .attr('transform', `translate(${rowHeight}, ${(rowHeight / 2) + padding / 2})`)
+      .text(d => `${d.APU_id}${d.Tasks_constrain ?
+        `::${d.Tasks_constrain}` : ''}`);
+  }
+
+  function drawBar(selection) {
+    selection.attr('class', 'bar')
+      .attr('height', rowHeight - (padding * 2))
+      .attr('width', d => d.Tasks_start && d.Tasks_end ?
+        (x(d.Tasks_end) - x(d.Tasks_start)) : 0)
+      .attr('fill', d => {
+        var p = d.APU_id.match(/[.]/g)
+        if (p) {
+          return COLORS[p.length];
+        }
+      });
+  }
+
+  function drawTask(selection) {
+    selection.attr('class', 'task')
       .attr('transform', (d, i) =>
         `translate(${d.Tasks_start ? x(d.Tasks_start) : 0}, ${padding})`)
       .on("mouseover", function(d) {
@@ -117,24 +127,32 @@ function Gantt() {
         .on("start", dragstarted)
         .on("drag", dragged)
         .on("end", dragended));
+  }
 
-    gtasks.append('rect')
-      .attr('class', 'bar')
-      .attr('height', rowHeight - (padding * 2))
-      .attr('width', d => d.Tasks_start && d.Tasks_end ?
-        (x(d.Tasks_end) - x(d.Tasks_start)) : 0)
-      .attr('fill', d => {
-        var p = d.APU_id.match(/[.]/g)
-        if (p) {
-          return COLORS[p.length];
-        }
-      });
+  function renderRows() {
+    height = tasks.length * rowHeight
+    d3.select('svg').attr('height', height)
+      .selectAll('g#timeline .tick line')
+        .attr('y2', height)
+        .attr('opacity', 0.2);
 
-    gtasks.append('text')
-      .attr('fill', 'black')
-      .attr('transform', `translate(${rowHeight}, ${(rowHeight / 2) + padding / 2})`)
-      .text(d => `${d.APU_id}${d.Tasks_constrain ?
-        `::${d.Tasks_constrain}` : ''}`);
+    var gtasks = d3.select('svg g#tasks').selectAll('g.row').data(tasks);
+    gtasks.attr('id', d => d.id);
+    gtasks.select('.background').call(drawBackground);
+    gtasks.select('.task').call(drawTask);
+    gtasks.select('.text').call(drawText);
+    gtasks.select('.bar').call(drawBar);
+
+    var grow = gtasks.enter().append('g')
+      .attr('transform', (d, i) => `translate(0, ${i * rowHeight})`)
+      .attr('class', 'row')
+      .attr('id', d => d.id);
+
+    grow.append('rect').call(drawBackground);
+
+    var gtasks = grow.append('g').call(drawTask);
+    gtasks.append('rect').call(drawBar);
+    gtasks.append('text').call(drawText);
 
     grow.each(function(d) {
       if (d.APU_expand) {

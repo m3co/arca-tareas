@@ -129,6 +129,27 @@ function Gantt() {
         .on("end", dragended));
   }
 
+  function eachDrawExpand(d) {
+    if (d.APU_expand) {
+      if (!this.querySelector('rect.btn-expand')) {
+        d3.select(this).append('rect')
+          .attr('class', 'btn-expand')
+          .attr('fill', 'gold')
+          .attr('width', rowHeight - (padding * 2))
+          .attr('height', rowHeight - (padding * 2))
+      }
+      d3.select(this).select('rect.btn-expand')
+        .attr('transform', `translate(${x(d.Tasks_start)}, ${padding})`)
+        .on('click', () => {
+          client.arca.select({
+            parent: d.APU_id
+          });
+        });
+    } else {
+      d3.select(this).select('rect.btn-expand').remove();
+    }
+  }
+
   function renderRows() {
     height = tasks.length * rowHeight
     d3.select('svg').attr('height', height)
@@ -142,6 +163,7 @@ function Gantt() {
     gtasks.select('.task').call(drawTask);
     gtasks.select('.text').call(drawText);
     gtasks.select('.bar').call(drawBar);
+    gtasks.each(eachDrawExpand);
 
     var grow = gtasks.enter().append('g')
       .attr('transform', (d, i) => `translate(0, ${i * rowHeight})`)
@@ -150,25 +172,11 @@ function Gantt() {
 
     grow.append('rect').call(drawBackground);
 
-    var gtasks = grow.append('g').call(drawTask);
-    gtasks.append('rect').call(drawBar);
-    gtasks.append('text').call(drawText);
+    var gtask = grow.append('g').call(drawTask);
+    gtask.append('rect').call(drawBar);
+    gtask.append('text').call(drawText);
 
-    grow.each(function(d) {
-      if (d.APU_expand) {
-        d3.select(this).append('rect')
-          .attr('class', 'btn-expand')
-          .attr('fill', 'gold')
-          .attr('width', rowHeight - (padding * 2))
-          .attr('height', rowHeight - (padding * 2))
-          .attr('transform', `translate(${x(d.Tasks_start)}, ${padding})`)
-          .on('click', () => {
-            client.arca.select({
-              parent: d.APU_id
-            });
-          });
-      }
-    });
+    grow.each(eachDrawExpand);
   }
 
   this.doselect = doselect;

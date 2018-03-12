@@ -51,6 +51,19 @@ function Gantt() {
       .attr('transform', `translate(0, ${document.querySelector('svg g#timeline text').getBoundingClientRect().bottom})`);
   }
 
+  function doupdate(row) {
+    var task = tasks.find(d => d.id == row.id);
+    if (!task) {
+      return;
+    }
+    row.Tasks_start = row.Tasks_start ? new Date(row.Tasks_start) : null;
+    row.Tasks_end = row.Tasks_end ? new Date(row.Tasks_end) : null;
+    Object.keys(row).forEach(key => {
+      task[key] = row[key];
+    });
+    renderRows();
+  }
+
   function doselect(row) {
     if (tasks.find(d => d.id == row.id)) {
       return;
@@ -183,6 +196,7 @@ function Gantt() {
   }
 
   this.doselect = doselect;
+  this.doupdate = doupdate;
   this.setedges = setedges;
 }
 

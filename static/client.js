@@ -41,6 +41,8 @@
     var query = data.query;
     if (query == 'select') {
       gantt.doselect(data.row);
+    } else if (query == 'update') {
+      gantt.doupdate(data.row);
     } else if (query == 'get-edges') {
       gantt.setedges(data.row);
       client.arca.select({

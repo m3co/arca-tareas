@@ -52,6 +52,9 @@ function Gantt() {
   }
 
   function doselect(row) {
+    if (tasks.find(d => d.id == row.id)) {
+      return;
+    }
     row.Tasks_start = row.Tasks_start ? new Date(row.Tasks_start) : null;
     row.Tasks_end = row.Tasks_end ? new Date(row.Tasks_end) : null;
     row[APUIdSymbol] = row.APU_id.split('.')

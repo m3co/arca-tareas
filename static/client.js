@@ -45,6 +45,8 @@
       gantt.doupdate(data.row);
     } else if (query == 'delete') {
       gantt.dodelete(data.row);
+    } else if (query == 'insert') {
+      gantt.doinsert(data.row);
     } else if (query == 'get-edges') {
       gantt.setedges(data.row);
       client.arca.select({

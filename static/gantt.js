@@ -80,6 +80,16 @@ function Gantt() {
     renderRows();
   }
 
+  function doinsert(row) {
+    if (tasks.find(d => d.id == row.id)) {
+      return;
+    }
+    if (tasks.find(d => d.APU_parent == row.APU_parent)) {
+      insertTask(row);
+      renderRows();
+    }
+  }
+
   function insertTask(row) {
     row.Tasks_start = row.Tasks_start ? new Date(row.Tasks_start) : null;
     row.Tasks_end = row.Tasks_end ? new Date(row.Tasks_end) : null;
@@ -211,6 +221,7 @@ function Gantt() {
   this.doselect = doselect;
   this.doupdate = doupdate;
   this.dodelete = dodelete;
+  this.doinsert = doinsert;
   this.setedges = setedges;
 }
 

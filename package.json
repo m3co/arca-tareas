@@ -4,7 +4,8 @@
   "description": "The simplest way to render a Gantt Chart",
   "main": "index.js",
   "scripts": {
-    "start": "node middleware.js"
+    "start": "node middleware.js",
+    "static": "http-server -c-1 -p 1133 ./static"
   },
   "repository": {
     "type": "git",

@@ -51,6 +51,14 @@ function Gantt() {
       .attr('transform', `translate(0, ${document.querySelector('svg g#timeline text').getBoundingClientRect().bottom})`);
   }
 
+  function dodelete(row) {
+    var taskIndex = tasks.findIndex(d => d.id == row.id);
+    if (taskIndex > -1) {
+      tasks.splice(taskIndex, 1);
+      renderRows();
+    }
+  }
+
   function doupdate(row) {
     var task = tasks.find(d => d.id == row.id);
     if (!task) {
@@ -193,10 +201,13 @@ function Gantt() {
     gtask.append('text').call(drawText);
 
     grow.each(eachDrawExpand);
+
+    gtasks.exit().remove();
   }
 
   this.doselect = doselect;
   this.doupdate = doupdate;
+  this.dodelete = dodelete;
   this.setedges = setedges;
 }
 

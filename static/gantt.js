@@ -76,6 +76,11 @@ function Gantt() {
     if (tasks.find(d => d.id == row.id)) {
       return;
     }
+    insertTask(row);
+    renderRows();
+  }
+
+  function insertTask(row) {
     row.Tasks_start = row.Tasks_start ? new Date(row.Tasks_start) : null;
     row.Tasks_end = row.Tasks_end ? new Date(row.Tasks_end) : null;
     row[APUIdSymbol] = row.APU_id.split('.')
@@ -93,8 +98,6 @@ function Gantt() {
       if (a[APUIdSymbol] < b[APUIdSymbol]) return -1;
       return 0;
     });
-
-    renderRows();
   }
 
   function drawBackground(selection) {

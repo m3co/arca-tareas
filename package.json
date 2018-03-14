@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node middleware.js",
-    "static": "http-server -c-1 -p 1133 ./static"
+    "static": "http-server -c-1 -p 9001 ./static"
   },
   "repository": {
     "type": "git",

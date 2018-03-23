@@ -255,7 +255,6 @@ function CostFlow() {
         .attr('class', 'month')
         .attr('transform', (d, i) => {
           var px = x(d[monthSymbol]);
-          console.log(px);
           return `translate(${px < 30 ? 30 : px}, ${15 + ((i % 4) * 15)})`
         })
         .attr('fill', 'black')
@@ -276,7 +275,14 @@ function CostFlow() {
             Subcontrato: $${Number(Number(d.cost_subcontrato).toFixed(0)).toLocaleString()}<br>
             `)
             .style("left", (d3.event.pageX) + "px")
-            .style("top", (d3.event.pageY - 30) + "px");
+            .style("top", (d3.event.pageY - 30) + "px")
+            .each(function(d) {
+              var rect = this.getBoundingClientRect();
+              if (rect.right > document.body.offsetWidth) {
+                var l = Math.abs(rect.right - document.body.offsetWidth);
+                d3.select(this).style('left', (rect.left - l - 10) + "px");
+              }
+            });
         })
         .on("mouseout", function(d) {
           tooltip.transition()

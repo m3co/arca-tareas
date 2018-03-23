@@ -14,6 +14,12 @@
       module: 'viewAPUTasks',
       project: '2'
     });
+
+    client.emit('data', {
+      query: 'select',
+      module: 'viewCosts1MonthFlow',
+      project: '2'
+    });
   });
 
   client.arca = {};
@@ -39,8 +45,10 @@
 
   client.on('response', (data) => {
     var query = data.query;
-    if (query == 'select') {
+    if (query == 'select' && data.module == 'viewAPUTasks') {
       gantt.doselect(data.row);
+    } else if (query == 'select' && data.module == 'viewCosts1MonthFlow') {
+      costflow.doselect(data.row);
     } else if (query == 'update') {
       gantt.doupdate(data.row);
     } else if (query == 'delete') {

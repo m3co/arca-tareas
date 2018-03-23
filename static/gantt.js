@@ -1,8 +1,10 @@
 'use strict';
 (() => {
+var monthSymbol = Symbol();
 var APUIdSymbol = Symbol();
 var tempSymbol = Symbol();
 var tooltip = d3.select("body div.tooltip");
+var sharedX;
 function Gantt() {
 
   var edges = { Tasks_start: null, Tasks_end: null, count: null };
@@ -13,6 +15,10 @@ function Gantt() {
   const padding = 4;
   var width, height;
   var x = d3.scaleTime();
+  var sharedXresolve;
+  sharedX = new Promise(resolve => {
+    sharedXresolve = resolve;
+  });
 
   function dragstarted(d) {
     d[tempSymbol] = d3.event.x - (d.Tasks_start ? x(d.Tasks_start) : 0);
@@ -42,13 +48,14 @@ function Gantt() {
     edges.Tasks_start = new Date(row.Tasks_start);
     edges.Tasks_end = new Date(row.Tasks_end);
     edges.count = row.count;
-    width = document.body.clientWidth - 14;
+    width = document.body.clientWidth - 15;
     x.range([0, width]).domain([edges.Tasks_start, edges.Tasks_end]);
+    sharedXresolve(x);
     d3.select('svg').attr('width', width)
       .select('g#timeline')
       .call(d3.axisBottom(x));
     d3.select('svg g#tasks')
-      .attr('transform', `translate(0, ${document.querySelector('svg g#timeline text').getBoundingClientRect().bottom})`);
+      .attr('transform', `translate(0, 82)`);
   }
 
   function dodelete(row) {
@@ -189,7 +196,7 @@ function Gantt() {
 
   function renderRows() {
     height = tasks.length * rowHeight
-    d3.select('svg').attr('height', height)
+    d3.select('svg').attr('height', height + 88)
       .selectAll('g#timeline .tick line')
         .attr('y2', height)
         .attr('opacity', 0.2);
@@ -225,5 +232,60 @@ function Gantt() {
   this.setedges = setedges;
 }
 
+function CostFlow() {
+
+  var months = [];
+  var cf = d3.select('svg g#costflow');
+  function doselect(row) { sharedX.then(x => {
+    if (months.findIndex(d => d.id == row.id) == -1) {
+      [row.start, row.end] = row.id.split(',').map(d => new Date(d));
+      row[monthSymbol] = row.start;
+      months.push(row);
+      months.sort((a, b) => {
+        if (a.id > b.id) return 1;
+        if (a.id < b.id) return -1;
+        return 0;
+      });
+    }
+    cf.selectAll('text.month')
+      .data(months)
+      .enter()
+      .append('text')
+        .attr('class', 'month')
+        .attr('transform', (d, i) => {
+          return `translate(${x(d[monthSymbol])}, ${15 + ((i % 4) * 15)})`
+        })
+        .attr('fill', 'black')
+        .text(d => `$${Number(Number(d.cost).toFixed(0)).toLocaleString()}`)
+        .on("mouseover", function(d) {
+          tooltip.transition()
+            .duration(200)
+            .style("opacity", .9);
+          tooltip.html(`
+            Desde:${d.start ? d.start.toLocaleDateString() : ''}<br>
+            Hasta:${d.end ? d.end.toLocaleDateString() : ''}<br>
+            Total: $${Number(Number(d.cost).toFixed(0)).toLocaleString()}<br>
+            Material: $${Number(Number(d.cost_material).toFixed(0)).toLocaleString()}<br>
+            Mano de Obra: $${Number(Number(d.cost_mdo).toFixed(0)).toLocaleString()}<br>
+            Equipo: $${Number(Number(d.cost_equipo).toFixed(0)).toLocaleString()}<br>
+            Herramienta: $${Number(Number(d.cost_herramienta).toFixed(0)).toLocaleString()}<br>
+            Transporte: $${Number(Number(d.cost_transporte).toFixed(0)).toLocaleString()}<br>
+            Subcontrato: $${Number(Number(d.cost_subcontrato).toFixed(0)).toLocaleString()}<br>
+            `)
+            .style("left", (d3.event.pageX) + "px")
+            .style("top", (d3.event.pageY - 30) + "px");
+        })
+        .on("mouseout", function(d) {
+          tooltip.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
+  }); }
+
+  this.doselect = doselect;
+}
+
 window.gantt = new Gantt();
+window.costflow = new CostFlow();
+
 })();

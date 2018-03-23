@@ -13,6 +13,7 @@ function Gantt() {
   const COLORS = ['brown', 'red', 'blue', 'maroon', 'darkgreen'];
   const rowHeight = 26;
   const padding = 4;
+  const monthWidth = 50;
   var width, height;
   var x = d3.scaleTime();
   var sharedXresolve;
@@ -48,8 +49,8 @@ function Gantt() {
     edges.Tasks_start = new Date(row.Tasks_start);
     edges.Tasks_end = new Date(row.Tasks_end);
     edges.count = row.count;
-    width = document.body.clientWidth - 15;
-    x.range([0, width]).domain([edges.Tasks_start, edges.Tasks_end]);
+    width = monthWidth * Math.ceil((edges.Tasks_end - edges.Tasks_start) / 2592000000);
+    x.range([50, width - 50]).domain([edges.Tasks_start, edges.Tasks_end]);
     sharedXresolve(x);
     d3.select('svg').attr('width', width)
       .select('g#timeline')
@@ -198,7 +199,7 @@ function Gantt() {
     height = tasks.length * rowHeight
     d3.select('svg').attr('height', height + 88)
       .selectAll('g#timeline .tick line')
-        .attr('y2', height)
+        .attr('y2', height + 88)
         .attr('opacity', 0.2);
 
     var gtasks = d3.select('svg g#tasks').selectAll('g.row').data(tasks);
@@ -253,7 +254,9 @@ function CostFlow() {
       .append('text')
         .attr('class', 'month')
         .attr('transform', (d, i) => {
-          return `translate(${x(d[monthSymbol])}, ${15 + ((i % 4) * 15)})`
+          var px = x(d[monthSymbol]);
+          console.log(px);
+          return `translate(${px < 30 ? 30 : px}, ${15 + ((i % 4) * 15)})`
         })
         .attr('fill', 'black')
         .text(d => `$${Number(Number(d.cost).toFixed(0)).toLocaleString()}`)

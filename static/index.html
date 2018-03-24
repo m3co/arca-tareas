@@ -5,6 +5,10 @@
     <script src="node_modules/d3/build/d3.min.js"></script>
     <script src="client.js"></script>
     <style>
+      body {
+        font-family: "sans-serif";
+        font-size: 10px;
+      }
       div.tooltip {
         position: absolute;
         padding: 2px;
@@ -20,7 +24,7 @@
     <div class="tooltip" style="opacity:0;"></div>
     <svg>
       <g id="timeline"></g>
-      <g font-size="10" font-family="sans-serif" text-anchor="middle" id="costflow" height="56" transform="translate(0, 16)"></g>
+      <g id="costflow" height="56" transform="translate(0, 16)"></g>
       <g id="tasks"></g>
     </svg>
     <script src="gantt.js"></script>

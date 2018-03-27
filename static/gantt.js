@@ -1,5 +1,6 @@
 'use strict';
 (() => {
+var IDSymbol = Symbol();
 var monthSymbol = Symbol();
 var APUIdSymbol = Symbol();
 var tempSymbol = Symbol();
@@ -238,8 +239,9 @@ function CostFlow() {
   var months = [];
   var cf = d3.select('svg g#costflow');
   function doselect(row) { sharedX.then(x => {
-    if (months.findIndex(d => d.id == row.id) == -1) {
-      [row.start, row.end] = row.id.split(',').map(d => new Date(d));
+    [row.start, row.end] = [row.start, row.end].map(d => new Date(d));
+    row[IDSymbol] = `${row.id},${row.start},${row.end}`;
+    if (months.findIndex(d => d[IDSymbol] == row[IDSymbol]) == -1) {
       row[monthSymbol] = row.start;
       months.push(row);
       months.sort((a, b) => {

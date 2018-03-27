@@ -257,7 +257,7 @@ function CostFlow() {
         .attr('class', 'month')
         .attr('transform', (d, i) => {
           var px = x(d[monthSymbol]);
-          return `translate(${px < 30 ? 30 : px}, ${15 + ((i % 4) * 15)})`
+          return `translate(${px < 30 ? 30 : px}, ${15 + ((i % 3) * 15)})`
         })
         .attr('fill', 'black')
         .text(d => `$${Number(Number(d.cost).toFixed(0)).toLocaleString()}`)

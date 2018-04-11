@@ -47,7 +47,7 @@
     var query = data.query;
     if (query == 'select' && data.module == 'viewAPUTasks') {
       gantt.doselect(data.row);
-    } else if (query == 'select' && data.module == 'viewCosts1MonthFlow') {
+    } else if (query == 'select' && data.module == 'viewAPUCosts1MonthFlow') {
       costflow.doselect(data.row);
     } else if (query == 'update') {
       gantt.doupdate(data.row);

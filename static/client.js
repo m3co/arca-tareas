@@ -6,18 +6,18 @@
 
     client.emit('data', {
       query: 'subscribe',
-      module: 'viewAPUTasks'
+      module: 'viewAAUTasks'
     });
 
     client.emit('data', {
       query: 'get-edges',
-      module: 'viewAPUTasks',
+      module: 'viewAAUTasks',
       project: '2'
     });
 
     client.emit('data', {
       query: 'select',
-      module: 'viewAPUCosts1MonthFlow',
+      module: 'viewAAUCosts1MonthFlow',
       id: '2'
     });
   });
@@ -26,8 +26,8 @@
   client.arca.update = function update(row) {
     var event = {
       query: 'update',
-      module: 'viewAPUTasks',
-      from: 'viewAPUTasks',
+      module: 'viewAAUTasks',
+      from: 'viewAAUTasks',
       id: row.id,
       idkey: 'id',
       key: ['Tasks_start'],
@@ -38,16 +38,16 @@
   client.arca.select = function select(params) {
     client.emit('data', {
       query: 'select',
-      module: 'viewAPUTasks',
+      module: 'viewAAUTasks',
       parent: params.parent
     });
   };
 
   client.on('response', (data) => {
     var query = data.query;
-    if (query == 'select' && data.module == 'viewAPUTasks') {
+    if (query == 'select' && data.module == 'viewAAUTasks') {
       gantt.doselect(data.row);
-    } else if (query == 'select' && data.module == 'viewAPUCosts1MonthFlow') {
+    } else if (query == 'select' && data.module == 'viewAAUCosts1MonthFlow') {
       costflow.doselect(data.row);
     } else if (query == 'update') {
       gantt.doupdate(data.row);

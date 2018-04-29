@@ -2,7 +2,7 @@
 (() => {
 var IDSymbol = Symbol();
 var monthSymbol = Symbol();
-var APUIdSymbol = Symbol();
+var AAUIdSymbol = Symbol();
 var tempSymbol = Symbol();
 var tooltip = d3.select("body div.tooltip");
 var sharedX;
@@ -93,7 +93,7 @@ function Gantt() {
     if (tasks.find(d => d.id == row.id)) {
       return;
     }
-    if (tasks.find(d => d.APU_parent == row.APU_parent)) {
+    if (tasks.find(d => d.AAU_parent == row.AAU_parent)) {
       insertTask(row);
       renderRows();
     }
@@ -102,7 +102,7 @@ function Gantt() {
   function insertTask(row) {
     row.Tasks_start = row.Tasks_start ? new Date(row.Tasks_start) : null;
     row.Tasks_end = row.Tasks_end ? new Date(row.Tasks_end) : null;
-    row[APUIdSymbol] = row.APU_id.split('.')
+    row[AAUIdSymbol] = row.AAU_id.split('.')
       .reduce((acc, d, i, array) => {
         acc.push(`${'0'.repeat(5 - d.length)}${d}`);
         if (i + 1 == array.length) {
@@ -113,8 +113,8 @@ function Gantt() {
 
     tasks.push(row);
     tasks.sort((a, b) => {
-      if (a[APUIdSymbol] > b[APUIdSymbol]) return 1;
-      if (a[APUIdSymbol] < b[APUIdSymbol]) return -1;
+      if (a[AAUIdSymbol] > b[AAUIdSymbol]) return 1;
+      if (a[AAUIdSymbol] < b[AAUIdSymbol]) return -1;
       return 0;
     });
   }
@@ -131,7 +131,7 @@ function Gantt() {
     selection.attr('class', 'text')
       .attr('fill', 'black')
       .attr('transform', `translate(${rowHeight}, ${(rowHeight / 2) + padding / 2})`)
-      .text(d => `${d.APU_id}${d.Tasks_constrain ?
+      .text(d => `${d.AAU_id}${d.Tasks_constrain ?
         `::${d.Tasks_constrain}` : ''}`);
   }
 
@@ -141,7 +141,7 @@ function Gantt() {
       .attr('width', d => d.Tasks_start && d.Tasks_end ?
         (x(d.Tasks_end) - x(d.Tasks_start)) : 0)
       .attr('fill', d => {
-        var p = d.APU_id.match(/[.]/g)
+        var p = d.AAU_id.match(/[.]/g)
         if (p) {
           return COLORS[p.length];
         }
@@ -159,8 +159,8 @@ function Gantt() {
         tooltip.html(`
           Desde:${d.Tasks_start ? d.Tasks_start.toLocaleDateString() : ''}<br>
           Hasta:${d.Tasks_end ? d.Tasks_end.toLocaleDateString() : ''}<br>
-          ${d.APU_id}${d.Tasks_constrain ? `::${d.Tasks_constrain}` : ''}<br>
-          ${d.APU_description}`)
+          ${d.AAU_id}${d.Tasks_constrain ? `::${d.Tasks_constrain}` : ''}<br>
+          ${d.AAU_description}`)
           .style("left", (d3.event.pageX) + "px")
           .style("top", (d3.event.pageY - 30) + "px");
       })
@@ -176,7 +176,7 @@ function Gantt() {
   }
 
   function eachDrawExpand(d) {
-    if (d.APU_expand) {
+    if (d.AAU_expand) {
       if (!this.querySelector('rect.btn-expand')) {
         d3.select(this).append('rect')
           .attr('class', 'btn-expand')
@@ -188,7 +188,7 @@ function Gantt() {
         .attr('transform', `translate(${x(d.Tasks_start)}, ${padding})`)
         .on('click', () => {
           client.arca.select({
-            parent: d.APU_id
+            parent: d.AAU_id
           });
         });
     } else {

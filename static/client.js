@@ -1,6 +1,7 @@
 'use strict';
 ((io) => {
   var client = io();
+  var ProjectId = location.search.match(/\d+$/);
   client.on('connect', () => {
     console.log('connection');
 
@@ -9,16 +10,23 @@
       module: 'viewAAUTasks'
     });
 
-    client.emit('data', {
-      query: 'get-edges',
-      module: 'viewAAUTasks',
-      project: '2'
-    });
+    if (ProjectId) {
+      client.emit('data', {
+        query: 'get-edges',
+        module: 'viewAAUTasks',
+        project: ProjectId
+      });
+
+      client.emit('data', {
+        query: 'select',
+        module: 'viewAAUCosts1MonthFlow',
+        id: ProjectId
+      });
+    }
 
     client.emit('data', {
       query: 'select',
-      module: 'viewAAUCosts1MonthFlow',
-      id: '2'
+      module: 'Projects'
     });
   });
 
@@ -58,8 +66,10 @@
     } else if (query == 'get-edges') {
       gantt.setedges(data.row);
       client.arca.select({
-        parent: 2
+        parent: ProjectId
       });
+    } else if (query == 'select' && data.module == 'Projects') {
+      window.projects.doselect(data.row);
     } else {
       console.log('not processed', data);
     }

@@ -50,7 +50,7 @@
     "react-test-renderer": "^16.11.0",
     "style-loader": "^0.23.1",
     "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.9",
+    "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {
@@ -61,12 +61,12 @@
     "@material-ui/icons": "^4.5.1",
     "@types/jest": "^24.0.21",
     "@types/react-modal": "^3.10.0",
-    "@types/react-select": "^3.0.6",
+    "@types/react-select": "^3.0.8",
     "@types/react-test-renderer": "^16.9.1",
     "@types/redux-thunk": "^2.1.0",
     "@types/socket.io-client": "^1.4.32",
     "@types/uuid": "^3.4.6",
-    "arca-redux": "^1.0.28",
+    "arca-table": "^1.0.28",
     "eslint-config-airbnb-typescript": "^4.0.1",
     "less": "^3.10.3",
     "prop-types": "^15.7.2",

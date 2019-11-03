@@ -7,7 +7,7 @@
     "start": "webpack-dev-server --mode development",
     "build": "webpack --mode production",
     "test": "jest --updateSnapshot",
-    "eslint": "./node_modules/.bin/eslint --ext .js,.jsx,.ts,.tsx ./"
+    "eslint": "./node_modules/.bin/eslint --fix . --ext .js,.jsx,.ts,.tsx ./"
   },
   "repository": {
     "type": "git",
@@ -67,6 +67,7 @@
     "@types/redux-thunk": "^2.1.0",
     "@types/socket.io-client": "^1.4.32",
     "@types/uuid": "^3.4.6",
+    "arca-redux": "^2.0.31",
     "arca-table": "^1.0.28",
     "eslint-config-airbnb-typescript": "^4.0.1",
     "less": "^3.10.3",

@@ -16,12 +16,12 @@ class App extends React.Component<AppProps, AppState> {
 
     this.state = {
       ganttInfo: null,
-    }
+    };
 
     props.socket.store.subscribe(() => {
       const state = props.socket.store.getState();
       this.setState({
-        ganttInfo: state.Source['AAU-Tasks-Gantt']
+        ganttInfo: state.Source['AAU-Tasks-Gantt'],
       });
     });
 
@@ -32,13 +32,14 @@ class App extends React.Component<AppProps, AppState> {
 
   render() {
     const { ganttInfo } = this.state;
+
     return (
-      <div className="outer">
-        <div className="inner">
+      <div className='outer'>
+        <div className='inner'>
           <Gantt ganttInfo={ganttInfo} />
         </div>
       </div>
-    )
+    );
   }
 }
 

@@ -6,35 +6,28 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import { sortByEnd } from '../../utils';
 
 interface GanttProps {
   ganttInfo: State['Source']['AAU-Tasks-Gantt'],
 }
 
 const Gantt: React.FunctionComponent<GanttProps> = ({
-  ganttInfo
+  ganttInfo,
 }) => {
-  const getStartDate = (rows: State['Source']['AAU-Tasks-Gantt']['Rows']) =>
-    rows.sort((a, b) =>
-      Date.parse(String(a.Start)) - Date.parse(String(b.Start)));
-
-  const getEndDate = (rows: State['Source']['AAU-Tasks-Gantt']['Rows']) =>
-    rows.sort((a, b) =>
-      Date.parse(String(a.End)) - Date.parse(String(b.End)));
-
   const displayGantt = () => {
-    const sortedData = getEndDate(ganttInfo.Rows);
+    const sortedData = sortByEnd([...ganttInfo.Rows]);
     const diff = (Date.parse(String(sortedData[0].End)) - Date.parse(String(sortedData[sortedData.length - 1].End))) / 60000;
 
     return (
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell key='first th' className="fix">
+            <TableCell key='first th' className='fix'>
               tree/days
             </TableCell>
             {
-              range(diff / 1440).map((item) => (
+              range(diff / 1440).map(item => (
                 <TableCell key={String(item)}>
                   {`day ${item}`}
                 </TableCell>
@@ -45,8 +38,8 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
         <TableBody>
           {
             ganttInfo.Rows.map((item, id) => (
-              <TableRow key={item.Key + id}>
-                <TableCell className="fix">
+              <TableRow key={item.Key + String(id)}>
+                <TableCell className='fix'>
                   {item.Key}
                 </TableCell>
                 <TableCell>
@@ -60,10 +53,10 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
           }
         </TableBody>
       </Table>
-    )
-  }
+    );
+  };
 
-  return ganttInfo && ganttInfo.Rows.length? displayGantt() : null;
-}
+  return ganttInfo && ganttInfo.Rows.length ? displayGantt() : null;
+};
 
 export default Gantt;

@@ -1,21 +1,41 @@
 import React from 'react';
-import { ARCASocket } from 'arca-redux';
+import { ARCASocket, State } from 'arca-redux';
+import Gantt from '../components/Gantt/Gantt';
 
 interface AppProps {
   socket: ARCASocket,
 }
 
-const App: React.FunctionComponent<AppProps> = ({
-  socket
-}) => {
-  socket.store.subscribe(() => {});
-  socket.Select('AAU-Tasks-Gantt');
-  socket.GetInfo('AAU-Tasks-Gantt');
-  socket.Subscribe('AAU-Tasks-Gantt');
+interface AppState {
+  ganttInfo: State['Source']['AAU-Tasks-Gantt'],
+}
 
-  return (
-    <p>Gantt is here</p>
-  )
+class App extends React.Component<AppProps, AppState> {
+  constructor(props: AppProps) {
+    super(props);
+
+    this.state = {
+      ganttInfo: null,
+    }
+
+    props.socket.store.subscribe(() => {
+      const state = props.socket.store.getState();
+      this.setState({
+        ganttInfo: state.Source['AAU-Tasks-Gantt']
+      });
+    });
+
+    props.socket.Select('AAU-Tasks-Gantt');
+    props.socket.GetInfo('AAU-Tasks-Gantt');
+    props.socket.Subscribe('AAU-Tasks-Gantt');
+  }
+
+  render() {
+    const { ganttInfo } = this.state;
+    return (
+      <Gantt ganttInfo={ganttInfo} />
+    )
+  }
 }
 
 export default App;

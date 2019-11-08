@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { State } from 'arca-redux';
+import Tooltip from '@material-ui/core/Tooltip';
 import { getDateList } from '../../../utils';
 import './Row.less';
 
@@ -33,13 +34,23 @@ const Row: React.FunctionComponent<RowProps> = ({
           width: (51 * timeLine.length) - 1,
         }}
       >
-        <div
-          style={{
-            width: (51 * duration.length) - 1,
-            marginLeft: 51 * start,
-          }}
-          className='gantt-row__task-duration'
-        />
+        <Tooltip title={(
+          <div className='gantt-row__description'>
+            <h2>{`key: ${rowInfo.Key}`}</h2>
+            <p>{`Constraint: ${rowInfo.Constraint}`}</p>
+            <p>{`start: ${rowInfo.Start}`}</p>
+            <p>{`end: ${rowInfo.End}`}</p>
+          </div>
+        )}
+        >
+          <div
+            style={{
+              width: (51 * duration.length) - 1,
+              marginLeft: 51 * start,
+            }}
+            className='gantt-row__task-duration'
+          />
+        </Tooltip>
       </div>
     </div>
   );

@@ -30,7 +30,7 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
       <Header timeLine={timeLine} />
       {
           ganttInfo.Rows.map(row => (
-            <Row rowInfo={row} timeLine={timeLine} key={row.Key} />
+            <Row rowInfo={row} timeLine={timeLine} key={row.Key + row.Constraint} />
           ))
         }
     </React.Fragment>

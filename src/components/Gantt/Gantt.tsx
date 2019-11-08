@@ -21,23 +21,20 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     const endDate = new Date(last(sortedDataByEnd).End);
 
     return getDateList(startDate, endDate);
-  }
+  };
 
   const [timeLine, setTimeLine] = useState(calcTimeLine());
 
-  const displayGantt = () => {
-    const sortedDataByEnd = sortByEnd([...ganttInfo.Rows]);
-    const sortedDataByStart = sortByStart([...ganttInfo.Rows]);
-
-    calcTimeLine();
-
-    return (
-      <React.Fragment>
-        <Header timeLine={timeLine} />
-        <Row rowInfo={sortedDataByStart[0]} />
-      </React.Fragment>
-    );
-  };
+  const displayGantt = () => (
+    <React.Fragment>
+      <Header timeLine={timeLine} />
+      {
+          ganttInfo.Rows.map(row => (
+            <Row rowInfo={row} timeLine={timeLine} key={row.Key} />
+          ))
+        }
+    </React.Fragment>
+  );
 
   return displayGantt();
 };

@@ -34,11 +34,7 @@ class App extends React.Component<AppProps, AppState> {
     const { ganttInfo } = this.state;
 
     return (
-      <div className='outer'>
-        <div className='inner'>
-          <Gantt ganttInfo={ganttInfo} />
-        </div>
-      </div>
+      <Gantt ganttInfo={ganttInfo} />
     );
   }
 }

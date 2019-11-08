@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import 'typeface-roboto';
 import App from './App/App';
 import { store, socket } from './redux/store';
+import './less/index.less';
 
 render(
   <Provider store={store}>

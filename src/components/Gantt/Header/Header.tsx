@@ -7,21 +7,19 @@ interface HeaderProps {
 
 const Header: React.FunctionComponent<HeaderProps> = ({
   timeLine,
-}) => {
-  return (
-    <div className='gantt-header'>
-      <div className='gantt-header__title'>
+}) => (
+  <div className='gantt-header'>
+    <div className='gantt-header__title'>
         tasks/timeline
-      </div>
-      {
+    </div>
+    {
         timeLine.map(day => (
           <div className='gantt-header__day' key={String(day)}>
             { day.getDate() }
           </div>
         ))
       }
-    </div>
-  )
-}
+  </div>
+);
 
 export default Header;

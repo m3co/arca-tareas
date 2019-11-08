@@ -7,7 +7,38 @@
     width: 208px;
     padding: 16px;
     border: 1px solid @light-gray;
-    border-right: none;
+  }
+
+  &__year {
+    &-title {
+      padding: 16px;
+      text-align: center;
+      border: 1px solid @light-gray;
+  
+      &:first-child {
+        border-left: none;
+      }
+    }
+
+    &-content {
+      display: flex;
+    }
+  }
+
+  &__month {
+    &-title {
+      padding: 16px;
+      text-align: center;
+      border-right: 1px solid @light-gray;;
+  
+      &:first-child {
+        border-left: none;
+      }
+    }
+
+    &-content {
+      display: flex;
+    }
   }
 
   &__day {
@@ -15,6 +46,10 @@
     padding: 16px;
     border: 1px solid @light-gray;
     border-right: none;
+
+    &:first-child {
+      border-left: none;
+    }
 
     &:last-child {
       border-right: 1px solid @light-gray;

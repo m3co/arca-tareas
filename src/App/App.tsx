@@ -34,7 +34,9 @@ class App extends React.Component<AppProps, AppState> {
     const { ganttInfo } = this.state;
 
     return (
-      <Gantt ganttInfo={ganttInfo} />
+      ganttInfo && ganttInfo.Rows.length
+        ? <Gantt ganttInfo={ganttInfo} />
+        : <p>Loading...</p>
     );
   }
 }

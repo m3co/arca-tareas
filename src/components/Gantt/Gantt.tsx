@@ -6,7 +6,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { sortByEnd, getDurationTaskInDays } from '../../utils';
+import { sortByEnd, sortByStart, getDurationTaskInDays } from '../../utils';
+import Header from './Header/Header';
 
 interface GanttProps {
   ganttInfo: State['Source']['AAU-Tasks-Gantt'],
@@ -38,36 +39,47 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
   }
 
   const displayGantt = () => {
+    const sortedDataByEnd = sortByEnd([...ganttInfo.Rows]);
+    const sortedDataByStart = sortByStart([...ganttInfo.Rows]);
     return (
-      <Table>
-        { getTableHead() }
-        <TableBody>
-          {
-            ganttInfo.Rows.map((item, id) => {
-              const duration = getDurationTaskInDays(item);
-              console.log(duration);
-              return (
-                <TableRow key={item.Key + String(id)}>
-                  <TableCell className='fix'>
-                    {item.Key}
-                  </TableCell>
-                  {
-                    range(duration).map(item => (
-                      <TableCell key={item}>
-                        X
-                      </TableCell>
-                    ))
-                  }
-                </TableRow>
-              )}
-            )
-          }
-        </TableBody>
-      </Table>
+      <React.Fragment>
+        <Header startDate={sortedDataByStart[0].Start} endDate={sortedDataByEnd[sortedDataByEnd.length - 1].End} />
+        <Table>
+          {/* { getTableHead() } */}
+          <TableBody>
+            {
+              ganttInfo.Rows.map((item, id) => {
+                const duration = getDurationTaskInDays(item);
+                // console.log(duration);
+                return (
+                  <TableRow key={item.Key + String(id)}>
+                    <TableCell className='fix'>
+                      {item.Key}
+                    </TableCell>
+                    {
+                      range(duration).map(item => (
+                        <TableCell key={item}>
+                          X
+                        </TableCell>
+                      ))
+                    }
+                  </TableRow>
+                )}
+              )
+            }
+          </TableBody>
+        </Table>
+      </React.Fragment>
     );
   };
 
-  return ganttInfo && ganttInfo.Rows.length ? displayGantt() : null;
+  return (
+    <React.Fragment>
+      {
+        ganttInfo && ganttInfo.Rows.length ? displayGantt() : null
+      }
+    </React.Fragment>
+  )
 };
 
 export default Gantt;

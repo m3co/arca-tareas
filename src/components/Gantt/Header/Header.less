@@ -1,0 +1,23 @@
+@import '../../../less/colors.less';
+
+.gantt-header {
+  display: flex;
+
+  &__title {
+    width: 208px;
+    padding: 16px;
+    border: 1px solid @light-gray;
+    border-right: none;
+  }
+
+  &__day {
+    width: 18px;
+    padding: 16px;
+    border: 1px solid @light-gray;
+    border-right: none;
+
+    &:last-child {
+      border-right: 1px solid @light-gray;
+    }
+  }
+}

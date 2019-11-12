@@ -1,4 +1,4 @@
-import { IMonthsConstant } from "../types/date";
+import { IMonthsConstant } from '../types/date';
 
 export const MONTHS: IMonthsConstant = {
   0: 'January',

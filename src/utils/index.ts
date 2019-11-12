@@ -31,7 +31,7 @@ export const getMappedDates = (list: Array<Date>) => {
     if (years.has(year)) {
       years.set(year, [...years.get(year), date]);
     } else {
-      years.set(year, [date])
+      years.set(year, [date]);
     }
 
     return years;
@@ -48,14 +48,18 @@ export const getMappedDates = (list: Array<Date>) => {
       if (year[month]) {
         year[month].push(date);
       } else {
-        year[month] = [date];
+        Object.defineProperty(year, month, {
+          configurable: true,
+          enumerable: true,
+          value: [date],
+        });
       }
 
       return year;
-    }, {})
+    }, {});
 
     mappedDates.set(year, months);
-  })
+  });
 
   return mappedDates;
 };

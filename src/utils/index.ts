@@ -21,3 +21,41 @@ export const getDateList = (start: Date, end: Date) => {
 
   return list;
 };
+
+export const getMappedDates = (list: Array<Date>) => {
+  const mappedDates = new Map();
+
+  const yearsMap = list.reduce((years, date) => {
+    const year = date.getFullYear();
+
+    if (years.has(year)) {
+      years.set(year, [...years.get(year), date]);
+    } else {
+      years.set(year, [date])
+    }
+
+    return years;
+  }, new Map());
+
+  yearsMap.forEach((month: Array<Date>, year) => {
+    interface Imonth<T> {
+      [key: number]: Array<Date>,
+    }
+
+    const months = month.reduce((year: Imonth<[]>, date: Date) => {
+      const month: keyof Imonth<number> = date.getMonth();
+
+      if (year[month]) {
+        year[month].push(date);
+      } else {
+        year[month] = [date];
+      }
+
+      return year;
+    }, {})
+
+    mappedDates.set(year, months);
+  })
+
+  return mappedDates;
+};

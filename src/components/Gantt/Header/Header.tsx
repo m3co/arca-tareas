@@ -1,6 +1,8 @@
 import React from 'react';
-import './Header.less';
 import { MONTHS } from '../../../utils/constant';
+import { getMappedDates } from '../../../utils';
+import { TMonthsNumber, IDatesByMonthsInYear } from '../../../types/date';
+import './Header.less';
 
 interface HeaderProps {
   timeLine: Array<Date>,
@@ -9,62 +11,36 @@ interface HeaderProps {
 const Header: React.FunctionComponent<HeaderProps> = ({
   timeLine,
 }) => {
-  const yearsMap = timeLine.reduce((years, date) => {
-    if (years[date.getFullYear()]) {
-      years[date.getFullYear()].push(date);
-    } else {
-      years[date.getFullYear()] = [date];
-    }
+  const renderHead = (mappedDates: Map<TMonthsNumber, IDatesByMonthsInYear<{}>>) => {
+    const items: Array<JSX.Element> = [];
 
-    return years;
-  }, {})
-
-  const yearsMappedBymonth = {};
-  for (const year in yearsMap) {
-    const dates = yearsMap[year];
-
-    yearsMappedBymonth[year] = dates.reduce((acc, date) => {
-      if (acc[date.getMonth()]) {
-        acc[date.getMonth()].push(date);
-      } else {
-        acc[date.getMonth()] = [date];
-      }
-  
-      return acc;
-    }, {});
-  }
-
-  console.log(yearsMappedBymonth);
-
-  const renderHead = (yearsMappedBymonth) => {
-    const items = [];
-
-    for (const year in yearsMappedBymonth) {
+    mappedDates.forEach((months, year) => {
       items.push(
         <div className='gantt-header__year' key={year}>
           <div className='gantt-header__year-title'>{year}</div>
           <div className='gantt-header__year-content'>
             {
-              renderMonth(yearsMappedBymonth[year])
+              renderMonth(months)
             }
           </div>
-        </div>
-      )
-    }
+        </div>,
+      );
+    });
 
     return items;
-  }
+  };
 
-  const renderMonth = (year) => {
-    const items = [];
+  const renderMonth = (year: IDatesByMonthsInYear<{}>) => {
 
-    for (const month in year) {
-      items.push(
+    return Object.keys(year).map((month) => {
+      const numberMonth: keyof IDatesByMonthsInYear<number> = Number(month);
+
+      return (
         <div className='gantt-header__month' key={month}>
-          <div className='gantt-header__month-title'>{MONTHS[month]}</div>
+          <div className='gantt-header__month-title'>{MONTHS[numberMonth]}</div>
           <div className='gantt-header__month-content'>
             {
-              year[month].map(day => (
+              year[numberMonth].map((day: Date) => (
                 <div className='gantt-header__day' key={String(day)}>
                   { day.getDate() }
                 </div>
@@ -73,10 +49,8 @@ const Header: React.FunctionComponent<HeaderProps> = ({
           </div>
         </div>
       )
-    }
-
-    return items;
-  }
+    });
+  };
 
   return (
     <div className='gantt-header'>
@@ -84,17 +58,10 @@ const Header: React.FunctionComponent<HeaderProps> = ({
         tasks/timeline
       </div>
       {
-        renderHead(yearsMappedBymonth)
+        renderHead(getMappedDates(timeLine))
       }
-      {/* {
-        timeLine.map(day => (
-          <div className='gantt-header__day' key={String(day)}>
-            { day.getDate() }
-          </div>
-        ))
-      } */}
     </div>
-  )
+  );
 };
 
 export default Header;

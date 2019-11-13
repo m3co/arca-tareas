@@ -1,4 +1,6 @@
 import { State } from 'arca-redux';
+import head from 'lodash/head';
+import last from 'lodash/last';
 
 export const sortByStart = (rows: State['Source']['AAU-Tasks-Gantt']['Rows']) => rows
   .sort((a, b) => Date.parse(String(a.Start)) - Date.parse(String(b.Start)));
@@ -21,6 +23,34 @@ export const getDateList = (start: Date, end: Date) => {
 
   return list;
 };
+
+export function addDaysToHeadList(numberDays: number, list: Array<Date>) {
+  const newList = [];
+  const headList = head(list);
+  const date = new Date(headList);
+  date.setDate(date.getDate() - numberDays);
+
+  while (date < headList) {
+    newList.push(new Date(date));
+    date.setDate(date.getDate() + 1);
+  }
+
+  return [...newList, ...list];
+}
+
+export function addDaysToTailList(numberDays: number, list: Array<Date>) {
+  const newList = [];
+  const lastOfList = last(list);
+  const date = new Date(lastOfList);
+  date.setDate(date.getDate() + 1);
+
+  while (newList.length < numberDays) {
+    newList.push(new Date(date));
+    date.setDate(date.getDate() + 1);
+  }
+
+  return [...list, ...newList];
+}
 
 export const getMappedDates = (list: Array<Date>) => {
   const mappedDates = new Map();

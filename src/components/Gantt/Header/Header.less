@@ -4,16 +4,22 @@
   display: flex;
 
   &__title {
+    position: absolute;
     width: 208px;
+    height: 123px;
     padding: 16px;
     border: 1px solid @light-gray;
+    background: @white;
   }
 
   &__year {
+    margin-left: 241px;
+
     &-title {
       padding: 16px;
       text-align: center;
       border: 1px solid @light-gray;
+      border-right: none;
   
       &:first-child {
         border-left: none;
@@ -29,15 +35,20 @@
     &-title {
       padding: 16px;
       text-align: center;
-      border-right: 1px solid @light-gray;;
-  
-      &:first-child {
-        border-left: none;
-      }
     }
 
     &-content {
       display: flex;
+    }
+
+    &:last-child {
+      .gantt-header__day:last-child {
+        border-right: none;
+      }
+    }
+
+    &:not(:last-child) &-title {
+      border-right: 1px solid @light-gray;
     }
   }
 

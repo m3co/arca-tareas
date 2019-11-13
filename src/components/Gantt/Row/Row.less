@@ -1,22 +1,27 @@
 @import '../../../less/colors.less';
 
 .gantt-row {
-  display: flex;
-
   &__task-name {
+    position: absolute;
     width: 208px;
-    padding: 16px;
+    padding: 15px 16px;
     border: 1px solid @light-gray;
-    border-right: none;
     border-top: none;
+    background: @white;
   }
 
   &__task-timeline {
-    padding: 6px 0;
+    padding: 6px 0 5px;
+    margin-left: 241px;
     border: 1px solid @light-gray;
     border-top: none;
+    border-left: none;
     background: linear-gradient(90deg, @light-gray 1%, transparent 1%) -1px, @white;
     background-size: 51px 1px;
+
+    &:last-child {
+      border-right: none;
+    }
   }
 
   &__task-duration {

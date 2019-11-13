@@ -7,6 +7,7 @@ import {
 } from '../../utils';
 import Header from './Header/Header';
 import Row from './Row/Row';
+import './Gantt.less';
 
 interface GanttProps {
   ganttInfo: State['Source']['AAU-Tasks-Gantt'],
@@ -28,14 +29,16 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
   const [timeLine, setTimeLine] = useState(addDaysToTailList(3, addDaysToHeadList(3, calcTimeLine())));
 
   const displayGantt = () => (
-    <React.Fragment>
+    <div className='gantt__outer'>
+      <div className='gantt__inner'>
       <Header timeLine={timeLine} />
       {
-          ganttInfo.Rows.map(row => (
-            <Row rowInfo={row} timeLine={timeLine} key={row.Key + row.Constraint} />
-          ))
-        }
-    </React.Fragment>
+        ganttInfo.Rows.map(row => (
+          <Row rowInfo={row} timeLine={timeLine} key={row.Key + row.Constraint} />
+        ))
+      }
+      </div>
+    </div>
   );
 
   return displayGantt();

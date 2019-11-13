@@ -1,5 +1,6 @@
 import React from 'react';
-import { MONTHS } from '../../../utils/constant';
+import classNames from 'classnames';
+import { MONTHS, SANDAY, SATURDAY } from '../../../utils/constant';
 import { getMappedDates } from '../../../utils';
 import { TMonthsNumber, IDatesByMonthsInYear } from '../../../types/date';
 import './Header.less';
@@ -19,11 +20,20 @@ const Header: React.FunctionComponent<HeaderProps> = ({
         <div className='gantt-header__month-title'>{MONTHS[numberMonth]}</div>
         <div className='gantt-header__month-content'>
           {
-              year[numberMonth].map((day: Date) => (
-                <div className='gantt-header__day' key={String(day)}>
-                  { day.getDate() }
-                </div>
-              ))
+              year[numberMonth].map((day: Date) => {
+                const dayWeek = day.getDay();
+
+                return (
+                  <div
+                    className={classNames('gantt-header__day', {
+                      'gantt-header__day--weekend': dayWeek === SANDAY || dayWeek === SATURDAY,
+                    })}
+                    key={String(day)}
+                  >
+                    { day.getDate() }
+                  </div>
+                );
+              })
             }
         </div>
       </div>

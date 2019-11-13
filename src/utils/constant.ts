@@ -14,3 +14,6 @@ export const MONTHS: IMonthsConstant = {
   10: 'November',
   11: 'December',
 };
+
+export const SATURDAY = 6;
+export const SANDAY = 0;

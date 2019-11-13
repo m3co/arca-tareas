@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { State } from 'arca-redux';
 import first from 'lodash/first';
 import last from 'lodash/last';
-import { sortByEnd, sortByStart, getDateList } from '../../utils';
+import {
+  sortByEnd, sortByStart, getDateList, addDaysToHeadList, addDaysToTailList,
+} from '../../utils';
 import Header from './Header/Header';
 import Row from './Row/Row';
 
@@ -23,7 +25,7 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     return getDateList(startDate, endDate);
   };
 
-  const [timeLine, setTimeLine] = useState(calcTimeLine());
+  const [timeLine, setTimeLine] = useState(addDaysToTailList(3, addDaysToHeadList(3, calcTimeLine())));
 
   const displayGantt = () => (
     <React.Fragment>

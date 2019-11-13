@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { MONTHS, SANDAY, SATURDAY } from '../../../utils/constant';
-import { getMappedDates, addDaysToHeadList, addDaysToTailList } from '../../../utils';
+import { getMappedDates } from '../../../utils';
 import { TMonthsNumber, IDatesByMonthsInYear } from '../../../types/date';
 import './Header.less';
 
@@ -65,7 +65,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
         tasks/timeline
       </div>
       {
-        renderHead(getMappedDates(addDaysToTailList(7, addDaysToHeadList(7, timeLine))))
+        renderHead(getMappedDates(timeLine))
       }
     </div>
   );

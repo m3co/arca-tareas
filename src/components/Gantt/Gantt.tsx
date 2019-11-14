@@ -8,6 +8,7 @@ import {
 import Header from './Header/Header';
 import Row from './Row/Row';
 import './Gantt.less';
+import { ADDITIONAL_DAYS } from '../../utils/constant';
 
 interface GanttProps {
   ganttInfo: State['Source']['AAU-Tasks-Gantt'],
@@ -16,6 +17,8 @@ interface GanttProps {
 const Gantt: React.FunctionComponent<GanttProps> = ({
   ganttInfo,
 }) => {
+  const [clientWidth, setWidth] = useState(document.querySelector('body').clientWidth);
+
   const calcTimeLine = () => {
     const sortedDataByEnd = sortByEnd([...ganttInfo.Rows]);
     const sortedDataByStart = sortByStart([...ganttInfo.Rows]);
@@ -26,13 +29,18 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     return getDateList(startDate, endDate);
   };
 
-  const [timeLine, setTimeLine] = useState(addDaysToTailList(3, addDaysToHeadList(3, calcTimeLine())));
+  const [timeLine, setTimeLine] = useState(addDaysToTailList(ADDITIONAL_DAYS, addDaysToHeadList(ADDITIONAL_DAYS, calcTimeLine())));
 
   const displayGantt = () => (
     <div className='gantt__outer'>
-      <div className='gantt__inner'>
-      <Header timeLine={timeLine} />
-      {
+      <div
+        className='gantt__inner'
+        style={
+        { width: clientWidth }
+      }
+      >
+        <Header timeLine={timeLine} />
+        {
         ganttInfo.Rows.map(row => (
           <Row rowInfo={row} timeLine={timeLine} key={row.Key + row.Constraint} />
         ))

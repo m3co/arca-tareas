@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { State } from 'arca-redux';
 import first from 'lodash/first';
 import last from 'lodash/last';
@@ -19,7 +19,7 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
 }) => {
   const [clientWidth, setWidth] = useState(document.querySelector('body').clientWidth);
 
-  const calcTimeLine = () => {
+  const calcTimeLine = useCallback(() => {
     const sortedDataByEnd = sortByEnd([...ganttInfo.Rows]);
     const sortedDataByStart = sortByStart([...ganttInfo.Rows]);
 
@@ -27,9 +27,13 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     const endDate = new Date(last(sortedDataByEnd).End);
 
     return getDateList(startDate, endDate);
-  };
+  }, [ganttInfo]);
 
   const [timeLine, setTimeLine] = useState(addDaysToTailList(ADDITIONAL_DAYS, addDaysToHeadList(ADDITIONAL_DAYS, calcTimeLine())));
+
+  useEffect(() => {
+    setTimeLine(addDaysToTailList(ADDITIONAL_DAYS, addDaysToHeadList(ADDITIONAL_DAYS, calcTimeLine())));
+  }, [calcTimeLine]);
 
   const displayGantt = () => (
     <div className='gantt__outer'>

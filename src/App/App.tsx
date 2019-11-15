@@ -32,10 +32,11 @@ class App extends React.Component<AppProps, AppState> {
 
   render() {
     const { ganttInfo } = this.state;
+    const { socket } = this.props;
 
     return (
       ganttInfo && ganttInfo.Rows.length
-        ? <Gantt ganttInfo={ganttInfo} />
+        ? <Gantt ganttInfo={ganttInfo} socket={socket} />
         : <p>Loading...</p>
     );
   }

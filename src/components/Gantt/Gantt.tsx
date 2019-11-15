@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { State } from 'arca-redux';
+import { ARCASocket, State } from 'arca-redux';
 import first from 'lodash/first';
 import last from 'lodash/last';
 import {
@@ -12,10 +12,11 @@ import { ADDITIONAL_DAYS } from '../../utils/constant';
 
 interface GanttProps {
   ganttInfo: State['Source']['AAU-Tasks-Gantt'],
+  socket: ARCASocket,
 }
 
 const Gantt: React.FunctionComponent<GanttProps> = ({
-  ganttInfo,
+  ganttInfo, socket
 }) => {
   const [clientWidth, setWidth] = useState(document.querySelector('body').clientWidth);
 
@@ -46,7 +47,7 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
         <Header timeLine={timeLine} />
         {
         ganttInfo.Rows.map(row => (
-          <Row rowInfo={row} timeLine={timeLine} key={row.Key + row.Constraint} />
+          <Row rowInfo={row} timeLine={timeLine} key={row.Key + row.Constraint} socket={socket}/>
         ))
       }
       </div>

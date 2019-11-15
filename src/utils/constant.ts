@@ -18,4 +18,4 @@ export const MONTHS: IMonthsConstant = {
 export const SATURDAY = 6;
 export const SANDAY = 0;
 
-export const ADDITIONAL_DAYS = 10;
+export const ADDITIONAL_DAYS = 3;

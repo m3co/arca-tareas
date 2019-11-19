@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ARCASocket, State } from 'arca-redux';
 import Tooltip from '@material-ui/core/Tooltip';
 import { getDateList } from '../../../utils';
+import { getNumberFromString, dateToYYYYMMDD } from '../../../utils/text';
 import './Row.less';
+import { CELL_WIDTH } from '../../../utils/constant';
 
 interface RowProps {
   socket: ARCASocket,
@@ -26,20 +28,6 @@ const Row: React.FunctionComponent<RowProps> = ({
     getDateList(new Date(rowInfo.Start), new Date(rowInfo.End)),
   );
 
-  // const onDrag = (event: React.DragEvent) => {
-  //   console.log(event.nativeEvent.x);
-  //   console.log(rowRef.current);
-  //   if (event.nativeEvent.x !== 0) {
-  //     setX(event.nativeEvent.x);
-  //     socket.Update('AAU-Tasks-Gantt', {
-  //       Key: "1.4.2",
-  //       Constraint: "Level 3",
-  //       Start: "2019-10-16",
-  //       End: "2019-10-26",
-  //     })
-  //   }
-  // }
-
   const [dragStart, setDragStart] = useState(0);
 
   const onMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -49,15 +37,33 @@ const Row: React.FunctionComponent<RowProps> = ({
     block.style.transform = `translateX(${0 - diff}px)`;
   }
 
-  const onMouseDown = (event: React.MouseEvent) => {
+  const onMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     setDragStart(event.pageX);
   }
 
-  const onMouseUp = (event: React.MouseEvent) => {
+  const onMouseUp = (event: React.MouseEvent<HTMLDivElement>) => {
+    const block = event.currentTarget;
+    const shiftInDays = Math.round(getNumberFromString(block.style.transform) / CELL_WIDTH);
+    const newStart = new Date(rowInfo.Start);
+    const newEnd = new Date(rowInfo.End);
+
+    newStart.setDate(newStart.getDate() + shiftInDays);
+    newEnd.setDate(newEnd.getDate() + shiftInDays);
+
+    socket.Update('AAU-Tasks-Gantt', {
+      Key: rowInfo.Key,
+      Constraint: rowInfo.Constraint,
+      Start: dateToYYYYMMDD(newStart),
+      End: dateToYYYYMMDD(newEnd),
+    });
+
+    console.log(dateToYYYYMMDD(newStart));
+    console.log(shiftInDays);
     setDragStart(0);
+    block.style.transform = 'translateX(0px)';
   }
 
-  const onMouseLeave = (event: React.MouseEvent) => {
+  const onMouseLeave = (event: React.MouseEvent<HTMLDivElement>) => {
     setDragStart(0);
   }
 
@@ -69,7 +75,7 @@ const Row: React.FunctionComponent<RowProps> = ({
       <div
         className='gantt-row__task-timeline'
         style={{
-          width: (51 * timeLine.length) - 1,
+          width: (CELL_WIDTH * timeLine.length) - 1,
         }}
       >
         <Tooltip title={(
@@ -84,8 +90,8 @@ const Row: React.FunctionComponent<RowProps> = ({
           <div
             ref={rowRef}
             style={{
-              width: (51 * duration.length) - 1,
-              marginLeft: 51 * start,
+              width: (CELL_WIDTH * duration.length) - 1,
+              marginLeft: CELL_WIDTH * start,
             }}
             className='gantt-row__task-duration'
             onMouseDown={onMouseDown}

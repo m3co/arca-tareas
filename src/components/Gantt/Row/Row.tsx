@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { ARCASocket, State } from 'arca-redux';
 import Tooltip from '@material-ui/core/Tooltip';
 import { getDateList } from '../../../utils';
@@ -16,17 +16,13 @@ const Row: React.FunctionComponent<RowProps> = ({
   socket, rowInfo, timeLine,
 }) => {
   const rowRef = useRef(null);
+  const durationTask = getDateList(new Date(rowInfo.Start), new Date(rowInfo.End));
 
   const startOnTimeLine = timeLine.findIndex(item => {
     const startDate = new Date(rowInfo.Start);
 
     return String(item) === String(startDate);
   });
-
-  const [start, setStart] = useState(startOnTimeLine);
-  const [duration, setDuration] = useState(
-    getDateList(new Date(rowInfo.Start), new Date(rowInfo.End)),
-  );
 
   const [dragStart, setDragStart] = useState(0);
 
@@ -35,11 +31,11 @@ const Row: React.FunctionComponent<RowProps> = ({
     const diff = Math.floor(dragStart - event.pageX);
 
     block.style.transform = `translateX(${0 - diff}px)`;
-  }
+  };
 
   const onMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     setDragStart(event.pageX);
-  }
+  };
 
   const onMouseUp = (event: React.MouseEvent<HTMLDivElement>) => {
     const block = event.currentTarget;
@@ -57,15 +53,13 @@ const Row: React.FunctionComponent<RowProps> = ({
       End: dateToYYYYMMDD(newEnd),
     });
 
-    console.log(dateToYYYYMMDD(newStart));
-    console.log(shiftInDays);
     setDragStart(0);
     block.style.transform = 'translateX(0px)';
-  }
+  };
 
-  const onMouseLeave = (event: React.MouseEvent<HTMLDivElement>) => {
+  const onMouseLeave = () => {
     setDragStart(0);
-  }
+  };
 
   return (
     <div className='gantt-row'>
@@ -88,10 +82,11 @@ const Row: React.FunctionComponent<RowProps> = ({
         )}
         >
           <div
+            role='presentation'
             ref={rowRef}
             style={{
-              width: (CELL_WIDTH * duration.length) - 1,
-              marginLeft: CELL_WIDTH * start,
+              width: (CELL_WIDTH * durationTask.length) - 1,
+              marginLeft: CELL_WIDTH * startOnTimeLine,
             }}
             className='gantt-row__task-duration'
             onMouseDown={onMouseDown}

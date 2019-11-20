@@ -16,10 +16,8 @@ interface GanttProps {
 }
 
 const Gantt: React.FunctionComponent<GanttProps> = ({
-  ganttInfo, socket
+  ganttInfo, socket,
 }) => {
-  const [clientWidth, setWidth] = useState(document.querySelector('body').clientWidth);
-
   const calcTimeLine = useCallback(() => {
     const sortedDataByEnd = sortByEnd([...ganttInfo.Rows]);
     const sortedDataByStart = sortByStart([...ganttInfo.Rows]);
@@ -41,13 +39,13 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
       <div
         className='gantt__inner'
         style={
-        { width: clientWidth }
+        { width: document.querySelector('body').clientWidth }
       }
       >
         <Header timeLine={timeLine} />
         {
         ganttInfo.Rows.map(row => (
-          <Row rowInfo={row} timeLine={timeLine} key={row.Key + row.Constraint} socket={socket}/>
+          <Row rowInfo={row} timeLine={timeLine} key={row.Key + row.Constraint} socket={socket} />
         ))
       }
       </div>

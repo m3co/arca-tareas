@@ -2,11 +2,12 @@
 
 .gantt-header {
   display: flex;
+  font-size: 15px;
 
   &__title {
     position: absolute;
     width: 208px;
-    height: 79px;
+    height: 78px;
     padding: 5px 10px;
     border: 1px solid @light-gray;
     background: @white;
@@ -16,10 +17,13 @@
     margin-left: 230px;
 
     &-title {
+      height: 19px;
       padding: 5px 10px;
       text-align: center;
       border: 1px solid @light-gray;
       border-right: none;
+      word-break: break-all;
+      overflow: hidden;
   
       &:first-child {
         border-left: none;
@@ -38,8 +42,11 @@
 
   &__month {
     &-title {
+      height: 19px;
       padding: 5px;
       text-align: center;
+      word-break: break-all;
+      overflow: hidden;
     }
 
     &-content {

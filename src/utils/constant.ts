@@ -20,4 +20,4 @@ export const SANDAY = 0;
 
 export const ADDITIONAL_DAYS = 3;
 
-export const CELL_WIDTH = 51;
+export const CELL_WIDTH = 29;

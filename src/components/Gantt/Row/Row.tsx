@@ -37,7 +37,7 @@ const Row: React.FunctionComponent<RowProps> = ({
     setDragStart(event.pageX);
   };
 
-  const onMouseUp = (event: React.MouseEvent<HTMLDivElement>) => {
+  const onClick = (event: React.MouseEvent<HTMLDivElement>) => {
     const block = event.currentTarget;
     const shiftInDays = Math.round(getNumberFromString(block.style.transform) / CELL_WIDTH);
     const newStart = new Date(rowInfo.Start);
@@ -57,10 +57,6 @@ const Row: React.FunctionComponent<RowProps> = ({
     block.style.transform = 'translateX(0px)';
   };
 
-  const onMouseLeave = () => {
-    setDragStart(0);
-  };
-
   return (
     <div className='gantt-row'>
       <div className='gantt-row__task-name'>
@@ -76,6 +72,8 @@ const Row: React.FunctionComponent<RowProps> = ({
           <div className='gantt-row__description'>
             <h2>{`key: ${rowInfo.Key}`}</h2>
             <p>{`Constraint: ${rowInfo.Constraint}`}</p>
+            <p>{`Description: ${rowInfo.Description}`}</p>
+            <p>{`Unit: ${rowInfo.Unit}`}</p>
             <p>{`start: ${rowInfo.Start}`}</p>
             <p>{`end: ${rowInfo.End}`}</p>
           </div>
@@ -90,9 +88,8 @@ const Row: React.FunctionComponent<RowProps> = ({
             }}
             className='gantt-row__task-duration'
             onMouseDown={onMouseDown}
-            onMouseUp={onMouseUp}
             onMouseMove={dragStart ? onMouseMove : () => {}}
-            onMouseLeave={onMouseLeave}
+            onClick={onClick}
           />
         </Tooltip>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { ARCASocket, State } from 'arca-redux';
 import Tooltip from '@material-ui/core/Tooltip';
 import { getDateList } from '../../../utils';
@@ -24,21 +24,14 @@ const Row: React.FunctionComponent<RowProps> = ({
     return String(item) === String(startDate);
   });
 
-  const [dragStart, setDragStart] = useState(0);
+  const onMouseMove = (event: MouseEvent) => {
+    const diff = Math.floor(Number(window.name) - event.pageX);
 
-  const onMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    const block = event.currentTarget;
-    const diff = Math.floor(dragStart - event.pageX);
-
-    block.style.transform = `translateX(${0 - diff}px)`;
+    rowRef.current.style.transform = `translateX(${0 - diff}px)`;
   };
 
-  const onMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
-    setDragStart(event.pageX);
-  };
-
-  const onClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    const block = event.currentTarget;
+  const onMouseUp = () => {
+    const block = rowRef.current;
     const shiftInDays = Math.round(getNumberFromString(block.style.transform) / CELL_WIDTH);
     const newStart = new Date(rowInfo.Start);
     const newEnd = new Date(rowInfo.End);
@@ -53,8 +46,17 @@ const Row: React.FunctionComponent<RowProps> = ({
       End: dateToYYYYMMDD(newEnd),
     });
 
-    setDragStart(0);
+    window.name = '0';
     block.style.transform = 'translateX(0px)';
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  const onMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+    window.name = String(event.pageX);
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   };
 
   return (
@@ -88,8 +90,6 @@ const Row: React.FunctionComponent<RowProps> = ({
             }}
             className='gantt-row__task-duration'
             onMouseDown={onMouseDown}
-            onMouseMove={dragStart ? onMouseMove : () => {}}
-            onClick={onClick}
           />
         </Tooltip>
       </div>

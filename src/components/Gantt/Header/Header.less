@@ -3,6 +3,8 @@
 .gantt-header {
   display: flex;
   font-size: 15px;
+  position: fixed;
+  z-index: 9999;
 
   &__title {
     position: absolute;
@@ -15,6 +17,7 @@
 
   &__year {
     margin-left: 230px;
+    background: @white;
 
     &-title {
       height: 19px;

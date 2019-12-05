@@ -10,6 +10,10 @@ import Row from './Row/Row';
 import './Gantt.less';
 import { ADDITIONAL_DAYS } from '../../utils/constant';
 
+type styles = {
+  ['margin-left']?: string,
+};
+
 interface GanttProps {
   ganttInfo: State['Source']['AAU-Tasks-Gantt'],
   socket: ARCASocket,
@@ -34,13 +38,23 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     setTimeLine(addDaysToTailList(ADDITIONAL_DAYS, addDaysToHeadList(ADDITIONAL_DAYS, calcTimeLine())));
   }, [calcTimeLine]);
 
+  const onScroll = (event: React.UIEvent<HTMLElement>) => {
+    const left = event.currentTarget.scrollLeft;
+    const innerChilds = event.currentTarget.children[0] as HTMLElement;
+    const topPanel = innerChilds.children[1] as HTMLElement;
+    const topPanelStyles = topPanel.style as styles;
+
+    topPanelStyles['margin-left'] = `${-left + 230}px`;
+  }
+
   const displayGantt = () => (
     <div className='gantt__outer'>
       <div
         className='gantt__inner'
+        onScroll={onScroll}
         style={
-        { width: document.querySelector('body').clientWidth }
-      }
+          { width: document.querySelector('body').clientWidth }
+        }
       >
         <Header timeLine={timeLine} />
         {

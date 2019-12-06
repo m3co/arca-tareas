@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import Typography from '@material-ui/core/Typography';
 import { MONTHS, SANDAY, SATURDAY } from '../../../utils/constant';
 import { getMappedDates } from '../../../utils';
 import { TMonthsNumber, IDatesByMonthsInYear } from '../../../types/date';
@@ -62,7 +63,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
   return (
     <div className='gantt-header'>
       <div className='gantt-header__title'>
-        <h1>Arca - Gantt</h1>
+        <Typography variant='h4' component='h1'>Arca Gantt</Typography>
       </div>
       {
         renderHead(getMappedDates(timeLine))

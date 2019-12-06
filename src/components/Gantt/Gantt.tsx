@@ -17,10 +17,11 @@ type styles = {
 interface GanttProps {
   ganttInfo: State['Source']['AAU-Tasks-Gantt'],
   socket: ARCASocket,
+  fieldsInfo: State['Source']['AAU-Tasks-Gantt']['Info']['Fields'],
 }
 
 const Gantt: React.FunctionComponent<GanttProps> = ({
-  ganttInfo, socket,
+  ganttInfo, socket, fieldsInfo,
 }) => {
   const calcTimeLine = useCallback(() => {
     const sortedDataByEnd = sortByEnd([...ganttInfo.Rows]);
@@ -45,7 +46,7 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     const topPanelStyles = topPanel.style as styles;
 
     topPanelStyles['margin-left'] = `${-left + 230}px`;
-  }
+  };
 
   const displayGantt = () => (
     <div className='gantt__outer'>
@@ -59,7 +60,13 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
         <Header timeLine={timeLine} />
         {
         ganttInfo.Rows.map(row => (
-          <Row rowInfo={row} timeLine={timeLine} key={row.Key + row.Constraint} socket={socket} />
+          <Row
+            rowInfo={row}
+            timeLine={timeLine}
+            key={row.Key + row.Constraint}
+            socket={socket}
+            fieldsInfo={fieldsInfo}
+          />
         ))
       }
       </div>

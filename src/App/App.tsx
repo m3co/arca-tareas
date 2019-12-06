@@ -8,6 +8,7 @@ interface AppProps {
 
 interface AppState {
   ganttInfo: State['Source']['AAU-Tasks-Gantt'],
+  fieldsInfo: State['Source']['AAU-Tasks-Gantt']['Info'],
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -16,12 +17,14 @@ class App extends React.Component<AppProps, AppState> {
 
     this.state = {
       ganttInfo: null,
+      fieldsInfo: null,
     };
 
     props.socket.store.subscribe(() => {
       const state = props.socket.store.getState();
       this.setState({
         ganttInfo: state.Source['AAU-Tasks-Gantt'],
+        fieldsInfo: state.Source['AAU-Tasks-Gantt'].Info,
       });
     });
 
@@ -31,12 +34,12 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   render() {
-    const { ganttInfo } = this.state;
+    const { ganttInfo, fieldsInfo } = this.state;
     const { socket } = this.props;
 
     return (
-      ganttInfo && ganttInfo.Rows.length
-        ? <Gantt ganttInfo={ganttInfo} socket={socket} />
+      ganttInfo && ganttInfo.Rows.length && fieldsInfo
+        ? <Gantt ganttInfo={ganttInfo} socket={socket} fieldsInfo={fieldsInfo.Fields} />
         : <p>Loading...</p>
     );
   }

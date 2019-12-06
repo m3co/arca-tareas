@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ARCASocket, State } from 'arca-redux';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 interface EditModalProps {
   socket: ARCASocket,
@@ -31,6 +32,13 @@ const EditModal: React.FunctionComponent<EditModalProps> = ({
   return (
     <div className='gantt-row__edit-modal'>
       <form onSubmit={onSubmit} className='gantt-row__edit-modal-form'>
+        <Typography
+          variant='h6'
+          component='h2'
+          className='gantt-row__edit-modal-title'
+        >
+          {rowInfo.Key}
+        </Typography>
         {
           Object.keys(rowInfo).reduce((list, field) => {
             const currentFieldInfo = fieldsInfo.find(item => item.Name === field);

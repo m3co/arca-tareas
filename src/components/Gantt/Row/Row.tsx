@@ -76,8 +76,7 @@ const Row: React.FunctionComponent<RowProps> = ({
   return (
     <div className='gantt-row'>
       <div className='gantt-row__task-name'>
-        { rowInfo.Key }
-        <EditIcon className='gantt-row__edit-button' onClick={handleOpen} />
+        <EditIcon className='gantt-row__edit-button' onClick={handleOpen} color='action' />
         <Modal
           open={open}
           onClose={handleClose}
@@ -90,6 +89,7 @@ const Row: React.FunctionComponent<RowProps> = ({
             fieldsInfo={fieldsInfo}
           />
         </Modal>
+        { rowInfo.Key }
       </div>
       <div
         className='gantt-row__task-timeline'

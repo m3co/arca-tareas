@@ -62,7 +62,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
   return (
     <div className='gantt-header'>
       <div className='gantt-header__title'>
-        tasks/timeline
+        <h1>Arca - Gantt</h1>
       </div>
       {
         renderHead(getMappedDates(timeLine))

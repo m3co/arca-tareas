@@ -11,6 +11,10 @@
     border-top: none;
     background: @white;
     z-index: 100;
+
+    &:hover .gantt-row__edit-button {
+      opacity: 1 !important;
+    }
   }
 
   &__task-timeline {
@@ -39,6 +43,8 @@
   & &__edit-button {
     width: 15px;
     height: 15px;
+    opacity: 0;
+    cursor: pointer;
   }
 
   &__edit-modal {

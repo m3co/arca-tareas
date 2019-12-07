@@ -38,16 +38,12 @@ const Row: React.FunctionComponent<RowProps> = ({
     const block = rowRef.current;
     const shiftInDays = Math.round(getNumberFromString(block.style.transform) / CELL_WIDTH);
     const newStart = new Date(rowInfo.Start);
-    const newEnd = new Date(rowInfo.End);
 
     newStart.setDate(newStart.getDate() + shiftInDays);
-    newEnd.setDate(newEnd.getDate() + shiftInDays);
 
     socket.Update('AAU-Tasks-Gantt', {
-      Key: rowInfo.Key,
-      Constraint: rowInfo.Constraint,
+      ...rowInfo,
       Start: dateToYYYYMMDD(newStart),
-      End: dateToYYYYMMDD(newEnd),
     });
 
     window.name = '0';

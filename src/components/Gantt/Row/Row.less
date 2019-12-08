@@ -23,6 +23,7 @@
   }
 
   &__task-timeline {
+    position: relative;
     padding: 3px 0;
     margin-left: 230px;
     border: 1px solid @light-gray;
@@ -86,5 +87,22 @@
       margin-top: 10px;
       margin-bottom: 10px;
     }
+  }
+
+  &__weekend {
+    position: absolute;
+    left: 0;
+    top: -1px;
+    width: 28px;
+    height: 28px;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 1px,
+      #f1f1f1 1px,
+      #f1f1f1 2px
+    );
+    z-index: 1;
+    border: 1px solid @light-gray;
   }
 }

@@ -10,3 +10,9 @@ export function strTemplateBySeparator(separator: string, ...args: Array<string>
   const truthyValues = args.filter(elem => elem.trim() && elem !== 'null');
   return truthyValues.join(separator);
 }
+
+export function getPointOnTimeline(timeline: Array<Date>, date: Date) {
+  return timeline.findIndex(item => {
+    return String(item) === String(date);
+  });
+}

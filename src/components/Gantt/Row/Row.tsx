@@ -4,7 +4,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Modal from '@material-ui/core/Modal';
 import EditIcon from '@material-ui/icons/Edit';
 import { getDateList } from '../../../utils';
-import { getNumberFromString, dateToYYYYMMDD } from '../../../utils/text';
+import { getNumberFromString, dateToYYYYMMDD, strTemplateBySeparator } from '../../../utils/text';
 import './Row.less';
 import { CELL_WIDTH } from '../../../utils/constant';
 import EditModal from './components/EditModal';
@@ -85,7 +85,10 @@ const Row: React.FunctionComponent<RowProps> = ({
             fieldsInfo={fieldsInfo}
           />
         </Modal>
-        { rowInfo.Key }
+        <div className='gantt-row__task-title'>
+          <span>{ rowInfo.Key }</span>
+          { rowInfo.Constraint && <span>{ rowInfo.Constraint }</span>}
+        </div>
       </div>
       <div
         className='gantt-row__task-timeline'
@@ -95,12 +98,9 @@ const Row: React.FunctionComponent<RowProps> = ({
       >
         <Tooltip title={(
           <div className='gantt-row__description'>
-            <h2>{`key: ${rowInfo.Key}`}</h2>
-            <p>{`Constraint: ${rowInfo.Constraint}`}</p>
-            <p>{`Description: ${rowInfo.Description}`}</p>
-            <p>{`Unit: ${rowInfo.Unit}`}</p>
-            <p>{`start: ${rowInfo.Start}`}</p>
-            <p>{`end: ${rowInfo.End}`}</p>
+            <p>{strTemplateBySeparator(' ', rowInfo.Key, String(rowInfo.Constraint))}</p>
+            <p>{strTemplateBySeparator(', ', String(rowInfo.Description), String(rowInfo.Unit))}</p>
+            <p>{`${rowInfo.Start} - ${rowInfo.End}`}</p>
           </div>
         )}
         >

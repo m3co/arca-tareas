@@ -5,3 +5,8 @@ export function getNumberFromString(string: string): number {
 export function dateToYYYYMMDD(date: Date): string {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
+
+export function strTemplateBySeparator(separator: string, ...args: Array<string>) {
+  const truthyValues = args.filter(elem => elem.trim() && elem !== 'null');
+  return truthyValues.join(separator);
+}

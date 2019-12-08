@@ -4,9 +4,11 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Modal from '@material-ui/core/Modal';
 import EditIcon from '@material-ui/icons/Edit';
 import { getDateList } from '../../../utils';
-import { getNumberFromString, dateToYYYYMMDD, strTemplateBySeparator, getPointOnTimeline } from '../../../utils/text';
+import {
+  getNumberFromString, dateToYYYYMMDD, strTemplateBySeparator, getPointOnTimeline,
+} from '../../../utils/text';
 import './Row.less';
-import { CELL_WIDTH, SANDAY, SATURDAY  } from '../../../utils/constant';
+import { CELL_WIDTH, SANDAY, SATURDAY } from '../../../utils/constant';
 import EditModal from './components/EditModal';
 
 interface RowProps {
@@ -111,18 +113,19 @@ const Row: React.FunctionComponent<RowProps> = ({
             onMouseDown={onMouseDown}
           />
         </Tooltip>
-          {
-            durationTask.reduce((weekEndsList, day) => {
+        {
+            durationTask.reduce((weekEndsList, day, index) => {
               const dayWeek = day.getDay();
 
               if (dayWeek === SANDAY || dayWeek === SATURDAY) {
                 weekEndsList.push(
                   <div
+                    key={String(index)}
                     className='gantt-row__weekend'
                     style={{
                       left: (CELL_WIDTH * getPointOnTimeline(timeLine, day)) - 1,
                     }}
-                  />
+                  />,
                 );
               }
 

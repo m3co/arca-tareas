@@ -12,7 +12,5 @@ export function strTemplateBySeparator(separator: string, ...args: Array<string>
 }
 
 export function getPointOnTimeline(timeline: Array<Date>, date: Date) {
-  return timeline.findIndex(item => {
-    return String(item) === String(date);
-  });
+  return timeline.findIndex(item => String(item) === String(date));
 }

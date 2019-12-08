@@ -3,6 +3,7 @@ import { ARCASocket, State } from 'arca-redux';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { strTemplateBySeparator } from '../../../../utils/text';
 
 interface EditModalProps {
   socket: ARCASocket,
@@ -37,7 +38,7 @@ const EditModal: React.FunctionComponent<EditModalProps> = ({
           component='h2'
           className='gantt-row__edit-modal-title'
         >
-          {rowInfo.Key}
+          {strTemplateBySeparator(' ', rowInfo.Key, String(rowInfo.Constraint))}
         </Typography>
         {
           Object.keys(rowInfo).reduce((list, field) => {

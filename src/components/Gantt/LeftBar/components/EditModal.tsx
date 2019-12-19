@@ -31,12 +31,12 @@ const EditModal: React.FunctionComponent<EditModalProps> = ({
 
 
   return (
-    <div className='gantt-row__edit-modal'>
-      <form onSubmit={onSubmit} className='gantt-row__edit-modal-form'>
+    <div className='gantt-leftbar__edit-modal'>
+      <form onSubmit={onSubmit} className='gantt-leftbar__edit-modal-form'>
         <Typography
           variant='h6'
           component='h2'
-          className='gantt-row__edit-modal-title'
+          className='gantt-leftbar__edit-modal-title'
         >
           {strTemplateBySeparator(' ', rowInfo.Key, String(rowInfo.Constraint))}
         </Typography>
@@ -48,7 +48,7 @@ const EditModal: React.FunctionComponent<EditModalProps> = ({
             if (currentFieldInfo.Editable) {
               list.push(
                 <TextField
-                  className='gantt-row__edit-modal-field'
+                  className='gantt-leftbar__edit-modal-field'
                   key={fieldValue}
                   value={String(values[fieldValue])}
                   label={fieldValue}
@@ -65,7 +65,7 @@ const EditModal: React.FunctionComponent<EditModalProps> = ({
           color='inherit'
           type='submit'
           size='small'
-          className='gantt-row__edit-modal-submit'
+          className='gantt-leftbar__edit-modal-submit'
         >
           Send
         </Button>
@@ -73,7 +73,7 @@ const EditModal: React.FunctionComponent<EditModalProps> = ({
           variant='outlined'
           onClick={handleClose}
           size='small'
-          className='gantt-row__edit-modal-cancel'
+          className='gantt-leftbar__edit-modal-cancel'
         >
           Cancel
         </Button>

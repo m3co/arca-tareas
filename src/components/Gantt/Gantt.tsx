@@ -9,9 +9,11 @@ import Header from './Header/Header';
 import Row from './Row/Row';
 import './Gantt.less';
 import { ADDITIONAL_DAYS } from '../../utils/constant';
+import LeftBar from './LeftBar/LeftBar';
 
 type styles = {
   ['margin-left']?: string,
+  ['margin-top']?: string,
 };
 
 interface GanttProps {
@@ -45,7 +47,12 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     const topPanel = innerChilds.children[1] as HTMLElement;
     const topPanelStyles = topPanel.style as styles;
 
+    const top = event.currentTarget.scrollTop;
+    const leftBar = event.currentTarget.children[1] as HTMLElement;
+    const leftBartyles = leftBar.style as styles;
+
     topPanelStyles['margin-left'] = `${-left + 230}px`;
+    leftBartyles['margin-top'] = `${-top + 90}px`;
   };
 
   const displayGantt = () => (
@@ -53,22 +60,20 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
       <div
         className='gantt__inner'
         onScroll={onScroll}
-        style={
-          { width: document.querySelector('body').clientWidth }
-        }
       >
         <Header timeLine={timeLine} />
+        <LeftBar ganttInfo={ganttInfo} socket={socket} fieldsInfo={fieldsInfo} />
         {
-        ganttInfo.Rows.map(row => (
-          <Row
-            rowInfo={row}
-            timeLine={timeLine}
-            key={row.Key + row.Constraint}
-            socket={socket}
-            fieldsInfo={fieldsInfo}
-          />
-        ))
-      }
+          ganttInfo.Rows.map(row => (
+            <Row
+              rowInfo={row}
+              timeLine={timeLine}
+              key={row.Key + row.Constraint}
+              socket={socket}
+              fieldsInfo={fieldsInfo}
+            />
+          ))
+        }
       </div>
     </div>
   );

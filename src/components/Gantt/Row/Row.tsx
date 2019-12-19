@@ -1,15 +1,12 @@
 import React, { useRef } from 'react';
 import { ARCASocket, State } from 'arca-redux';
 import Tooltip from '@material-ui/core/Tooltip';
-import Modal from '@material-ui/core/Modal';
-import EditIcon from '@material-ui/icons/Edit';
 import { getDateList } from '../../../utils';
 import {
   getNumberFromString, dateToYYYYMMDD, strTemplateBySeparator, getPointOnTimeline,
 } from '../../../utils/text';
 import './Row.less';
 import { CELL_WIDTH, SANDAY, SATURDAY } from '../../../utils/constant';
-import EditModal from './components/EditModal';
 
 interface RowProps {
   socket: ARCASocket,
@@ -19,7 +16,7 @@ interface RowProps {
 }
 
 const Row: React.FunctionComponent<RowProps> = ({
-  socket, rowInfo, timeLine, fieldsInfo,
+  socket, rowInfo, timeLine,
 }) => {
   const rowRef = useRef(null);
   const durationTask = getDateList(new Date(rowInfo.Start), new Date(rowInfo.End));
@@ -57,37 +54,8 @@ const Row: React.FunctionComponent<RowProps> = ({
     document.addEventListener('mouseup', onMouseUp);
   };
 
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <div className='gantt-row'>
-      <div className='gantt-row__task-name'>
-        <EditIcon className='gantt-row__edit-button' onClick={handleOpen} color='action' />
-        <Modal
-          open={open}
-          onClose={handleClose}
-          className='gantt-row__edit-modal-wrapper'
-        >
-          <EditModal
-            rowInfo={rowInfo}
-            socket={socket}
-            handleClose={handleClose}
-            fieldsInfo={fieldsInfo}
-          />
-        </Modal>
-        <div className='gantt-row__task-title'>
-          <span>{ rowInfo.Key }</span>
-          { rowInfo.Constraint && <span>{ rowInfo.Constraint }</span>}
-        </div>
-      </div>
       <div
         className='gantt-row__task-timeline'
         style={{

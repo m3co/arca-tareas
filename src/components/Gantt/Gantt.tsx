@@ -43,12 +43,14 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
 
   const onScroll = (event: React.UIEvent<HTMLElement>) => {
     const left = event.currentTarget.scrollLeft;
-    const innerChilds = event.currentTarget.children[0] as HTMLElement;
-    const topPanel = innerChilds.children[1] as HTMLElement;
+    const top = event.currentTarget.scrollTop;
+
+    const innerChilds = event.currentTarget.children as HTMLCollection;
+
+    const topPanel = innerChilds[0].children[1] as HTMLElement;
     const topPanelStyles = topPanel.style as styles;
 
-    const top = event.currentTarget.scrollTop;
-    const leftBar = event.currentTarget.children[1] as HTMLElement;
+    const leftBar = innerChilds[1].children[0] as HTMLElement;
     const leftBartyles = leftBar.style as styles;
 
     topPanelStyles['margin-left'] = `${-left + 230}px`;

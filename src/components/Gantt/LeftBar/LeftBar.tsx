@@ -12,17 +12,19 @@ interface LeftBarProps {
 const LeftBar: React.FunctionComponent<LeftBarProps> = ({
   ganttInfo, socket, fieldsInfo,
 }) => (
-  <div className='gantt-leftbar'>
-    {
-      ganttInfo.Rows.map(row => (
-        <TaskName
-          rowInfo={row}
-          key={row.Key + row.Constraint}
-          socket={socket}
-          fieldsInfo={fieldsInfo}
-        />
-      ))
-    }
+  <div className='gantt-leftbar-wrap'>
+    <div className='gantt-leftbar'>
+      {
+        ganttInfo.Rows.map(row => (
+          <TaskName
+            rowInfo={row}
+            key={row.Key + row.Constraint}
+            socket={socket}
+            fieldsInfo={fieldsInfo}
+          />
+        ))
+      }
+    </div>
   </div>
 );
 

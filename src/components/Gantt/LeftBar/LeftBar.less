@@ -1,9 +1,14 @@
 @import '../../../less/colors.less';
 
 .gantt-leftbar {
-  position: fixed;
   margin-top: 90px;
-  z-index: 100;
+
+  &-wrap {
+    position: fixed;
+    height: calc(100vh - 17px);
+    overflow: hidden;
+    z-index: 100;
+  }
 
   &__task-name {
     display: flex;

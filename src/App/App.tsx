@@ -1,6 +1,7 @@
 import React from 'react';
 import { ARCASocket, State } from 'arca-redux';
 import Gantt from '../components/Gantt/Gantt';
+import Loader from '../components/Loader/Loader';
 
 interface AppProps {
   socket: ARCASocket,
@@ -40,7 +41,7 @@ class App extends React.Component<AppProps, AppState> {
     return (
       ganttInfo && ganttInfo.Rows.length && fieldsInfo
         ? <Gantt ganttInfo={ganttInfo} socket={socket} fieldsInfo={fieldsInfo.Fields} />
-        : <p>Loading...</p>
+        : <Loader />
     );
   }
 }

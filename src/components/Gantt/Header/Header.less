@@ -1,0 +1,94 @@
+@import '../../../less/colors.less';
+
+.gantt-header {
+  position: fixed;
+  display: flex;
+  width: calc(100vw - 15px);
+  overflow: hidden;
+  z-index: 200;
+  font-size: 15px;
+
+  &__title {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 208px;
+    height: 78px;
+    padding: 5px 10px;
+    border: 1px solid @light-gray;
+    background: @white;
+  }
+
+  &__year {
+    margin-left: 230px;
+    background: @white;
+
+    &-title {
+      height: 19px;
+      padding: 5px 10px;
+      text-align: center;
+      border: 1px solid @light-gray;
+      border-right: none;
+      word-break: break-all;
+      overflow: hidden;
+  
+      &:first-child {
+        border-left: none;
+      }
+    }
+
+    &-content {
+      display: flex;
+    }
+
+    &:not(:nth-of-type(2)) {
+      margin-left: 0px;
+      border-left: 1px solid @light-gray;
+    }
+  }
+
+  &__month {
+    &-title {
+      height: 19px;
+      padding: 5px;
+      text-align: center;
+      word-break: break-all;
+      overflow: hidden;
+    }
+
+    &-content {
+      display: flex;
+    }
+
+    &:last-child {
+      .gantt-header__day:last-child {
+        border-right: none;
+      }
+    }
+
+    &:not(:last-child) &-title {
+      border-right: 1px solid @light-gray;
+    }
+  }
+
+  &__day {
+    width: 18px;
+    padding: 5px;
+    border: 1px solid @light-gray;
+    border-right: none;
+    text-align: center;
+
+    &:first-child {
+      border-left: none;
+    }
+
+    &:last-child {
+      border-right: 1px solid @light-gray;
+    }
+
+    &--weekend {
+      background: #f1f1f1;
+    }
+  }
+}

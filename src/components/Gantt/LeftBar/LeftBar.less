@@ -1,0 +1,75 @@
+@import '../../../less/colors.less';
+
+.gantt-leftbar {
+  margin-top: 90px;
+
+  &-wrap {
+    position: fixed;
+    height: calc(100vh - 15px);
+    overflow: hidden;
+    z-index: 100;
+  }
+
+  &__task-name {
+    display: flex;
+    width: 208px;
+    padding: 5px 10px 4px;
+    border: 1px solid @light-gray;
+    border-top: none;
+    background: @white;
+    z-index: 10;
+
+    &:hover .gantt-leftbar__edit-button {
+      opacity: 1 !important;
+    }
+  }
+
+  &__task-title {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  & &__edit-button {
+    width: 15px;
+    height: 15px;
+    margin-right: 50px;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  &__edit-modal {
+    position: absolute;
+    left: 240px;
+    top: 50%;
+    transform: translate(0, -50%);
+    outline: none;
+    border: 1px solid @light-gray;
+    box-shadow: 0 2px 10px @transparent-black;
+    background: @white;
+
+    &-wrapper [aria-hidden='true'] {
+      background: none !important;
+    }
+
+    &-title {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    &-form {
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+    }
+
+    & &-field {
+      margin-bottom: 10px;
+    }
+
+    & &-submit {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+  }
+}

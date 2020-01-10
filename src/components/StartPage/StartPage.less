@@ -1,0 +1,33 @@
+@import '../../less/colors.less';
+
+.start-page {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+
+  &__wrap {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  &__logo {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto;
+    background: url('../../assets/logo.png');
+  }
+
+  .cash-flow-project-select {
+    text-align: left;
+
+    .MuiInputBase-root {
+      width: 100%;
+    }
+  }
+
+  .MuiFormHelperText-root {
+    color: @red;
+  }
+}

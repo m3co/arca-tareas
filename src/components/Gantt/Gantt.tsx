@@ -53,7 +53,7 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
     const leftBar = innerChilds[1].children[0] as HTMLElement;
     const leftBartyles = leftBar.style as styles;
 
-    topPanelStyles['margin-left'] = `${-left + 230}px`;
+    topPanelStyles['margin-left'] = `${-left + 471}px`;
     leftBartyles['margin-top'] = `${-top + 90}px`;
   };
 
@@ -66,11 +66,11 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
         <Header timeLine={timeLine} />
         <LeftBar ganttInfo={ganttInfo} socket={socket} fieldsInfo={fieldsInfo} />
         {
-          ganttInfo.Rows.map(row => (
+          ganttInfo.Rows.map((row, index) => (
             <Row
               rowInfo={row}
               timeLine={timeLine}
-              key={row.Key + row.Constraint}
+              key={`${row.Key + row.Constraint} ${String(index)}`}
               socket={socket}
               fieldsInfo={fieldsInfo}
             />

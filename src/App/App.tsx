@@ -45,7 +45,7 @@ class App extends React.Component<AppProps, AppState> {
     const { currentProject } = this.state;
 
     if (currentProject > 0) {
-      socket.Select('AAU-Tasks-Gantt', { Project: currentProject });
+      socket.Select('AAU-Tasks-Gantt', { Key: currentProject.toString() });
     } else {
       socket.Select('AAU-Tasks-Gantt');
     }
@@ -59,7 +59,7 @@ class App extends React.Component<AppProps, AppState> {
       const { socket } = this.props;
       const { currentProject } = this.state;
 
-      socket.Select('AAU-Tasks-Gantt', { Project: currentProject });
+      socket.Select('AAU-Tasks-Gantt', { Key: currentProject.toString() });
       socket.GetInfo('AAU-Tasks-Gantt');
       socket.Subscribe('AAU-Tasks-Gantt');
     });

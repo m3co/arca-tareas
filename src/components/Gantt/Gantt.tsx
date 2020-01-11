@@ -10,6 +10,7 @@ import Row from './Row/Row';
 import './Gantt.less';
 import { ADDITIONAL_DAYS } from '../../utils/constant';
 import LeftBar from './LeftBar/LeftBar';
+import TopBar from '../TopBar/TopBar';
 
 type styles = {
   ['margin-left']?: string,
@@ -20,10 +21,13 @@ interface GanttProps {
   ganttInfo: State['Source']['AAU-Tasks-Gantt'],
   socket: ARCASocket,
   fieldsInfo: State['Source']['AAU-Tasks-Gantt']['Info']['Fields'],
+  currentProject: number,
+  setCurrentProject: (event: React.ChangeEvent<{ name?: string, value: unknown, }>) => void,
+  projectOptions: Array<{ name: number | string; value: number }>,
 }
 
 const Gantt: React.FunctionComponent<GanttProps> = ({
-  ganttInfo, socket, fieldsInfo,
+  ganttInfo, socket, fieldsInfo, currentProject, setCurrentProject, projectOptions,
 }) => {
   const calcTimeLine = useCallback(() => {
     const sortedDataByEnd = sortByEnd([...ganttInfo.Rows]);
@@ -47,14 +51,14 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
 
     const innerChilds = event.currentTarget.children as HTMLCollection;
 
-    const topPanel = innerChilds[0].children[1] as HTMLElement;
+    const topPanel = innerChilds[1].children[1] as HTMLElement;
     const topPanelStyles = topPanel.style as styles;
 
-    const leftBar = innerChilds[1].children[0] as HTMLElement;
+    const leftBar = innerChilds[2].children[0] as HTMLElement;
     const leftBartyles = leftBar.style as styles;
 
-    topPanelStyles['margin-left'] = `${-left + 230}px`;
-    leftBartyles['margin-top'] = `${-top + 90}px`;
+    topPanelStyles['margin-left'] = `${-left + 471}px`;
+    leftBartyles['margin-top'] = `${-top + 122}px`;
   };
 
   const displayGantt = () => (
@@ -63,14 +67,19 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
         className='gantt__inner'
         onScroll={onScroll}
       >
+        <TopBar
+          currentProject={currentProject}
+          setCurrentProject={setCurrentProject}
+          projectOptions={projectOptions}
+        />
         <Header timeLine={timeLine} />
         <LeftBar ganttInfo={ganttInfo} socket={socket} fieldsInfo={fieldsInfo} />
         {
-          ganttInfo.Rows.map(row => (
+          ganttInfo.Rows.map((row, index) => (
             <Row
               rowInfo={row}
               timeLine={timeLine}
-              key={row.Key + row.Constraint}
+              key={`${row.Key + row.Constraint} ${String(index)}`}
               socket={socket}
               fieldsInfo={fieldsInfo}
             />

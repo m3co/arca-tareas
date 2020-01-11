@@ -2,6 +2,7 @@
 
 .gantt-header {
   position: fixed;
+  top: 32px;
   display: flex;
   width: calc(100vw - 15px);
   overflow: hidden;
@@ -11,17 +12,41 @@
   &__title {
     position: absolute;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 208px;
-    height: 78px;
-    padding: 5px 10px;
+    width: 469px;
+    height: 88px;
     border: 1px solid @light-gray;
     background: @white;
   }
 
+  &__key {
+    width: 105px;
+    text-align: center;
+    line-height: 85px;
+  }
+
+  &__constraint {
+    width: 100px;
+    border-left: 1px solid @light-gray;
+    line-height: 88px;
+    text-align: center;
+  }
+
+  &__description {
+    width: 211px;
+    border-left: 1px solid @light-gray;
+    line-height: 88px;
+    text-align: center;
+  }
+
+  &__unit {
+    width: 50px;
+    border-left: 1px solid @light-gray;
+    line-height: 88px;
+    text-align: center;
+  }
+
   &__year {
-    margin-left: 230px;
+    margin-left: 471px;
     background: @white;
 
     &-title {

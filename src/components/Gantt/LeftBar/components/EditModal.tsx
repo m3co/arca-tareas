@@ -12,9 +12,9 @@ interface EditModalProps {
   handleClose: () => void,
 }
 
-const EditModal: React.FunctionComponent<EditModalProps> = ({
+const EditModal: React.FunctionComponent<EditModalProps> = React.forwardRef(({
   socket, rowInfo, fieldsInfo, handleClose,
-}) => {
+}, ref: React.Ref<HTMLDivElement>) => {
   const [values, setValues] = useState(rowInfo);
   const onChangeValues = (field: keyof State['Source']['AAU-Tasks-Gantt']['Rows'][0]) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({
@@ -31,7 +31,7 @@ const EditModal: React.FunctionComponent<EditModalProps> = ({
 
 
   return (
-    <div className='gantt-leftbar__edit-modal'>
+    <div className='gantt-leftbar__edit-modal' ref={ref}>
       <form onSubmit={onSubmit} className='gantt-leftbar__edit-modal-form'>
         <Typography
           variant='h6'
@@ -80,6 +80,6 @@ const EditModal: React.FunctionComponent<EditModalProps> = ({
       </form>
     </div>
   );
-};
+});
 
 export default EditModal;

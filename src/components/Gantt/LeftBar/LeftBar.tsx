@@ -15,10 +15,10 @@ const LeftBar: React.FunctionComponent<LeftBarProps> = ({
   <div className='gantt-leftbar-wrap'>
     <div className='gantt-leftbar'>
       {
-        ganttInfo.Rows.map(row => (
+        ganttInfo.Rows.map((row, index) => (
           <TaskName
             rowInfo={row}
-            key={row.Key + row.Constraint}
+            key={`${row.Key + row.Constraint} ${String(index)}`}
             socket={socket}
             fieldsInfo={fieldsInfo}
           />

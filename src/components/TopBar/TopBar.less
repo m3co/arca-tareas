@@ -1,0 +1,21 @@
+@import '../../less/colors.less';
+
+.gantt-top-bar {
+  position: fixed;
+  width: calc(100% - 15px);
+  display: flex;
+  justify-content: space-between;
+  z-index: 300;
+  background: @white;
+
+  h1 {
+    margin-left: 10px;
+    font-weight: 600;
+  }
+
+  .gantt-project-select {
+    .MuiInput-underline:before {
+      border-color: transparent;
+    }
+  }
+}

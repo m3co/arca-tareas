@@ -1,0 +1,29 @@
+@import '../../less/colors.less';
+
+.loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+
+  &__wrap {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  &__logo {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto;
+    background: url('../../assets/logo.png');
+  }
+
+  & .MuiLinearProgress-barColorPrimary {
+    background-color: @blue;
+  }
+
+  & .MuiLinearProgress-colorPrimary {
+    background-color: @light-gray;
+  }
+}

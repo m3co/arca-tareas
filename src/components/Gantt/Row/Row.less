@@ -1,0 +1,49 @@
+@import '../../../less/colors.less';
+
+.gantt-row {
+  &__task-timeline {
+    position: relative;
+    padding: 3px 0;
+    margin-left: 471px;
+    border: 1px solid @light-gray;
+    border-top: none;
+    border-left: none;
+    background: linear-gradient(90deg, @light-gray 2%, transparent 1%) -1px, @white;
+    background-size: 29px 1px;
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  &__task-duration {
+    height: 22px;
+    background: @blue;
+  }
+
+  &:nth-child(4) {
+    margin-top: 122px;
+  }
+
+  &__weekend {
+    position: absolute;
+    left: 0;
+    top: -1px;
+    width: 28px;
+    height: 28px;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 1px,
+      #f1f1f1 1px,
+      #f1f1f1 2px
+    );
+    z-index: 1;
+    border: 1px solid @light-gray;
+    pointer-events: none;
+  }
+
+  &__description p {
+    color: @white;
+  }
+}

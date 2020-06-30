@@ -1,5 +1,5 @@
 import React from 'react';
-import { ARCASocket, State } from 'arca-redux';
+import { State } from 'arca-redux-v4';
 import Modal from '@material-ui/core/Modal';
 import EditIcon from '@material-ui/icons/Edit';
 import { Tooltip } from '@material-ui/core';
@@ -7,13 +7,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import EditModal from './EditModal';
 
 interface TaskNameProps {
-  socket: ARCASocket,
-  rowInfo: State['Source']['AAU-Tasks-Gantt']['Rows'][0],
-  fieldsInfo: State['Source']['AAU-Tasks-Gantt']['Info']['Fields'],
+  rowInfo: State['Source']['AAU-Tasks-Gantt'][0],
 }
 
 const TaskName: React.FunctionComponent<TaskNameProps> = ({
-  socket, rowInfo, fieldsInfo,
+  rowInfo,
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -37,9 +35,7 @@ const TaskName: React.FunctionComponent<TaskNameProps> = ({
           <DialogContent className='gantt-leftbar__edit-modal-dialog'>
             <EditModal
               rowInfo={rowInfo}
-              socket={socket}
               handleClose={handleClose}
-              fieldsInfo={fieldsInfo}
             />
           </DialogContent>
         </Modal>

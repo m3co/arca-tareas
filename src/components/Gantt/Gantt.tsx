@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ARCASocket, State } from 'arca-redux';
+import { State } from 'arca-redux-v4';
 import first from 'lodash/first';
 import last from 'lodash/last';
 import {
@@ -19,19 +19,17 @@ type styles = {
 
 interface GanttProps {
   ganttInfo: State['Source']['AAU-Tasks-Gantt'],
-  socket: ARCASocket,
-  fieldsInfo: State['Source']['AAU-Tasks-Gantt']['Info']['Fields'],
   currentProject: number,
   setCurrentProject: (event: React.ChangeEvent<{ name?: string, value: unknown, }>) => void,
   projectOptions: Array<{ name: number | string; value: number }>,
 }
 
 const Gantt: React.FunctionComponent<GanttProps> = ({
-  ganttInfo, socket, fieldsInfo, currentProject, setCurrentProject, projectOptions,
+  ganttInfo, currentProject, setCurrentProject, projectOptions,
 }) => {
   const calcTimeLine = useCallback(() => {
-    const sortedDataByEnd = sortByEnd([...ganttInfo.Rows]);
-    const sortedDataByStart = sortByStart([...ganttInfo.Rows]);
+    const sortedDataByEnd = sortByEnd([...ganttInfo]);
+    const sortedDataByStart = sortByStart([...ganttInfo]);
 
     const startDate = new Date(first(sortedDataByStart).Start);
     const endDate = new Date(last(sortedDataByEnd).End);
@@ -73,15 +71,13 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
           projectOptions={projectOptions}
         />
         <Header timeLine={timeLine} />
-        <LeftBar ganttInfo={ganttInfo} socket={socket} fieldsInfo={fieldsInfo} />
+        <LeftBar ganttInfo={ganttInfo} />
         {
-          ganttInfo.Rows.map((row, index) => (
+          ganttInfo.map((row, index) => (
             <Row
               rowInfo={row}
               timeLine={timeLine}
               key={`${row.Key + row.Constraint} ${String(index)}`}
-              socket={socket}
-              fieldsInfo={fieldsInfo}
             />
           ))
         }

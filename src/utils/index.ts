@@ -1,15 +1,15 @@
-import { State } from 'arca-redux';
+import { State } from 'arca-redux-v4';
 import head from 'lodash/head';
 import last from 'lodash/last';
 
-export const sortByStart = (rows: State['Source']['AAU-Tasks-Gantt']['Rows']) => rows
+export const sortByStart = (rows: State['Source']['AAU-Tasks-Gantt']) => rows
   .sort((a, b) => Date.parse(String(a.Start)) - Date.parse(String(b.Start)));
 
-export const sortByEnd = (rows: State['Source']['AAU-Tasks-Gantt']['Rows']) => rows
+export const sortByEnd = (rows: State['Source']['AAU-Tasks-Gantt']) => rows
   .sort((a, b) => Date.parse(String(a.End)) - Date.parse(String(b.End)));
 
 export const getDurationTaskInDays = (
-  row: State['Source']['AAU-Tasks-Gantt']['Rows'][0],
+  row: State['Source']['AAU-Tasks-Gantt'][0],
 ) => ((Date.parse(String(row.End)) - Date.parse(String(row.Start))) / 60000) / 1440;
 
 export const getDateList = (start: Date, end: Date) => {

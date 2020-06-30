@@ -1,26 +1,22 @@
 import React from 'react';
-import { ARCASocket, State } from 'arca-redux';
+import { State } from 'arca-redux-v4';
 import TaskName from './components/TaskName';
 import './LeftBar.less';
 
 interface LeftBarProps {
-  socket: ARCASocket,
   ganttInfo: State['Source']['AAU-Tasks-Gantt'],
-  fieldsInfo: State['Source']['AAU-Tasks-Gantt']['Info']['Fields'],
 }
 
 const LeftBar: React.FunctionComponent<LeftBarProps> = ({
-  ganttInfo, socket, fieldsInfo,
+  ganttInfo,
 }) => (
   <div className='gantt-leftbar-wrap'>
     <div className='gantt-leftbar'>
       {
-        ganttInfo.Rows.map((row, index) => (
+        ganttInfo.map((row, index) => (
           <TaskName
             rowInfo={row}
             key={`${row.Key + row.Constraint} ${String(index)}`}
-            socket={socket}
-            fieldsInfo={fieldsInfo}
           />
         ))
       }

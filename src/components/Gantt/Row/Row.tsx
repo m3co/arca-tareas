@@ -1,22 +1,22 @@
 import React, { useRef } from 'react';
-import { ARCASocket, State } from 'arca-redux';
+import { State } from 'arca-redux-v4';
 import Tooltip from '@material-ui/core/Tooltip';
+import { socket } from '../../../redux/store';
 import { getDateList } from '../../../utils';
 import {
   getNumberFromString, dateToYYYYMMDD, strTemplateBySeparator, getPointOnTimeline,
 } from '../../../utils/text';
-import './Row.less';
 import { CELL_WIDTH, SANDAY, SATURDAY } from '../../../utils/constant';
 
+import './Row.less';
+
 interface RowProps {
-  socket: ARCASocket,
-  rowInfo: State['Source']['AAU-Tasks-Gantt']['Rows'][0],
+  rowInfo: State['Source']['AAU-Tasks-Gantt'][0],
   timeLine: Array<Date>,
-  fieldsInfo: State['Source']['AAU-Tasks-Gantt']['Info']['Fields'],
 }
 
 const Row: React.FunctionComponent<RowProps> = ({
-  socket, rowInfo, timeLine,
+  rowInfo, timeLine,
 }) => {
   const rowRef = useRef(null);
   const durationTask = getDateList(new Date(rowInfo.Start), new Date(rowInfo.End));
@@ -36,9 +36,12 @@ const Row: React.FunctionComponent<RowProps> = ({
 
     newStart.setDate(newStart.getDate() + shiftInDays);
 
-    socket.Update('AAU-Tasks-Gantt', {
+    socket.update('AAU-Tasks-Gantt', {
       ...rowInfo,
       Start: dateToYYYYMMDD(newStart),
+    }, {
+      Key: rowInfo.Key,
+      Constraint: rowInfo.Constraint,
     });
 
     window.name = '0';

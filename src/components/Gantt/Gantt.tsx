@@ -20,12 +20,15 @@ type styles = {
 interface GanttProps {
   ganttInfo: State['Source']['AAU-Tasks-Gantt'],
   currentProject: number,
+  currentType: string,
   setCurrentProject: (event: React.ChangeEvent<{ name?: string, value: unknown, }>) => void,
   projectOptions: Array<{ name: number | string; value: number }>,
+  setCurrentType: (event: React.ChangeEvent<{ name?: string, value: unknown, }>) => void,
+  typeOptions: Array<{ name: number | string; value: string }>,
 }
 
 const Gantt: React.FunctionComponent<GanttProps> = ({
-  ganttInfo, currentProject, setCurrentProject, projectOptions,
+  ganttInfo, currentProject, setCurrentProject, projectOptions, currentType, setCurrentType, typeOptions,
 }) => {
   const calcTimeLine = useCallback(() => {
     const sortedDataByEnd = sortByEnd([...ganttInfo]);
@@ -69,12 +72,16 @@ const Gantt: React.FunctionComponent<GanttProps> = ({
           currentProject={currentProject}
           setCurrentProject={setCurrentProject}
           projectOptions={projectOptions}
+          currentType={currentType}
+          setCurrentType={setCurrentType}
+          typeOptions={typeOptions}
         />
         <Header timeLine={timeLine} />
-        <LeftBar ganttInfo={ganttInfo} />
+        <LeftBar ganttInfo={ganttInfo} currentType={currentType} />
         {
           ganttInfo.map((row, index) => (
             <Row
+              currentType={currentType}
               rowInfo={row}
               timeLine={timeLine}
               key={`${row.Key + row.Constraint} ${String(index)}`}

@@ -7,15 +7,23 @@ interface StartPageProps {
   currentProject: number,
   setCurrentProject: (event: React.ChangeEvent<{ name?: string, value: unknown, }>) => void,
   projectOptions: Array<{ name: number | string; value: number }>,
+  currentType: string;
+  setCurrentType: (event: React.ChangeEvent<{ name?: string, value: unknown, }>) => void,
+  typeOptions: Array<{ name: number | string; value: string }>,
 }
 
 const StartPage: React.FunctionComponent<StartPageProps> = ({
-  currentProject, setCurrentProject, projectOptions,
+  currentProject, setCurrentProject, projectOptions, currentType, setCurrentType, typeOptions,
 }) => (
   <div className='start-page-wrap'>
     <div className='start-page'>
       <div className='start-page__logo' />
       <h1>Arca Gantt</h1>
+      <ProjectSelect
+        onChange={setCurrentType}
+        currentProject={currentType}
+        options={typeOptions}
+      />
       <ProjectSelect
         onChange={setCurrentProject}
         currentProject={currentProject}

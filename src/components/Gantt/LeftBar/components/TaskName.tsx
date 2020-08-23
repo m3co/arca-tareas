@@ -8,10 +8,11 @@ import EditModal from './EditModal';
 
 interface TaskNameProps {
   rowInfo: State['Source']['AAU-Tasks-Gantt'][0],
+  currentType: string,
 }
 
 const TaskName: React.FunctionComponent<TaskNameProps> = ({
-  rowInfo,
+  rowInfo, currentType,
 }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -34,6 +35,7 @@ const TaskName: React.FunctionComponent<TaskNameProps> = ({
         >
           <DialogContent className='gantt-leftbar__edit-modal-dialog'>
             <EditModal
+              currentType={currentType}
               rowInfo={rowInfo}
               handleClose={handleClose}
             />

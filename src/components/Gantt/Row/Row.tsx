@@ -13,10 +13,11 @@ import './Row.less';
 interface RowProps {
   rowInfo: State['Source']['AAU-Tasks-Gantt'][0],
   timeLine: Array<Date>,
+  currentType: string,
 }
 
 const Row: React.FunctionComponent<RowProps> = ({
-  rowInfo, timeLine,
+  rowInfo, timeLine, currentType,
 }) => {
   const rowRef = useRef(null);
   const durationTask = getDateList(new Date(rowInfo.Start), new Date(rowInfo.End));
@@ -36,13 +37,27 @@ const Row: React.FunctionComponent<RowProps> = ({
 
     newStart.setDate(newStart.getDate() + shiftInDays);
 
-    socket.update('AAU-Tasks-Gantt', {
-      ...rowInfo,
-      Start: dateToYYYYMMDD(newStart),
-    }, {
-      Key: rowInfo.Key,
-      Constraint: rowInfo.Constraint,
-    });
+    switch (currentType) {
+      case 'AAU':
+        socket.update('AAU-Tasks-Gantt', {
+          ...rowInfo,
+          Start: dateToYYYYMMDD(newStart),
+        }, {
+          Key: rowInfo.Key,
+          Constraint: rowInfo.Constraint,
+        });
+        break;
+      case 'APU':
+        socket.update('APU-Tasks-Gantt', {
+          ...rowInfo,
+          Start: dateToYYYYMMDD(newStart),
+        }, {
+          ID: rowInfo.ID,
+        });
+        break;
+      default:
+        break;
+    }
 
     window.name = '0';
     block.style.transform = 'translateX(0px)';

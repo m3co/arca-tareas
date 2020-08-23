@@ -9,10 +9,11 @@ import { strTemplateBySeparator } from '../../../../utils/text';
 interface EditModalProps {
   rowInfo: State['Source']['AAU-Tasks-Gantt'][0],
   handleClose: () => void,
+  currentType: string,
 }
 
 const EditModal: React.FunctionComponent<EditModalProps> = React.forwardRef(({
-  rowInfo, handleClose,
+  rowInfo, handleClose, currentType,
 }, ref: React.Ref<HTMLDivElement>) => {
   const [values, setValues] = useState(rowInfo);
   const onChangeValues = (field: keyof State['Source']['AAU-Tasks-Gantt'][0]) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +25,16 @@ const EditModal: React.FunctionComponent<EditModalProps> = React.forwardRef(({
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    socket.update('AAU-Tasks-Gantt', values, values);
+    switch (currentType) {
+      case 'AAU':
+        socket.update('AAU-Tasks-Gantt', values, values);
+        break;
+      case 'APU':
+        socket.update('APU-Tasks-Gantt', values, values);
+        break;
+      default:
+        break;
+    }
     handleClose();
   };
 

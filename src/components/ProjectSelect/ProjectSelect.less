@@ -1,6 +1,10 @@
 @import '../../less/colors.less';
 
 .gantt-project-select {
+  &:not(:last-child) {
+    margin-bottom: 24px;
+  }
+
   &__placeholder {
     color: @dark-gray;
   }

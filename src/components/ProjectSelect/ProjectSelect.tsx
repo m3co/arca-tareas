@@ -5,9 +5,9 @@ import Select from '@material-ui/core/Select';
 import './ProjectSelect.less';
 
 interface ProjectSelectProps {
-  currentProject: number,
+  currentProject: number | string,
   onChange: (event: React.ChangeEvent<{ name?: string, value: unknown, }>) => void,
-  options: Array<{ name?: number | string; value: number }>,
+  options: Array<{ name?: number | string; value: number | string }>,
 }
 
 const ProjectSelect: React.FunctionComponent<ProjectSelectProps> = ({
